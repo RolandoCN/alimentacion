@@ -11,7 +11,7 @@ $("#form_registro_rol").submit(function(e){
         $('#descripcion').focus()
         return
     } 
-
+    vistacargando("m","Espere por favor")
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -30,7 +30,7 @@ $("#form_registro_rol").submit(function(e){
     }
   
     var FrmData=$("#form_registro_rol").serialize();
-    console.log(FrmData)
+
     $.ajax({
             
         type: tipo,
@@ -41,8 +41,8 @@ $("#form_registro_rol").submit(function(e){
         processData:false, 
 
         success: function(data){
-            console.log(data)
-            // vistacargando("");                
+
+            vistacargando("");                
             if(data.error==true){
                 alertNotificar(data.mensaje,'error');
                 return;                      
@@ -56,7 +56,7 @@ $("#form_registro_rol").submit(function(e){
         }, error:function (data) {
             console.log(data)
 
-            // vistacargando("");
+            vistacargando("");
             alertNotificar('Ocurrió un error','error');
         }
     });
@@ -72,7 +72,6 @@ function llenar_tabla_rol(){
    
     
     $.get("/listado-rol/", function(data){
-        console.log(data)
       
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
@@ -143,7 +142,6 @@ function accesos(id_perfil, abiertaModal=null){
     
     
     $.get("/acceso-perfil/"+id_perfil, function(data){
-        console.log(data)
         
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
@@ -226,9 +224,9 @@ function accionAcceso(id){
 }
 
 function AggQuitarMenuPerfil(id_menu, tipo){
+    vistacargando("m","Espere por favor")
     $.get("/acceso-por-perfil/"+id_menu+"/"+tipo+"/"+PerfilSeleccionado, function(data){
-        console.log(data)
-      
+        vistacargando("")
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
             return;   
@@ -239,16 +237,16 @@ function AggQuitarMenuPerfil(id_menu, tipo){
 
        
     }).fail(function(){
-       
+        vistacargando("")
         alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
     });
 }
 
 
 function editarRol(id_perfil){
+    vistacargando("m","Espere por favor")
     $.get("/editar-rol/"+id_perfil, function(data){
-        console.log(data)
-      
+        vistacargando("")
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
             return;   
@@ -265,7 +263,7 @@ function editarRol(id_perfil){
 
        
     }).fail(function(){
-       
+        vistacargando("")
         alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
     });
 }
@@ -293,9 +291,9 @@ function visualizarListado(){
 
 function eliminarRol(id_perfil){
     if(confirm('¿Quiere eliminar el registro?')){
+        vistacargando("")
         $.get("/eliminar-rol/"+id_perfil, function(data){
-            console.log(data)
-          
+            vistacargando("")
             if(data.error==true){
                 alertNotificar(data.mensaje,"error");
                 return;   
@@ -305,7 +303,7 @@ function eliminarRol(id_perfil){
             llenar_tabla_rol()
            
         }).fail(function(){
-           
+            vistacargando("")
             alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
         });
     }

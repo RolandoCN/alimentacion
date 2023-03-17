@@ -32,7 +32,7 @@ $("#form_registro_empleado").submit(function(e){
         $('#idarea').focus()
         return
     } 
-
+    vistacargando("m","Espere por favor")
 
     $.ajaxSetup({
         headers: {
@@ -52,7 +52,7 @@ $("#form_registro_empleado").submit(function(e){
     }
   
     var FrmData=$("#form_registro_empleado").serialize();
-    console.log(FrmData)
+
     $.ajax({
             
         type: tipo,
@@ -63,8 +63,7 @@ $("#form_registro_empleado").submit(function(e){
         processData:false, 
 
         success: function(data){
-            console.log(data)
-            // vistacargando("");                
+            vistacargando("");                
             if(data.error==true){
                 alertNotificar(data.mensaje,'error');
                 return;                      
@@ -78,7 +77,7 @@ $("#form_registro_empleado").submit(function(e){
         }, error:function (data) {
             console.log(data)
 
-            // vistacargando("");
+            vistacargando("");
             alertNotificar('Ocurrió un error','error');
         }
     });
@@ -97,7 +96,6 @@ function llenar_tabla_empleado(){
    
     
     $.get("/listado-empleado/", function(data){
-        console.log(data)
       
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
@@ -138,7 +136,6 @@ function llenar_tabla_empleado(){
                         {data: "cedula" },
                 ],    
                 "rowCallback": function( row, data ) {
-                    console.log(data.puesto)
                   
                     $('td', row).eq(4).html(`
                                   
@@ -167,9 +164,9 @@ $('.table-responsive').css({'padding-top':'12px','padding-bottom':'12px', 'borde
 
 
 function editarEmpleado(id_empleado){
+    vistacargando("m","Espere por favor")
     $.get("/editar-empleado/"+id_empleado, function(data){
-        console.log(data)
-      
+        vistacargando("")
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
             return;   
@@ -193,7 +190,7 @@ function editarEmpleado(id_empleado){
 
        
     }).fail(function(){
-       
+        vistacargando("")
         alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
     });
 }
@@ -221,9 +218,9 @@ function visualizarListado(){
 
 function btn_eliminar_tarea(id_empleado){
     if(confirm('¿Quiere eliminar el registro?')){
+        vistacargando("m","Espere por favor")
         $.get("/eliminar-empleado/"+id_empleado, function(data){
-            console.log(data)
-          
+            vistacargando("")
             if(data.error==true){
                 alertNotificar(data.mensaje,"error");
                 return;   
@@ -233,7 +230,7 @@ function btn_eliminar_tarea(id_empleado){
             llenar_tabla_empleado()
            
         }).fail(function(){
-           
+            vistacargando("")
             alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
         });
     }

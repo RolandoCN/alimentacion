@@ -11,7 +11,7 @@ $("#form_registro_gestion").submit(function(e){
         $('#descripcion').focus()
         return
     } 
-
+    vistacargando("m","Espere por favor")
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -30,7 +30,7 @@ $("#form_registro_gestion").submit(function(e){
     }
   
     var FrmData=$("#form_registro_gestion").serialize();
-    console.log(FrmData)
+
     $.ajax({
             
         type: tipo,
@@ -41,8 +41,7 @@ $("#form_registro_gestion").submit(function(e){
         processData:false, 
 
         success: function(data){
-            console.log(data)
-            // vistacargando("");                
+            vistacargando("");                
             if(data.error==true){
                 alertNotificar(data.mensaje,'error');
                 return;                      
@@ -56,7 +55,7 @@ $("#form_registro_gestion").submit(function(e){
         }, error:function (data) {
             console.log(data)
 
-            // vistacargando("");
+            vistacargando("");
             alertNotificar('Ocurrió un error','error');
         }
     });
@@ -73,7 +72,6 @@ function llenar_tabla_gestion(){
    
     
     $.get("/listado-gestion/", function(data){
-        console.log(data)
       
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
@@ -140,9 +138,9 @@ $('.table-responsive').css({'padding-top':'12px','padding-bottom':'12px', 'borde
 
 
 function editarGestion(id_gestion){
+    vistacargando("m","Espere por favor")
     $.get("/editar-gestion/"+id_gestion, function(data){
-        console.log(data)
-      
+        vistacargando("")
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
             return;   
@@ -161,7 +159,7 @@ function editarGestion(id_gestion){
 
        
     }).fail(function(){
-       
+        vistacargando("")
         alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
     });
 }
@@ -189,9 +187,9 @@ function visualizarListado(){
 
 function eliminarGestion(id_gestion){
     if(confirm('¿Quiere eliminar el registro?')){
+        vistacargando("m","Espere por favor")
         $.get("/eliminar-gestion/"+id_gestion, function(data){
-            console.log(data)
-          
+            vistacargando("")
             if(data.error==true){
                 alertNotificar(data.mensaje,"error");
                 return;   
@@ -201,7 +199,7 @@ function eliminarGestion(id_gestion){
             llenar_tabla_gestion()
            
         }).fail(function(){
-           
+            vistacargando("")
             alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
         });
     }

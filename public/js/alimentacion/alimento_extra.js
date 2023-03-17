@@ -53,7 +53,7 @@ $("#form_extra").submit(function(e){
         return
     } 
 
-
+    vistacargando("m","Espere por favor")
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -72,7 +72,6 @@ $("#form_extra").submit(function(e){
     }
   
     var FrmData=$("#form_extra").serialize();
-    console.log(FrmData)
     $.ajax({
             
         type: tipo,
@@ -83,8 +82,7 @@ $("#form_extra").submit(function(e){
         processData:false, 
 
         success: function(data){
-            console.log(data)
-            // vistacargando("");                
+            vistacargando("");                
             if(data.error==true){
                 alertNotificar(data.mensaje,'error');
                 return;                      
@@ -96,9 +94,8 @@ $("#form_extra").submit(function(e){
             llenar_tabla_extra()
                             
         }, error:function (data) {
-            console.log(data)
 
-            // vistacargando("");
+            vistacargando("");
             alertNotificar('Ocurrió un error','error');
         }
     });
@@ -119,7 +116,6 @@ function llenar_tabla_extra(){
    
     
     $.get("/listado-extra/", function(data){
-        console.log(data)
       
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
@@ -207,9 +203,9 @@ function visualizarListado(){
 
 function elimina_extra(idextra){
     if(confirm('¿Quiere eliminar el registro?')){
+        vistacargando("m","Espere por favor")
         $.get("/eliminar-extra/"+idextra, function(data){
-            console.log(data)
-          
+            vistacargando("")
             if(data.error==true){
                 alertNotificar(data.mensaje,"error");
                 return;   
@@ -219,7 +215,7 @@ function elimina_extra(idextra){
             llenar_tabla_extra()
            
         }).fail(function(){
-           
+            vistacargando("")
             alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
         });
     }

@@ -132,7 +132,8 @@
 @endsection
 @section('scripts')
 
-    <script src="/js/alimentacion/gestionMenu.js"></script>
+    <script src="{{ asset('js/alimentacion/gestionMenu.js?v='.rand())}}"></script>
+
 
     <script>
         llenar_tabla_gestion_menu()

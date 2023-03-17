@@ -143,7 +143,9 @@
 
 @section('scripts')
 
-    <script src="/js/alimentacion/horario_alimento.js"></script>
+    {{-- <script src="/js/alimentacion/horario_alimento.js"></script> --}}
+    <script src="{{ asset('js/alimentacion/horario_alimento.js?v='.rand())}}"></script>
+
 
     <script>
         llenar_tabla_horario()

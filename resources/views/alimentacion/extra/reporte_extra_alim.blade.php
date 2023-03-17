@@ -118,8 +118,8 @@
 @endsection
 @section('scripts')
 
-{{-- <script src="/js/alimentacion/reporte/entre_fecha.js"></script> --}}
-<script src="/js/alimentacion/extra/reporte.js"></script>
+{{-- <script src="/js/alimentacion/extra/reporte.js"></script> --}}
+<script src="{{ asset('js/alimentacion/extra/reporte.js?v='.rand())}}"></script>
     
 <script>
 

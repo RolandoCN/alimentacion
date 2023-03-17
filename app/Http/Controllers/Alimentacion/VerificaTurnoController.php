@@ -32,6 +32,7 @@ class VerificaTurnoController extends Controller
         
         //primero validamos que se encuentre en el rango de hora de uno de los alimentos
         $hora_actual=date('H:i');
+        
         $verificarRangoFecha=DB::table('alimento')->
         where(function($c)use($hora_actual) {
             $c->whereTime('hora_min', '<=', $hora_actual)

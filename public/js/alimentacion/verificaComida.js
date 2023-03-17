@@ -1,3 +1,9 @@
+
+$(document).keyup(function(event) {
+    if (event.which === 13) {
+        $("#form_valida").submit()
+    }
+});
 $("#form_valida").submit(function(e){
     e.preventDefault();
     let cedula_func=$('#cedula_func').val()
@@ -16,7 +22,7 @@ $("#form_valida").submit(function(e){
     
     limpiar()
     var FrmData=$("#form_valida").serialize();
-    console.log(FrmData)
+   
     $.ajax({
            
        type: "POST",
@@ -27,7 +33,7 @@ $("#form_valida").submit(function(e){
        processData:false, 
 
        success: function(data){
-           console.log(data)
+          
            vistacargando("");                
            if(data.error==true){
                 

@@ -5,7 +5,7 @@ function detalleTurno(id_empleado){
    
     let eventosArray=[]
     $.get('/fullcalender_/'+id_empleado, function(data){
-        console.log(data)
+     
         vistacargando("")
         eventosArray=data.data
         verCale()
@@ -26,7 +26,6 @@ function detalleTurno(id_empleado){
         }
         globalThis.PersonaSeleccionada=id_empleado
 
-        console.log(eventosArray)
        
     }).fail(function(){
         vistacargando("")
@@ -102,7 +101,6 @@ function verCale(){
                         },
                         success: function (response) {
                             vistacargando("")
-                            console.log(response)
 
                             if(response.error==true){
                                 
@@ -145,7 +143,6 @@ function verCale(){
                     },
                     type: "POST",
                     success: function (response) {
-                        console.log(response)
                         vistacargando("")
                         if(response.error==true){
                             if(response.dataArray.length==0){
@@ -209,7 +206,7 @@ function guardarTurno(){
     
         success: function (data) {
             vistacargando("")
-            console.log(data)
+
             if(data['error']==true){
                 
                 alertNotificar(data.mensaje,"error")
@@ -280,10 +277,8 @@ function buscarPersona(){
 			}
 			
 			$("#table_persona tbody").html('');
-			console.log(data)
            
 			$.each(data.resultado,function(i, item){
-                console.log(item)
 				$('#table_persona').append(`<tr>
 											<td>${item.id_empleado}</td>
                                             <td>${item.cedula}</td>

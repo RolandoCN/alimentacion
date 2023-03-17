@@ -113,7 +113,8 @@
 
 @section('scripts')
 
-    <script src="/js/alimentacion/perfil.js"></script>
+   
+    <script src="{{ asset('js/alimentacion/perfil.js?v='.rand())}}"></script>
 
     <script>
         llenar_tabla_rol()

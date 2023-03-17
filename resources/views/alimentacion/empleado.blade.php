@@ -159,7 +159,7 @@
 @endsection
 @section('scripts')
 
-    <script src="/js/alimentacion/empleado.js"></script>
+    <script src="{{ asset('js/alimentacion/empleado.js?v='.rand())}}"></script>
 
     <script>
         llenar_tabla_empleado()

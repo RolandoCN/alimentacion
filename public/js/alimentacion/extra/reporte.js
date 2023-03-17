@@ -43,7 +43,6 @@ function buscarTurnos(){
     $('#fecha_fin_rep').html('')
     
     $.get('/alimento-extra/'+fecha_inicial+'/'+fecha_final, function(data){
-        console.log(data)
         if(data.error==true){
 			$("#table_persona tbody").html('');
 			$("#table_persona tbody").html(`<tr><td colspan="${num_col}">No existen registros</td></tr>`);
@@ -60,14 +59,12 @@ function buscarTurnos(){
 			}
 			
 			$("#table_persona tbody").html('');
-			console.log(data)
             $('#fecha_ini_rep').html(fecha_inicial)
             $('#fecha_fin_rep').html(fecha_final)
           
             
             let contador=0
 			$.each(data.resultado,function(i, item){
-                console.log(item)
                
 				$('#table_persona').append(`<tr>
                                                 <td style="width:10%">${item.fecha}</td>

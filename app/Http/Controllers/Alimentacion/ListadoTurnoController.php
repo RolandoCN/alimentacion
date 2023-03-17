@@ -275,12 +275,12 @@ class ListadoTurnoController extends Controller
                     }
 
                   
-                    if(strtotime($hora_valida_ax) < strtotime(date('H:i'))){
-                        return response()->json([
-                            'error'=>true,
-                            'mensaje'=>'La hora máxima de aprobación para el tipo de alimento seleccionado es '.$hora_valida->hora_max_aprobacion. " ".$formato
-                        ]);
-                    }
+                    // if(strtotime($hora_valida_ax) < strtotime(date('H:i'))){
+                    //     return response()->json([
+                    //         'error'=>true,
+                    //         'mensaje'=>'La hora máxima de aprobación para el tipo de alimento seleccionado es '.$hora_valida->hora_max_aprobacion. " ".$formato
+                    //     ]);
+                    // }
                 }
                 //cambiamos el estado de la tabla turno
                 $aprobar=Turno::whereIn('id',$request->array_turnos)

@@ -118,7 +118,7 @@
 @endsection
 @section('scripts')
 
-    <script src="/js/alimentacion/menu.js"></script>
+    <script src="{{ asset('js/alimentacion/menu.js?v='.rand())}}"></script>
 
     <script>
         llenar_tabla_menu()

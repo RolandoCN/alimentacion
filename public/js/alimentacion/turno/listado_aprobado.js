@@ -52,7 +52,6 @@ function buscarTurnos(){
 			}
 			
 			$("#table_persona tbody").html('');
-			console.log(data)
             $('#fecha_turno').html(fecha_selecc)
             $('#comida_turno').html($("#idalimento :selected").text())
             $('#total_turno').html(data.resultado.length)
@@ -61,7 +60,6 @@ function buscarTurnos(){
             
             let contador=0
 			$.each(data.resultado,function(i, item){
-                console.log(item)
                 let estado=""
                
                 if(item.estado_turno=="Generado"){

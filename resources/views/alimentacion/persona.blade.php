@@ -155,7 +155,7 @@
 @endsection
 @section('scripts')
 
-    <script src="/js/alimentacion/persona.js"></script>
+    <script src="{{ asset('js/alimentacion/persona.js?v='.rand())}}"></script>
 
     <script>
         llenar_tabla_persona()

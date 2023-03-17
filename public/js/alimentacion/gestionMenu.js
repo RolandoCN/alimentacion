@@ -14,7 +14,7 @@ $("#form_gestion_menu").submit(function(e){
         alertNotificar("Debe seleccionar el menu","error")
         return
     } 
-
+    vistacargando("m","Espere por favor")
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -33,7 +33,7 @@ $("#form_gestion_menu").submit(function(e){
     }
   
     var FrmData=$("#form_gestion_menu").serialize();
-    console.log(FrmData)
+
     $.ajax({
             
         type: tipo,
@@ -44,8 +44,7 @@ $("#form_gestion_menu").submit(function(e){
         processData:false, 
 
         success: function(data){
-            console.log(data)
-            // vistacargando("");                
+            vistacargando("");                
             if(data.error==true){
                 alertNotificar(data.mensaje,'error');
                 return;                      
@@ -59,7 +58,7 @@ $("#form_gestion_menu").submit(function(e){
         }, error:function (data) {
             console.log(data)
 
-            // vistacargando("");
+            vistacargando("");
             alertNotificar('Ocurrió un error','error');
         }
     });
@@ -76,7 +75,6 @@ function llenar_tabla_gestion_menu(){
    
     
     $.get("/listado-gestion-menu/", function(data){
-        console.log(data)
       
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
@@ -143,9 +141,9 @@ $('.table-responsive').css({'padding-top':'12px','padding-bottom':'12px', 'borde
 
 
 function editarGestionMenu(id_gestion_menu){
+    vistacargando("m","Espere por favor")
     $.get("/editar-gestion-menu/"+id_gestion_menu, function(data){
-        console.log(data)
-      
+        vistacargando("")
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
             return;   
@@ -164,7 +162,7 @@ function editarGestionMenu(id_gestion_menu){
 
        
     }).fail(function(){
-       
+        vistacargando("")
         alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
     });
 }
@@ -192,9 +190,9 @@ function visualizarListado(){
 
 function eliminarGestionMenu(id_gestion_menu){
     if(confirm('¿Quiere eliminar el registro?')){
+        vistacargando("m","Espere por favor")
         $.get("/eliminar-gestion-menu/"+id_gestion_menu, function(data){
-            console.log(data)
-          
+            vistacargando("")
             if(data.error==true){
                 alertNotificar(data.mensaje,"error");
                 return;   
@@ -204,7 +202,7 @@ function eliminarGestionMenu(id_gestion_menu){
             llenar_tabla_gestion_menu()
            
         }).fail(function(){
-           
+            vistacargando("")
             alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
         });
     }

@@ -140,7 +140,9 @@
 @endsection
 @section('scripts')
 
-<script src="/js/alimentacion/reporte/usuario_fecha.js"></script>
+{{-- <script src="/js/alimentacion/reporte/usuario_fecha.js"></script> --}}
+<script src="{{ asset('js/alimentacion/reporte/usuario_fecha.js?v='.rand())}}"></script>
+
     
 <script>
 

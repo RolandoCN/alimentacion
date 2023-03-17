@@ -34,9 +34,10 @@ $("#form_registro_user").submit(function(e){
         tipo="PUT"
         url_form="/actualizar-usuario/"+idUserEditar
     }
-  
+    
+    vistacargando("m","Espere por favor")
     var FrmData=$("#form_registro_user").serialize();
-    console.log(FrmData)
+   
     $.ajax({
             
         type: tipo,
@@ -47,8 +48,8 @@ $("#form_registro_user").submit(function(e){
         processData:false, 
 
         success: function(data){
-            console.log(data)
-            // vistacargando("");                
+           
+            vistacargando("");                
             if(data.error==true){
                 alertNotificar(data.mensaje,'error');
                 return;                      
@@ -62,7 +63,7 @@ $("#form_registro_user").submit(function(e){
         }, error:function (data) {
             console.log(data)
 
-            // vistacargando("");
+            vistacargando("");
             alertNotificar('Ocurrió un error','error');
         }
     });
@@ -81,7 +82,7 @@ function llenar_tabla_usuario(){
    
     
     $.get("/listado-usuario/", function(data){
-        console.log(data)
+       
       
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
@@ -154,9 +155,10 @@ $('.table-responsive').css({'padding-top':'12px','padding-bottom':'12px', 'borde
 
 
 function editarUsuario(idusuario){
+    vistacargando("m","Espere por favor")
     $.get("/editar-usuario/"+idusuario, function(data){
-        console.log(data)
-      
+       
+        vistacargando("")
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
             return;   
@@ -176,7 +178,7 @@ function editarUsuario(idusuario){
 
        
     }).fail(function(){
-       
+        vistacargando("")
         alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
     });
 }
@@ -203,10 +205,10 @@ function visualizarListado(){
 }
 
 function eliminarUsuario(idusuario){
+    vistacargando("m","Espere por favor")
     if(confirm('¿Quiere eliminar el registro?')){
         $.get("/eliminar-usuario/"+idusuario, function(data){
-            console.log(data)
-          
+            vistacargando("")
             if(data.error==true){
                 alertNotificar(data.mensaje,"error");
                 return;   
@@ -219,7 +221,7 @@ function eliminarUsuario(idusuario){
             llenar_tabla_usuario()
            
         }).fail(function(){
-           
+            vistacargando("")
             alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
         });
     }
@@ -240,9 +242,9 @@ function resetearPassword(idusuario){
     function(isConfirm) {
         if (isConfirm) { 
             //mmandamos a resetear
+            vistacargando("m","Espere por favor")
             $.get("/resetear-password/"+idusuario, function(data){
-                console.log(data)
-                
+                vistacargando("")
                 if(data.error==true){
                     alertNotificar(data.mensaje,"error");
                     return;   
@@ -255,7 +257,7 @@ function resetearPassword(idusuario){
                 llenar_tabla_usuario()
                 
             }).fail(function(){
-            
+                vistacargando("")
                 alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
             });
         }

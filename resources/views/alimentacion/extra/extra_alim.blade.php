@@ -150,7 +150,9 @@
 @endsection
 @section('scripts')
 
-    <script src="/js/alimentacion/alimento_extra.js"></script>
+    {{-- <script src="/js/alimentacion/alimento_extra.js"></script> --}}
+    <script src="{{ asset('js/alimentacion/alimento_extra.js?v='.rand())}}"></script>
+
 
     <script>
         llenar_tabla_extra()

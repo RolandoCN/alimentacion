@@ -66,7 +66,7 @@ function buscarTurnos(){
 			}
 			
 			$("#table_persona tbody").html('');
-			console.log(data)
+
             $('#fecha_ini_rep').html(fecha_inicial)
             $('#usuario_rep').html($("#id_empleado :selected").text())
             $('#fecha_fin_rep').html(fecha_final)
@@ -74,7 +74,7 @@ function buscarTurnos(){
             
             let contador=0
 			$.each(data.resultado,function(i, item){
-                console.log(item)
+
                 let estado=""
                
                 if(item.estado_turno=="Generado"){

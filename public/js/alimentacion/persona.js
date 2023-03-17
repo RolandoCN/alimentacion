@@ -32,8 +32,8 @@ $("#form_registro_persona").submit(function(e){
         $('#telefono').focus()
         return
     } 
-
-
+    
+    vistacargando("m","Espere por favor")
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -50,9 +50,9 @@ $("#form_registro_persona").submit(function(e){
         tipo="PUT"
         url_form="/actualizar-persona/"+idPersonaEditar
     }
-  
+    
     var FrmData=$("#form_registro_persona").serialize();
-    console.log(FrmData)
+   
     $.ajax({
             
         type: tipo,
@@ -63,8 +63,8 @@ $("#form_registro_persona").submit(function(e){
         processData:false, 
 
         success: function(data){
-            console.log(data)
-            // vistacargando("");                
+           
+            vistacargando("");                
             if(data.error==true){
                 alertNotificar(data.mensaje,'error');
                 return;                      
@@ -78,7 +78,7 @@ $("#form_registro_persona").submit(function(e){
         }, error:function (data) {
             console.log(data)
 
-            // vistacargando("");
+            vistacargando("");
             alertNotificar('Ocurrió un error','error');
         }
     });
@@ -97,8 +97,7 @@ function llenar_tabla_persona(){
    
     
     $.get("/listado-persona/", function(data){
-        console.log(data)
-      
+       
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
             $("#tabla_persona tbody").html(`<tr><td colspan="${num_col}" style="padding:40px; 0px; font-size:20px;"><center>No se encontraron datos</center></td></tr>`);
@@ -165,9 +164,9 @@ $('.table-responsive').css({'padding-top':'12px','padding-bottom':'12px', 'borde
 
 
 function editarPersona(idpersona){
+    vistacargando("m","Espere por favor")
     $.get("/editar-persona/"+idpersona, function(data){
-        console.log(data)
-      
+        vistacargando("")    
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
             return;   
@@ -191,7 +190,7 @@ function editarPersona(idpersona){
 
        
     }).fail(function(){
-       
+        vistacargando("")
         alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
     });
 }
@@ -219,9 +218,9 @@ function visualizarListado(){
 
 function btn_eliminar_tarea(idpersona){
     if(confirm('¿Quiere eliminar el registro?')){
+        vistacargando("m","Espere por favor")
         $.get("/eliminar-persona/"+idpersona, function(data){
-            console.log(data)
-          
+            vistacargando("")          
             if(data.error==true){
                 alertNotificar(data.mensaje,"error");
                 return;   
@@ -231,7 +230,7 @@ function btn_eliminar_tarea(idpersona){
             llenar_tabla_persona()
            
         }).fail(function(){
-           
+            vistacargando("")
             alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
         });
     }

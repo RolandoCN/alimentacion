@@ -38,7 +38,7 @@ $("#form_registro_horario").submit(function(e){
         $('#fecha_fin').focus()
         return
     }
-
+    vistacargando("m","Espere por favor")
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -57,7 +57,7 @@ $("#form_registro_horario").submit(function(e){
     }
   
     var FrmData=$("#form_registro_horario").serialize();
-    console.log(FrmData)
+
     $.ajax({
             
         type: tipo,
@@ -68,8 +68,8 @@ $("#form_registro_horario").submit(function(e){
         processData:false, 
 
         success: function(data){
-            console.log(data)
-            // vistacargando("");                
+
+            vistacargando("");                
             if(data.error==true){
                 alertNotificar(data.mensaje,'error');
                 return;                      
@@ -83,7 +83,7 @@ $("#form_registro_horario").submit(function(e){
         }, error:function (data) {
             console.log(data)
 
-            // vistacargando("");
+            vistacargando("");
             alertNotificar('Ocurrió un error','error');
         }
     });
@@ -102,7 +102,6 @@ function llenar_tabla_horario(){
    
     
     $.get("/listado-horario-alimentos/", function(data){
-        console.log(data)
       
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
@@ -177,9 +176,8 @@ function alimentos(id_horario, abiertaModal=null){
     $('#inicia_modal').html('')
     $('#descripcion_modal').html('')
     $('#fin_modal').html('')
-
+    
     $.get("/horario-alimentos/"+id_horario, function(data){
-        console.log(data)
         
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
@@ -265,9 +263,9 @@ function accionAcceso(id){
 }
 
 function AggQuitarAlimentoHorario(id_alim, tipo){
+    vistacargando("m","Espere por favor")
     $.get("/alimento-por-horario/"+id_alim+"/"+tipo+"/"+HorarioSeleccionado, function(data){
-        console.log(data)
-      
+        vistacargando("")
         if(data.error==true){
             if(tipo=="A"){
                 $('#check_'+id_alim).prop('checked', false)
@@ -289,14 +287,15 @@ function AggQuitarAlimentoHorario(id_alim, tipo){
             $('#check_'+id_alim).prop('checked', true)
         }
         alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
+        vistacargando("")
     });
 }
 
 
 function editarHorario(id_horario){
+    vistacargando("m","Espere por favor")
     $.get("/editar-horario/"+id_horario, function(data){
-        console.log(data)
-      
+        vistacargando("")
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
             return;   
@@ -316,7 +315,7 @@ function editarHorario(id_horario){
 
        
     }).fail(function(){
-       
+        vistacargando("")
         alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
     });
 }
@@ -344,9 +343,9 @@ function visualizarListado(){
 
 function eliminarHorario(id_horario){
     if(confirm('¿Quiere eliminar el registro?')){
+        vistacargando("m","Espere por favor")
         $.get("/eliminar-horario/"+id_horario, function(data){
-            console.log(data)
-          
+            vistacargando("")
             if(data.error==true){
                 alertNotificar(data.mensaje,"error");
                 return;   
@@ -356,7 +355,7 @@ function eliminarHorario(id_horario){
             llenar_tabla_horario()
            
         }).fail(function(){
-           
+            vistacargando("")
             alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
         });
     }

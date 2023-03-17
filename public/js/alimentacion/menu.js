@@ -17,7 +17,7 @@ $("#form_registro_menu").submit(function(e){
         $('#url').focus()
         return
     } 
-
+    vistacargando("m","Espere por favor")
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -36,7 +36,7 @@ $("#form_registro_menu").submit(function(e){
     }
   
     var FrmData=$("#form_registro_menu").serialize();
-    console.log(FrmData)
+
     $.ajax({
             
         type: tipo,
@@ -47,8 +47,7 @@ $("#form_registro_menu").submit(function(e){
         processData:false, 
 
         success: function(data){
-            console.log(data)
-            // vistacargando("");                
+            vistacargando("");                
             if(data.error==true){
                 alertNotificar(data.mensaje,'error');
                 return;                      
@@ -62,7 +61,7 @@ $("#form_registro_menu").submit(function(e){
         }, error:function (data) {
             console.log(data)
 
-            // vistacargando("");
+            vistacargando("");
             alertNotificar('Ocurrió un error','error');
         }
     });
@@ -79,7 +78,6 @@ function llenar_tabla_menu(){
    
     
     $.get("/listado-menu/", function(data){
-        console.log(data)
       
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
@@ -146,9 +144,9 @@ $('.table-responsive').css({'padding-top':'12px','padding-bottom':'12px', 'borde
 
 
 function editarMenu(id_menu){
+    vistacargando("m","Espere por favor")
     $.get("/editar-menu/"+id_menu, function(data){
-        console.log(data)
-      
+        vistacargando("")
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
             return;   
@@ -166,7 +164,7 @@ function editarMenu(id_menu){
 
        
     }).fail(function(){
-       
+        vistacargando("")
         alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
     });
 }
@@ -194,9 +192,9 @@ function visualizarListado(){
 
 function eliminarMenu(id_menu){
     if(confirm('¿Quiere eliminar el registro?')){
+        vistacargando("m","Espere por favor")
         $.get("/eliminar-menu/"+id_menu, function(data){
-            console.log(data)
-          
+            vistacargando("")
             if(data.error==true){
                 alertNotificar(data.mensaje,"error");
                 return;   
@@ -206,7 +204,7 @@ function eliminarMenu(id_menu){
             llenar_tabla_menu()
            
         }).fail(function(){
-           
+            vistacargando("")
             alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
         });
     }
