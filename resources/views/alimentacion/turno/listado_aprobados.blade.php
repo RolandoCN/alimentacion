@@ -149,8 +149,8 @@
 @endsection
 @section('scripts')
 
-<script src="/js/alimentacion/turno/listado_aprobado.js"></script>
-    
+{{-- <script src="/js/alimentacion/turno/listado_aprobado.js"></script> --}}
+<script src="{{ asset('js/alimentacion/turno/listado_aprobado.js?v='.rand())}}"></script>
 <script>
 
  

@@ -3,7 +3,7 @@
 $('#id_empleado').select2({
     placeholder: 'Seleccione una opción',
     ajax: {
-    url: '/buscar-persona',
+    url: 'buscar-persona',
     dataType: 'json',
     delay: 250,
     processResults: function (data) {
@@ -65,10 +65,10 @@ $("#form_extra").submit(function(e){
     let url_form=""
     if(AccionForm=="R"){
         tipo="POST"
-        url_form="/guardar-extra"
+        url_form="guardar-extra"
     }else{
         tipo="PUT"
-        url_form="/actualizar-extra/"+idExtraEditar
+        url_form="actualizar-extra/"+idExtraEditar
     }
   
     var FrmData=$("#form_extra").serialize();
@@ -115,7 +115,7 @@ function llenar_tabla_extra(){
 	$("#tabla_extra tbody").html(`<tr><td colspan="${num_col}" style="padding:40px; 0px; font-size:20px;"><center><span class="spinner-border" role="status" aria-hidden="true"></span><b> Obteniendo información</b></center></td></tr>`);
    
     
-    $.get("/listado-extra/", function(data){
+    $.get("listado-extra/", function(data){
       
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
@@ -137,7 +137,7 @@ function llenar_tabla_extra(){
                 order: [[ 1, "desc" ]],
                 sInfoFiltered:false,
                 language: {
-                    url: '/json/datatables/spanish.json',
+                    url: 'json/datatables/spanish.json',
                 },
                 columnDefs: [
                     { "width": "10%", "targets": 0 },
@@ -204,7 +204,7 @@ function visualizarListado(){
 function elimina_extra(idextra){
     if(confirm('¿Quiere eliminar el registro?')){
         vistacargando("m","Espere por favor")
-        $.get("/eliminar-extra/"+idextra, function(data){
+        $.get("eliminar-extra/"+idextra, function(data){
             vistacargando("")
             if(data.error==true){
                 alertNotificar(data.mensaje,"error");

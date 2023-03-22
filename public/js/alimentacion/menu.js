@@ -29,10 +29,10 @@ $("#form_registro_menu").submit(function(e){
     let url_form=""
     if(AccionForm=="R"){
         tipo="POST"
-        url_form="/guardar-menu"
+        url_form="guardar-menu"
     }else{
         tipo="PUT"
-        url_form="/actualizar-menu/"+idMenuEditar
+        url_form="actualizar-menu/"+idMenuEditar
     }
   
     var FrmData=$("#form_registro_menu").serialize();
@@ -77,7 +77,7 @@ function llenar_tabla_menu(){
 	$("#tabla_menu tbody").html(`<tr><td colspan="${num_col}" style="padding:40px; 0px; font-size:20px;"><center><span class="spinner-border" role="status" aria-hidden="true"></span><b> Obteniendo información</b></center></td></tr>`);
    
     
-    $.get("/listado-menu/", function(data){
+    $.get("listado-menu/", function(data){
       
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
@@ -99,7 +99,7 @@ function llenar_tabla_menu(){
                 order: [[ 1, "desc" ]],
                 sInfoFiltered:false,
                 language: {
-                    url: '/json/datatables/spanish.json',
+                    url: 'json/datatables/spanish.json',
                 },
                 columnDefs: [
                     { "width": "20%", "targets": 0 },
@@ -145,7 +145,7 @@ $('.table-responsive').css({'padding-top':'12px','padding-bottom':'12px', 'borde
 
 function editarMenu(id_menu){
     vistacargando("m","Espere por favor")
-    $.get("/editar-menu/"+id_menu, function(data){
+    $.get("editar-menu/"+id_menu, function(data){
         vistacargando("")
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
@@ -193,7 +193,7 @@ function visualizarListado(){
 function eliminarMenu(id_menu){
     if(confirm('¿Quiere eliminar el registro?')){
         vistacargando("m","Espere por favor")
-        $.get("/eliminar-menu/"+id_menu, function(data){
+        $.get("eliminar-menu/"+id_menu, function(data){
             vistacargando("")
             if(data.error==true){
                 alertNotificar(data.mensaje,"error");

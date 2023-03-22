@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 
-<link rel="stylesheet" href="../bower_components/fullcalendar/dist/fullcalendar.min.css">
-<link rel="stylesheet" href="../bower_components/fullcalendar/dist/fullcalendar.print.min.css" media="print">
-
+<link rel="stylesheet" href="{{asset('bower_components/fullcalendar/dist/fullcalendar.min.css')}}">
+<link rel="stylesheet" href="{{asset('bower_components/fullcalendar/dist/fullcalendar.print.min.css')}}" media="print">
+ 
 <style>
     .content_calendario{
         overflow-x: auto;
@@ -129,10 +129,11 @@
     </section>
 @endsection
 @section('scripts')
-<script src="../bower_components/moment/moment.js"></script>
-<script src="../bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
-<script src="../bower_components/fullcalendar/dist/locale/es.js"></script>
-<script src="/js/alimentacion/turno/registro.js"></script>
+<script src="{{asset('bower_components/moment/moment.js')}}"></script>
+<script src="{{asset('bower_components/fullcalendar/dist/fullcalendar.min.js')}}"></script>
+<script src="{{asset('bower_components/fullcalendar/dist/locale/es.js')}}"></script>
+{{-- <script src="/js/alimentacion/turno/registro.js"></script> --}}
+<script src="{{ asset('js/alimentacion/turno/registro.js?v='.rand())}}"></script>
     
 <script>
 

@@ -28,7 +28,7 @@ function buscarTurnos(){
     var num_col = $("#table_persona thead tr th").length; //obtenemos el numero de columnas de la tabla
 	$("#table_persona tbody").html(`<tr><td colspan="${num_col}" style="padding:40px; 0px; font-size:20px;"><center><span class="spinner-border" role="status" aria-hidden="true"></span><b> Obteniendo información</b></center></td></tr>`);
 
-    $.get('/turno-fecha/'+fecha_selecc+'/'+idalimento, function(data){
+    $.get('turno-fecha/'+fecha_selecc+'/'+idalimento, function(data){
         if(data.error==true){
 			$("#table_persona tbody").html('');
 			$("#table_persona tbody").html(`<tr><td colspan="${num_col}">No existen registros</td></tr>`);
@@ -111,7 +111,7 @@ function aprobarTurno(){
     
     $.ajax({
         type: "POST",
-        url: '/aprobar-turno',
+        url: 'aprobar-turno',
         data: { _token: $('meta[name="csrf-token"]').attr('content'),
         array_turnos:array_turnos, comida_sel:comida_sel},
         success: function(data){
@@ -142,7 +142,7 @@ function cargar_estilos_datatable(idtabla){
 		pageLength: 10,
 		sInfoFiltered:false,
 		language: {
-			url: '/json/datatables/spanish.json',
+			url: 'json/datatables/spanish.json',
 		},
 	}); 
 	$('.collapse-link').click();

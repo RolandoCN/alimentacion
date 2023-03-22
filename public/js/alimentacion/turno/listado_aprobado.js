@@ -34,8 +34,8 @@ function buscarTurnos(){
     $('#total_turno').html('')
     $('#usuario_apr').html('')
     $('#fecha_apr').html('')
-
-    $.get('/turno-fecha-aprob/'+fecha_selecc+'/'+idalimento, function(data){
+ 
+    $.get('turno-fecha-aprob/'+fecha_selecc+'/'+idalimento, function(data){
         if(data.error==true){
 			$("#table_persona tbody").html('');
 			$("#table_persona tbody").html(`<tr><td colspan="${num_col}">No existen registros</td></tr>`);
@@ -116,7 +116,7 @@ function descargarAprobacion(){
     
     $.ajax({
         type: "POST",
-        url: '/descargar-aprobacion',
+        url: 'descargar-aprobacion',
         data: { _token: $('meta[name="csrf-token"]').attr('content'),
         fecha_sele:fecha_sele, comida_sel:comida_sel},
         success: function(data){
@@ -127,7 +127,7 @@ function descargarAprobacion(){
                 return;                      
             }
             alertNotificar("El documento se descargará en unos segundos...","success");
-            window.location.href="/descargar-reporte/"+data.pdf
+            window.location.href="descargar-reporte/"+data.pdf
                             
         }, error:function (data) {
             vistacargando("");
@@ -147,7 +147,7 @@ function cargar_estilos_datatable(idtabla){
 		pageLength: 10,
 		sInfoFiltered:false,
 		language: {
-				url: '/json/datatables/spanish.json',
+				url: 'json/datatables/spanish.json',
 		},
 	}); 
 	$('.collapse-link').click();

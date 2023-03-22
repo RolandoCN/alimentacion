@@ -45,10 +45,10 @@ $("#form_registro_empleado").submit(function(e){
     let url_form=""
     if(AccionForm=="R"){
         tipo="POST"
-        url_form="/guardar-empleado"
+        url_form="guardar-empleado"
     }else{
         tipo="PUT"
-        url_form="/actualizar-empleado/"+idEmpleadoEditar
+        url_form="actualizar-empleado/"+idEmpleadoEditar
     }
   
     var FrmData=$("#form_registro_empleado").serialize();
@@ -95,7 +95,7 @@ function llenar_tabla_empleado(){
 	$("#tabla_empleado tbody").html(`<tr><td colspan="${num_col}" style="padding:40px; 0px; font-size:20px;"><center><span class="spinner-border" role="status" aria-hidden="true"></span><b> Obteniendo información</b></center></td></tr>`);
    
     
-    $.get("/listado-empleado/", function(data){
+    $.get("listado-empleado/", function(data){
       
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
@@ -117,7 +117,7 @@ function llenar_tabla_empleado(){
                 order: [[ 1, "desc" ]],
                 sInfoFiltered:false,
                 language: {
-                    url: '/json/datatables/spanish.json',
+                    url: 'json/datatables/spanish.json',
                 },
                 columnDefs: [
                     { "width": "10%", "targets": 0 },
@@ -165,7 +165,7 @@ $('.table-responsive').css({'padding-top':'12px','padding-bottom':'12px', 'borde
 
 function editarEmpleado(id_empleado){
     vistacargando("m","Espere por favor")
-    $.get("/editar-empleado/"+id_empleado, function(data){
+    $.get("editar-empleado/"+id_empleado, function(data){
         vistacargando("")
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
@@ -219,7 +219,7 @@ function visualizarListado(){
 function btn_eliminar_tarea(id_empleado){
     if(confirm('¿Quiere eliminar el registro?')){
         vistacargando("m","Espere por favor")
-        $.get("/eliminar-empleado/"+id_empleado, function(data){
+        $.get("eliminar-empleado/"+id_empleado, function(data){
             vistacargando("")
             if(data.error==true){
                 alertNotificar(data.mensaje,"error");

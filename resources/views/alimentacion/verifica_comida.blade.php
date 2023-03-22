@@ -10,17 +10,17 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
-    <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ asset('bower_components/bootstrap/dist/css/bootstrap.min.css')}}">
 
-    <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ asset('bower_components/font-awesome/css/font-awesome.min.css')}}">
 
-    <link rel="stylesheet" href="../../bower_components/Ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="{{ asset('bower_components/Ionicons/css/ionicons.min.css')}}">
 
     <link href="{{asset('bower_components/pnotify/dist/pnotify.css')}}" rel="stylesheet">
     <link href="{{asset('bower_components/pnotify/dist/pnotify.buttons.css')}}" rel="stylesheet">
     <link href="{{asset('bower_components/pnotify/dist/pnotify.nonblock.css')}}" rel="stylesheet">
 
-    <link rel="stylesheet" href="../../dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="{{ asset('dist/css/AdminLTE.min.css')}}">
 
 
     <style>
@@ -43,7 +43,7 @@
         <div class="col-md-8 " style="margin-top: 100px">
             <div class="box box-primary">
                 <div class="box-body box-profile">
-                    <a href="/"><img class="profile-user-img img-responsive img-circle" src="../../dist/img/logomsp.png" alt="User profile picture"></a>
+                    <a href="{{asset('/')}}"><img class="profile-user-img img-responsive img-circle" src="{{ asset('dist/img/logomsp.png')}}" alt="User profile picture"></a>
                     <h3 class="profile-username text-center">Hospital General Dr. Napoleón Dávila Córdova</h3>
                     <p class="text-muted text-center">Sistema Alimentación</p>
                     <div class="" style="margin-bottom:12px;text-align:center" >
@@ -156,9 +156,9 @@
     </div>
      {{-- fin modal detalle aprobado --}}
     
-    <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="{{ asset('bower_components/jquery/dist/jquery.min.js')}}"></script>
 
-    <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="{{ asset('bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
         {{-- PNotify --}}
         <script src="{{asset('bower_components/pnotify/dist/pnotify.js')}}"></script>
         <script src="{{asset('bower_components/pnotify/dist/pnotify.buttons.js')}}"></script>

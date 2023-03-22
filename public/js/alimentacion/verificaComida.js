@@ -26,7 +26,7 @@ $("#form_valida").submit(function(e){
     $.ajax({
            
        type: "POST",
-       url: "/valida-comida-empleado",
+       url: "valida-comida-empleado",
        method: "POST",             
        data: FrmData,      
        

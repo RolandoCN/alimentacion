@@ -4,7 +4,7 @@ function detalleTurno(id_empleado){
     vistacargando("m", "Espere por favor")
    
     let eventosArray=[]
-    $.get('/fullcalender_/'+id_empleado, function(data){
+    $.get('fullcalender_/'+id_empleado, function(data){
      
         vistacargando("")
         eventosArray=data.data
@@ -94,7 +94,7 @@ function verCale(){
                     });
                     $.ajax({
                         type: "POST",
-                        url: '/eliminar-turno-comida',
+                        url: 'eliminar-turno-comida',
                         data: {
                             id: calEvent.id,
                             type: 'delete'
@@ -133,7 +133,7 @@ function verCale(){
                 });
 
                 $.ajax({
-                    url:  '/actualizar-turno-comida',
+                    url:  'actualizar-turno-comida',
                     data: {
                         title: event.title,
                         start: start,
@@ -200,7 +200,7 @@ function guardarTurno(){
 
     $.ajax({
         type: "POST",
-            url: '/asignar-turno',
+            url: 'asignar-turno',
             data:{ _token: $('meta[name="csrf-token"]').attr('content'),
            Turno:idTurno,fecha_inicio:AF_ini, fecha_fin:AF_fin, idpers:PersonaSeleccionada},
     
@@ -234,7 +234,7 @@ function guardarTurno(){
 $('#cmb_persona').select2({
     placeholder: 'Seleccione una opción',
     ajax: {
-    url: '/buscar-persona',
+    url: 'buscar-persona',
     dataType: 'json',
     delay: 250,
     processResults: function (data) {
@@ -261,7 +261,7 @@ function buscarPersona(){
     
     // limpiarCampos()
 
-    $.get('/info-persona/'+idPers, function(data){
+    $.get('info-persona/'+idPers, function(data){
         if(data.error==true){
 			$("#table_persona tbody").html('');
 			$("#table_persona tbody").html(`<tr><td colspan="${num_col}">No existen registros</td></tr>`);
@@ -309,7 +309,7 @@ function cargar_estilos_datatable(idtabla){
 		pageLength: 10,
 		sInfoFiltered:false,
 		language: {
-				url: '/json/datatables/spanish.json',
+				url: 'json/datatables/spanish.json',
 		},
 	}); 
 	$('.collapse-link').click();

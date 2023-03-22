@@ -49,7 +49,7 @@ function buscarTurnos(){
     $('#usuario_rep').html('')
     $('#fecha_fin_rep').html('')
     
-    $.get('/alimento-servido-indiv/'+fecha_inicial+'/'+fecha_final+"/"+id_empleado, function(data){
+    $.get('alimento-servido-indiv/'+fecha_inicial+'/'+fecha_final+"/"+id_empleado, function(data){
         if(data.error==true){
 			$("#table_persona tbody").html('');
 			$("#table_persona tbody").html(`<tr><td colspan="${num_col}">No existen registros</td></tr>`);
@@ -130,7 +130,7 @@ function descargarAprobacion(){
     
     $.ajax({
         type: "POST",
-        url: '/reporte-individual',
+        url: 'reporte-individual',
         data: { _token: $('meta[name="csrf-token"]').attr('content'),
         fecha_inicial_rep:fecha_inicial_rep, fecha_final_rep:fecha_final_rep, id_empleado_rep,id_empleado_rep },
         success: function(data){
@@ -141,7 +141,7 @@ function descargarAprobacion(){
                 return;                      
             }
             alertNotificar("El documento se descargará en unos segundos...","success");
-            window.location.href="/descargar-reporte/"+data.pdf
+            window.location.href="descargar-reporte/"+data.pdf
                             
         }, error:function (data) {
             vistacargando("");
@@ -161,7 +161,7 @@ function cargar_estilos_datatable(idtabla){
 		pageLength: 10,
 		sInfoFiltered:false,
 		language: {
-			url: '/json/datatables/spanish.json',
+			url: 'json/datatables/spanish.json',
 		},
 	}); 
 	$('.collapse-link').click();
@@ -185,7 +185,7 @@ function cancelar(){
 $('#id_empleado').select2({
     placeholder: 'Seleccione una opción',
     ajax: {
-    url: '/buscar-persona',
+    url: 'buscar-persona',
     dataType: 'json',
     delay: 250,
     processResults: function (data) {
