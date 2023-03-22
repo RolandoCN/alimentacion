@@ -29,10 +29,10 @@ $("#form_registro_user").submit(function(e){
     let url_form=""
     if(AccionForm=="R"){
         tipo="POST"
-        url_form="/guardar-usuario"
+        url_form="guardar-usuario"
     }else{
         tipo="PUT"
-        url_form="/actualizar-usuario/"+idUserEditar
+        url_form="actualizar-usuario/"+idUserEditar
     }
     
     vistacargando("m","Espere por favor")
@@ -81,7 +81,7 @@ function llenar_tabla_usuario(){
 	$("#tabla_usuario tbody").html(`<tr><td colspan="${num_col}" style="padding:40px; 0px; font-size:20px;"><center><span class="spinner-border" role="status" aria-hidden="true"></span><b> Obteniendo información</b></center></td></tr>`);
    
     
-    $.get("/listado-usuario/", function(data){
+    $.get("listado-usuario/", function(data){
        
       
         if(data.error==true){
@@ -104,7 +104,7 @@ function llenar_tabla_usuario(){
                 order: [[ 1, "desc" ]],
                 sInfoFiltered:false,
                 language: {
-                    url: '/json/datatables/spanish.json',
+                    url: 'json/datatables/spanish.json',
                 },
                 columnDefs: [
                     { "width": "10%", "targets": 0 },
@@ -156,7 +156,7 @@ $('.table-responsive').css({'padding-top':'12px','padding-bottom':'12px', 'borde
 
 function editarUsuario(idusuario){
     vistacargando("m","Espere por favor")
-    $.get("/editar-usuario/"+idusuario, function(data){
+    $.get("editar-usuario/"+idusuario, function(data){
        
         vistacargando("")
         if(data.error==true){
@@ -207,7 +207,7 @@ function visualizarListado(){
 function eliminarUsuario(idusuario){
     vistacargando("m","Espere por favor")
     if(confirm('¿Quiere eliminar el registro?')){
-        $.get("/eliminar-usuario/"+idusuario, function(data){
+        $.get("eliminar-usuario/"+idusuario, function(data){
             vistacargando("")
             if(data.error==true){
                 alertNotificar(data.mensaje,"error");

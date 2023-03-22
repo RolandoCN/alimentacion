@@ -47,7 +47,10 @@
 		<div class="container-2">
 			<center><h1 id="modal_cargando_title">Cargando</h1></center>
 			{{-- <div class="loader3C" id="loader">Loading...</div> --}}
-			<div align="center" id="loader"><img width="7%" src="/img/cargargif.gif" alt=""></div>
+
+			{{-- <img src="{{ asset('dist/img/user2-160x160.jpg')}}" class="img-circle" alt="User Image"> --}}
+
+			<div align="center" id="loader"><img width="7%" src="{{ asset('img/cargargif.gif')}}"></div>
 		</div>
 	</div>
 </div>
