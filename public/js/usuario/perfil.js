@@ -19,7 +19,7 @@ function cargaInfoPerfil(){
     $('#user_informacion').html(spinner+spinner+spinner);
     $('#perfil_informacion').html(spinner+spinner+spinner);
     // cargaDato()
-    $.get('/dato-perfil',function(data){
+    $.get('dato-perfil',function(data){
         console.log(data)
         
         $('#cedula_informacion').html(data.data['persona'].tx_numident);
@@ -79,7 +79,7 @@ function mostrar_actualizar(){
     $('#celular_perfil').val('');
     $('#foto_perfil').val('');
 
-    $.get('/dato-perfil',function(data){
+    $.get('dato-perfil',function(data){
         
         $('#correo_perfil').val(data.data['persona'].tx_email);
         $('#direccion_perfil').val(data.data['persona'].tx_direccion);
@@ -139,7 +139,7 @@ $('#form_perfil_').submit(function (e) {
     });
     
     $.ajax({
-        url:'/edit-perfil',
+        url:'edit-perfil',
         method: 'POST',
         data: new FormData(this),
         contentType: false,
@@ -202,7 +202,7 @@ $('#form_cambio_claves').submit(function (e) {
 
     $.ajax({
         type: "POST",
-            url: '/cambiar-clave',
+            url: 'cambiar-clave',
             data: new FormData(this),
             contentType: false,
             cache: false,
