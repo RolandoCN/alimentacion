@@ -158,7 +158,7 @@
 
         $.ajax({
             type: "POST",
-                url: '/cambiar-clave',
+                url: 'cambiar-clave',
                 data:{ _token: $('meta[name="csrf-token"]').attr('content'),
                 clave_actual:clave_actual,clave_nueva:clave_nueva,clave_nueva_confirm:clave_nueva_confirm},
         
