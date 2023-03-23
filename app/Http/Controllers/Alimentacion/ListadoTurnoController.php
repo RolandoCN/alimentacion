@@ -234,13 +234,13 @@ class ListadoTurnoController extends Controller
 
                 $fecha_turno=$valida_estado->start;
             
-                //validamos para no permitir aprobar turnos con fecha diferente a la actual
-                // if(strtotime($fecha_turno) != strtotime(date('Y-m-d'))){
-                //     return response()->json([
-                //         'error'=>true,
-                //         'mensaje'=>'La fecha de aprobación no puede diferente a la fecha actual'
-                //     ]);
-                // }
+                //validamos para no permitir aprobar turnos con fecha anteriot a la actual
+                if(strtotime($fecha_turno) < strtotime(date('Y-m-d'))){
+                    return response()->json([
+                        'error'=>true,
+                        'mensaje'=>'La fecha de aprobación no puede menor a la fecha actual'
+                    ]);
+                }
 
                 $id_comida=$request->comida_sel;
 
@@ -283,7 +283,7 @@ class ListadoTurnoController extends Controller
                     'error'=>false,
                     'mensaje'=>'Información aprobada exitosamente'
                 ]);
-
+    
             
             }catch (\Throwable $e) {
                 DB::Rollback();
