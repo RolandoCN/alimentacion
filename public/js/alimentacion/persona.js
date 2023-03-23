@@ -89,6 +89,7 @@ function limpiarCampos(){
     $('#nombres').val('')
     $('#apellidos').val('')
     $('#telefono').val('')
+    $('#email').val('')
 }
 
 function llenar_tabla_persona(){
@@ -181,7 +182,7 @@ function editarPersona(idpersona){
         $('#nombres').val(data.resultado.nombres)
         $('#apellidos').val(data.resultado.apellidos)
         $('#telefono').val(data.resultado.telefono)
-       
+        $('#email').val(data.resultado.email)
 
         visualizarForm('E')
         globalThis.idPersonaEditar=idpersona

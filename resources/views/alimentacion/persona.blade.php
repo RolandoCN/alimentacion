@@ -121,11 +121,21 @@
 
                             <label for="inputPassword3" class="col-sm-3 control-label">Teléfono</label>
                             <div class="col-sm-8">
-                                <input type="text" minlength="1" maxlength="10" onKeyPress="if(this.value.length==10) return false;"  class="form-control" id="telefono" name="telefono" placeholder="Teléfono">
+                                <input type="number" minlength="1" maxlength="10" onKeyPress="if(this.value.length==10) return false;"  class="form-control" id="telefono" name="telefono" placeholder="Teléfono">
                                 <span class="invalid-feedback" role="alert" style="color:red; display:none
                                 " id="error_telefono">
                                     <strong id="txt_error_telefonos"></strong>
                                 </span>
+                            </div>
+                           
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="inputPassword3" class="col-sm-3 control-label">Correo</label>
+                            <div class="col-sm-8">
+                                <input type="text" minlength="1" maxlength="100" onKeyPress="if(this.value.length==100) return false;"  class="form-control" id="email" name="email" placeholder="Email">
+                                
                             </div>
                            
                         </div>

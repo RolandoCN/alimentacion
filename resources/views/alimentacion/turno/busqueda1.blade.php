@@ -39,11 +39,12 @@
                             <div class="box-body">
                                 <div id="smsAlert"></div>
                                 <div class="form-group">
-                                <label for="inputEmail3" id="label_crit" class="col-sm-2 control-label" >Criterio:</label>
-                                <div class="col-sm-10" style="font-weight: normal;">                     
-                                    <select data-placeholder="Busqueda por Cédula o Nombres de Persona" style="width: 100%;" class="form-control select2" onchange="buscarPersona()" id="cmb_persona" name="cmb_persona">
+                                    <label for="inputEmail3" id="label_crit" class="col-sm-2 control-label" >Criterio:</label>
+                                    <div class="col-sm-10" style="font-weight: normal;">                     
+                                        <select data-placeholder="Busqueda por Cédula o Nombres de Persona" style="width: 100%;" class="form-control select2" onchange="buscarPersona()" id="cmb_persona" name="cmb_persona">
+                                            
                                                 
-                                    </select>
+                                        </select>
                                 </div>
                                 </div>
                             </div>

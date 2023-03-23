@@ -231,30 +231,16 @@ class ListadoTurnoController extends Controller
                 $valida_estado=Turno::whereIn('id', $request->array_turnos)
                 ->where('estado','!=', 'E') //solo si no ha sido eliminado
                 ->first();
-            
-                // if(sizeof($valida_estado)==0){
-                //     return response()->json([
-                //         'error'=>true,
-                //         'mensaje'=>'Ya no se puede aprobar los turnos'
-                //     ]);
-                // }
-
-                // if(sizeof($valida_estado) != sizeof($request->array_turnos)){
-                //     return response()->json([
-                //         'error'=>true,
-                //         'mensaje'=>'Ya fué aprobado el turno'
-                //     ]);
-                // }
 
                 $fecha_turno=$valida_estado->start;
             
                 //validamos para no permitir aprobar turnos con fecha diferente a la actual
-                if(strtotime($fecha_turno) != strtotime(date('Y-m-d'))){
-                    return response()->json([
-                        'error'=>true,
-                        'mensaje'=>'La fecha de aprobación no puede diferente a la fecha actual'
-                    ]);
-                }
+                // if(strtotime($fecha_turno) != strtotime(date('Y-m-d'))){
+                //     return response()->json([
+                //         'error'=>true,
+                //         'mensaje'=>'La fecha de aprobación no puede diferente a la fecha actual'
+                //     ]);
+                // }
 
                 $id_comida=$request->comida_sel;
 

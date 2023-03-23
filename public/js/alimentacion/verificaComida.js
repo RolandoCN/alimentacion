@@ -57,6 +57,7 @@ $("#form_valida").submit(function(e){
            //bloqueamos el boton de cerrar x 10 segundos para que le de chance de verficar la aprobacion
             setTimeout(() => {
                 $('#btn_cancelar').prop('disabled',false)
+                cerrar()
             }, "10000");
 
             $('#btn_cancelar').prop('disabled',true)

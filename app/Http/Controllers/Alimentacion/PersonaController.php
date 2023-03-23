@@ -91,6 +91,7 @@ class PersonaController extends Controller
             $guarda_persona->nombres=$request->nombres;
             $guarda_persona->apellidos=$request->apellidos;
             $guarda_persona->telefono=$request->telefono;
+            $guarda_persona->email=$request->email;
             $guarda_persona->id_usuario_reg=auth()->user()->id;
             $guarda_persona->fecha_reg=date('Y-m-d H:i:s');
             $guarda_persona->estado="A";
@@ -169,6 +170,7 @@ class PersonaController extends Controller
             $guarda_persona->apellidos=$request->apellidos;
             $guarda_persona->telefono=$request->telefono;
             $guarda_persona->id_usuario_act=auth()->user()->id;
+            $guarda_persona->email=$request->email;
             $guarda_persona->fecha_actualiza=date('Y-m-d H:i:s');
             $guarda_persona->estado="A";
 

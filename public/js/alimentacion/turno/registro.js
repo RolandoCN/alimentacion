@@ -73,7 +73,7 @@ function verCale(){
         // events:dataArray,
         height: 650,
         width:95,
-       
+        
        
         dayClick: function (date, jsEvent, view) {
           
