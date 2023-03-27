@@ -17,6 +17,7 @@ class ListadoTurnoController extends Controller
 {
     //vista para buscar y aprobar 
     public function index(){
+
         $alimento=DB::table('alimento')->where('estado','A')->get();
         return view('alimentacion.turno.listado',[
             "alimento"=>$alimento
@@ -288,7 +289,7 @@ class ListadoTurnoController extends Controller
                 //mandamos a generar el documento para enviarlo x correo
                 $generaPdf=$this->descargarAprobacionFechaInd($request);
                 if($generaPdf['error']==false){
-                    log::info($generaPdf['pdf']);
+                    
                     //se creo lo enviamos
                     $fecha_apr=date('d-m-Y',strtotime($request->fecha_sele));
                     $archivo=Storage::disk('public')->get($generaPdf['pdf']);

@@ -243,7 +243,7 @@ function resetearPassword(idusuario){
         if (isConfirm) { 
             //mmandamos a resetear
             vistacargando("m","Espere por favor")
-            $.get("/resetear-password/"+idusuario, function(data){
+            $.get("resetear-password/"+idusuario, function(data){
                 vistacargando("")
                 if(data.error==true){
                     alertNotificar(data.mensaje,"error");

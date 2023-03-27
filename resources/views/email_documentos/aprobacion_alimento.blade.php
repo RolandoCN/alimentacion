@@ -24,11 +24,11 @@
                 <h2>HOSPITAL DR. NAPOLEÓN DÁVILA CÓRDOVA</h2>
                 <hr class="bg-black">
 
-                <h3> APROBACIÓN DE {{$comida}} del día {{$fecha_apr}}</h3>
+                <h3> Aprobación de {{$comida}} del día {{$fecha_apr}}</h3>
 
                 <p>Usted ha recibido el documento de aprobación de  {{$comida}} del día {{$fecha_apr}} </p>
 
-                <p><b>Correo generado desde sistema, contacto a {{$correo}}</b></p>
+                <p><b>Correo generado desde sistema, contacto a {{env('MAIL_FROM_ADDRESS')}}</b></p>
                 
                
             </div>
