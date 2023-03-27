@@ -43,6 +43,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css">
 
     <link rel="stylesheet" href="{{asset('css/spinners.css')}}">
+    <link rel="icon" href="https://seeklogo.com/images/M/msp-ministerio-de-salud-publica-logo-867969877C-seeklogo.com.png" sizes="32x32" />
 
     <style>
 

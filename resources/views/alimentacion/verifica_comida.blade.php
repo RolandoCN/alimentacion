@@ -21,6 +21,8 @@
     <link href="{{asset('bower_components/pnotify/dist/pnotify.nonblock.css')}}" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('dist/css/AdminLTE.min.css')}}">
+    
+    <link rel="icon" href="https://seeklogo.com/images/M/msp-ministerio-de-salud-publica-logo-867969877C-seeklogo.com.png" sizes="32x32" />
 
 
     <style>
@@ -164,6 +166,7 @@
         <script src="{{asset('bower_components/pnotify/dist/pnotify.buttons.js')}}"></script>
 
     <script src="{{ asset('js/alimentacion/verificaComida.js?v='.rand())}}"></script>
+
 
     <script>
         function mueveReloj(){

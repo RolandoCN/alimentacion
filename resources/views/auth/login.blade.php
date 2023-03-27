@@ -5,6 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SisAlim | Log in</title>
+    
+    <link rel="icon" href="https://seeklogo.com/images/M/msp-ministerio-de-salud-publica-logo-867969877C-seeklogo.com.png" sizes="32x32" />
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"

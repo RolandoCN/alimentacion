@@ -19,6 +19,8 @@ $("#form_valida").submit(function(e){
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
+    console.log("token "+$('meta[name="csrf-token"]').attr('content'))
     
     limpiar()
     var FrmData=$("#form_valida").serialize();
@@ -63,10 +65,14 @@ $("#form_valida").submit(function(e){
             $('#btn_cancelar').prop('disabled',true)
          
        }, error:function (data) {
-           console.log(data)
+            console.log(data)
+            alertNotificar('Ocurrió un error','error');
+            if(data.status==419){
+                window.location.href=""
+            }
 
            vistacargando("");
-           alertNotificar('Ocurrió un error','error');
+           
        }
    });
 })
