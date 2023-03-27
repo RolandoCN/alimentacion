@@ -215,6 +215,7 @@ class TurnoController extends Controller
                         'dataArray'=>[]
                     ]);
                 }
+                dd("ss");
                 $Turno->estado="E";
                 $Turno->id_usuario_act=auth()->user()->id;
                 $Turno->fecha_act=date('Y-m-d H:i:s');
@@ -310,7 +311,6 @@ class TurnoController extends Controller
                     ]);
                 }
                         
-
                 if($event->save()){
 
                     //primero eliminamos las comidas asociadas al horario del turno
