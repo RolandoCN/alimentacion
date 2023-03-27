@@ -11,6 +11,7 @@ use DB;
 use PDF;
 use Storage;
 use SplFileInfo;
+use Mail;
 
 class ListadoTurnoController extends Controller
 {
@@ -160,10 +161,10 @@ class ListadoTurnoController extends Controller
             ->get();
 
             if(sizeof($turnos)==0){
-                return response()->json([
+                return [
                     'error'=>true,
                     'mensaje'=>'Ocurrió un error'
-                ]);
+                ];
             }
 
             $nombrePDF="reporte_listado_comida_".date('d-m-Y',strtotime($turnos[0]->fecha_turno)).".pdf";
@@ -177,15 +178,15 @@ class ListadoTurnoController extends Controller
             Storage::disk('public')->put(str_replace("", "",$nombrePDF), $estadoarch);
             $exists_destino = Storage::disk('public')->exists($nombrePDF); 
             if($exists_destino){ 
-                return response()->json([
+                return [
                     'error'=>false,
                     'pdf'=>$nombrePDF
-                ]);
+                ];
             }else{
-                return response()->json([
+                return [
                     'error'=>true,
                     'mensaje'=>'No se pudo crear el documento'
-                ]);
+                ];
             }
 
             // return $crearpdf->stream($nombre."_".date('YmdHis').'.pdf');
@@ -195,10 +196,10 @@ class ListadoTurnoController extends Controller
 
         }catch (\Throwable $e) {
             Log::error('ListadoTurnoController => descargarAprobacionFechaInd => mensaje => '.$e->getMessage());
-            return response()->json([
+            return [
                 'error'=>true,
                 'mensaje'=>'Ocurrió un error, intentelo más tarde'
-            ]);
+            ];
             
         }
     }
@@ -222,7 +223,7 @@ class ListadoTurnoController extends Controller
 
    
     public function aprobacionTurno(Request $request){
-        
+        // dd($request->all());
         $transaction=DB::transaction(function() use($request){ 
             try{
               
@@ -279,15 +280,69 @@ class ListadoTurnoController extends Controller
                 ->update(['estado'=>'Aprobado', 'id_usuario_aprueba'=>auth()->user()->id,
                 'fecha_aprobacion'=>date('Y-m-d H:i:s')]);
 
-                return response()->json([
-                    'error'=>false,
-                    'mensaje'=>'Información aprobada exitosamente'
-                ]);
+                //informacion de la comida
+                $comida_con=DB::table('alimento')
+                ->where('idalimento',$request->comida_sel)
+                ->first();
+                $comida=$comida_con->descripcion;
+                //mandamos a generar el documento para enviarlo x correo
+                $generaPdf=$this->descargarAprobacionFechaInd($request);
+                if($generaPdf['error']==false){
+                    log::info($generaPdf['pdf']);
+                    //se creo lo enviamos
+                    $fecha_apr=date('d-m-Y',strtotime($request->fecha_sele));
+                    $archivo=Storage::disk('public')->get($generaPdf['pdf']);
+                    $nombrearchivo=$generaPdf['pdf'];
+                    
+                    //consultamos el correo donde enviaremos el documento
+                    $correo_param=DB::table('al_parametros')
+                    ->where('codigo','ECAA')->first();
+                    if(!is_null($correo_param)){
+                        $correo_db=$correo_param->valor;
+                    }else{
+                        $correo_db="juanrolandocn@gmail.com";
+                    }
+
+                    
+                    try{
+                        Mail::send('email_documentos.aprobacion_alimento', ['comida'=>$comida,"fecha_apr"=>$fecha_apr, "correo"=>$correo_db], function ($m) use ($correo_db,$archivo, $nombrearchivo, $comida, $fecha_apr) {
+                            $m->to($correo_db)
+                            ->subject("Aprobación de ".$comida." del ".$fecha_apr)
+                            
+                            ->attachData($archivo, $nombrearchivo, [
+                                'mime' => 'application/pdf',
+                            ]);
+                           
+                        });  
+                       
+                    
+
+                        $archivo=Storage::disk('public')->delete($nombrearchivo);
+
+                        return response()->json([
+                            'error'=>false,
+                            'mensaje'=>'Información aprobada y enviada exitosamente'
+                        ]);
+
+                    } catch (\Throwable $th) {
+                       
+                        $archivo=Storage::disk('public')->delete($nombrearchivo);
+
+                        Log::error('ListadoTurnoController, enviarCorreoAprobacion '.$th->getMessage()." Linea ".$th->getLine());
+
+                        return response()->json([
+                            'error'=>false,
+                            'mensaje'=>'Información fué aprobada exitosamente, pero no se pudo enviar al correo '
+                        ]);
+                    }
+                }
+
+              
     
             
             }catch (\Throwable $e) {
                 DB::Rollback();
-                Log::error('ListadoTurnoController => aprobacionTurno => mensaje => '.$e->getMessage());
+                Log::error('ListadoTurnoController => aprobacionTurno => mensaje => '.$e->getMessage().' linea => '.$e->getLine());
                 return response()->json([
                     'error'=>true,
                     'mensaje'=>'Ocurrió un error'

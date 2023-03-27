@@ -100,6 +100,7 @@ function aprobarTurno(){
     console.log(array_turnos)
 
     var comida_sel=$('#idalimento').val()
+    var fecha_sele=$('#txt_fecha').val()
 
     vistacargando("m","Espere por favor");           
 
@@ -108,12 +109,12 @@ function aprobarTurno(){
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-    
+     
     $.ajax({
         type: "POST",
         url: 'aprobar-turno',
         data: { _token: $('meta[name="csrf-token"]').attr('content'),
-        array_turnos:array_turnos, comida_sel:comida_sel},
+        array_turnos:array_turnos, comida_sel:comida_sel, fecha_sele:fecha_sele},
         success: function(data){
            
             vistacargando("");                
