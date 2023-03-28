@@ -299,24 +299,29 @@ class ListadoTurnoController extends Controller
                     $correo_param=DB::table('al_parametros')
                     ->where('codigo','ECAA')->first();
                     if(!is_null($correo_param)){
-                        $correo_db=$correo_param->valor;
+                        $correo_db_par=$correo_param->valor;
                     }else{
-                        $correo_db="juanrolandocn@gmail.com";
+                        $correo_db_par="juanrolandocn@gmail.com";
                     }
-
+                    //correos parametrizados
+                    $correos_enviar=explode(",", $correo_db_par);
                     
                     try{
-                        Mail::send('email_documentos.aprobacion_alimento', ['comida'=>$comida,"fecha_apr"=>$fecha_apr, "correo"=>$correo_db], function ($m) use ($correo_db,$archivo, $nombrearchivo, $comida, $fecha_apr) {
-                            $m->to($correo_db)
-                            ->subject("Aprobación de ".$comida." del ".$fecha_apr)
+                        
+                        foreach($correos_enviar as $email){
+
+                            $correo_envio=$email;
+
+                            Mail::send('email_documentos.aprobacion_alimento', ['comida'=>$comida,"fecha_apr"=>$fecha_apr, "correo"=>$correo_envio], function ($m) use ($correo_envio,$archivo, $nombrearchivo, $comida, $fecha_apr) {
+                                $m->to($correo_envio)
+                                ->subject("Aprobación de ".$comida." del ".$fecha_apr)
+                                
+                                ->attachData($archivo, $nombrearchivo, [
+                                    'mime' => 'application/pdf',
+                                ]);
                             
-                            ->attachData($archivo, $nombrearchivo, [
-                                'mime' => 'application/pdf',
-                            ]);
-                           
-                        });  
-                       
-                    
+                            });  
+                        }
 
                         $archivo=Storage::disk('public')->delete($nombrearchivo);
 
