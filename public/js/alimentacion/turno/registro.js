@@ -7,7 +7,27 @@ function detalleTurno(id_empleado){
     $.get('fullcalender_/'+id_empleado, function(data){
      
         vistacargando("")
-        eventosArray=data.data
+        let color_est=""
+        $.each(data.data, function (i, item){
+            if(item.estado=="A"){
+                color_est="#28a745"
+            }else{
+                color_est=""
+            }
+       
+            eventosArray.push({
+                id:item.id,
+                title:item.title,
+                start: item.start,
+                end: item.end,
+                color: color_est,
+               
+            });
+        })
+
+        console.log(eventosArray)
+        // eventosArray=data.data
+
         verCale()
 
         $('#calendar').fullCalendar('removeEvents'); // limpiamos todos los eventos asignados
@@ -144,15 +164,35 @@ function verCale(){
                     type: "POST",
                     success: function (response) {
                         vistacargando("")
+
                         if(response.error==true){
                             if(response.dataArray.length==0){
                                 alertNotificar(response.mensaje, "error");
                                 cancelar()
                                 return
                             }
-                           
+                            let eventoArray=[]
+                            let color_est=""
+                            $.each(response.dataArray.data, function (i, item){
+                                if(item.estado=="A"){
+                                    color_est="#28a745"
+                                }else{
+                                    color_est=""
+                                }
+                                eventoArray.push({
+                                    id:item.id,
+                                    title:item.title,
+                                    start: item.start,
+                                    end: item.end,
+                                    color: color_est,
+                                   
+                                });
+                            
+
+                            })
+                               
                             $('#calendar').fullCalendar('removeEvents'); 
-                            $('#calendar').fullCalendar('addEventSource', response.dataArray.data); 
+                            $('#calendar').fullCalendar('addEventSource',eventoArray); 
                             $('#calendar').fullCalendar('refetchEvents'); 
                            
                             alertNotificar(response.mensaje, "error");

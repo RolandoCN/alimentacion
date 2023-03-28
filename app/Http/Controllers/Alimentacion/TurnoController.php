@@ -55,7 +55,7 @@ class TurnoController extends Controller
         ->leftJoin('horario as tipo', 'tipo.id_horario','turnoev.id_horario')
         ->where('turnoev.id_persona',$id)
         ->where('turnoev.estado','!=','E')
-        ->select('turnoev.id as id', 'turnoev.start','turnoev.end', DB::raw("CONCAT(tipo.codigo, ' -- [', tipo.hora_ini, ' - ', tipo.hora_fin,']') AS title"))
+        ->select('turnoev.estado','turnoev.id as id', 'turnoev.start','turnoev.end', DB::raw("CONCAT(tipo.codigo, ' -- [', tipo.hora_ini, ' - ', tipo.hora_fin,']') AS title"))
         ->get();
      
         // $empleado=Empleado::where('id_empleado', $id)->first();
@@ -215,7 +215,7 @@ class TurnoController extends Controller
                         'dataArray'=>[]
                     ]);
                 }
-                dd("ss");
+               
                 $Turno->estado="E";
                 $Turno->id_usuario_act=auth()->user()->id;
                 $Turno->fecha_act=date('Y-m-d H:i:s');
@@ -245,12 +245,36 @@ class TurnoController extends Controller
         return $transaction;
     }
 
+    public function consultaTurno($id){
+       
+        $data=DB::table('al_turno as turnoev')
+        ->leftJoin('horario as tipo', 'tipo.id_horario','turnoev.id_horario')
+        ->where('turnoev.id_persona',$id)
+        ->where('turnoev.estado','!=','E')
+        ->select('turnoev.estado','turnoev.id as id', 'turnoev.start','turnoev.end', DB::raw("CONCAT(tipo.codigo, ' -- [', tipo.hora_ini, ' - ', tipo.hora_fin,']') AS title"))
+        ->get();
+
+        return[
+            "data"=>$data,
+        ];
+    } 
+
     public function actualizarTurnoComida(Request $request)
     {
         $transaction=DB::transaction(function() use($request){   
             try{
-            
+              
                 $event=Turno::find($request->id);
+               
+                if($event->estado=="A"){
+                    $turno=$this->consultaTurno($event->id_persona);
+                    return response()->json([
+                        'error'=>true,
+                        'mensaje'=>'El turno ya fué aprobado y no se puede eliminar',
+                        'dataArray'=>$turno
+                    ]);
+                }
+               
                 $event->start=$request->start;
                 $event->end= date('Y-m-d', strtotime("{$event->start} + 1 day"));
                 $event->estado="P";
@@ -265,7 +289,8 @@ class TurnoController extends Controller
                 if(is_null($horarios)){
                     return response()->json([
                         'error'=>true,
-                        'mensaje'=>'El turno seleccionado no se encuentra activo'
+                        'mensaje'=>'El turno seleccionado no se encuentra activo',
+                        'dataArray'=>$turno
                     ]);
                 }
 
@@ -278,7 +303,8 @@ class TurnoController extends Controller
                 if(sizeof($horario_ali)==0){
                     return response()->json([
                         'error'=>true,
-                        'mensaje'=>'No se encontró alimentos asociadas al turno seleccionado'
+                        'mensaje'=>'No se encontró alimentos asociadas al turno seleccionado',
+                        'dataArray'=>$turno
                     ]);
                 }
 
@@ -289,7 +315,7 @@ class TurnoController extends Controller
                 ->where('estado','!=','E')
                 ->first();
                 if(!is_null($valida)){
-                    $turno=$this->mostrarAux($event->id_persona,'S');
+                    $turno=$this->consultaTurno($event->id_persona);
                     return response()->json([
                         'error'=>true,
                         'mensaje'=>'La información ya existe',
@@ -303,7 +329,7 @@ class TurnoController extends Controller
                 ->where('estado','!=','E')
                 ->first();
                 if(!is_null($ya_tiene)){
-                    $turno=$this->mostrarAux($event->id_persona,'S');
+                    $turno=$this->consultaTurno($event->id_persona);
                     return response()->json([
                         'error'=>true,
                         'mensaje'=>'Ya existe un turno para el día seleccionado',
@@ -338,7 +364,8 @@ class TurnoController extends Controller
                 }else{
                     return response()->json([
                         'error'=>true,
-                        'mensaje'=>'No se pudo actualizada la información'
+                        'mensaje'=>'No se pudo actualizada la información',
+                        'dataArray'=>$turno
                     ]);
                 }
                 

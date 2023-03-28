@@ -23,7 +23,7 @@
 
     <section class="content">
 
-        <div id="content_consulta-" >
+        <div id="arriba" >
             <div class="box ">
                 <div class="box-header with-border">
                     <h3 class="box-title">
