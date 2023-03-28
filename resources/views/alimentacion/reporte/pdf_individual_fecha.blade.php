@@ -77,7 +77,7 @@
         <table class="ltable" style="" border="0" width="100%" style="padding-bottom:2px !important">
           
             <tr style="font-size: 11px"  class="fuenteSubtitulo " style=""> 
-                <th colspan="11" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  >INDIVIDUAL POR USUARIOxx Y FECHA<br>
+                <th colspan="11" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  >INDIVIDUAL POR USUARIO Y FECHA<br>
                 DESDE {{date('d-m-Y',strtotime($datos[0]->fecha_turno))}} HASTA  {{date('d-m-Y',strtotime($datos[0]->fecha_turno))}}<br><br>
               
                 </th>
