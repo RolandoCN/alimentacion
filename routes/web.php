@@ -43,7 +43,7 @@ Route::get('/persona', [PersonaController::class, 'index']);
 Route::middleware(['auth'])->group(function() { //middleware autenticacion
 
     //PERSONA
-    // Route::get('/persona', [PersonaController::class, 'index'])->middleware('validarRuta');
+    Route::get('/persona', [PersonaController::class, 'index'])->middleware('validarRuta');
     Route::get('/listado-persona', [PersonaController::class, 'listar']);
     Route::post('/guardar-persona', [PersonaController::class, 'guardar']);
     Route::get('/editar-persona/{id}', [PersonaController::class, 'editar']);

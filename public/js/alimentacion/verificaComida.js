@@ -42,7 +42,7 @@ $("#form_valida").submit(function(e){
                 alertNotificar(data.mensaje,'error');
                 $('#audio').attr("src", "./rechazado.mp4")
                 audio.play();
-
+                $('#cedula_func').val('')
                 return;                      
            }
            $('#audio').attr("src", "./aprobado.mp4")
