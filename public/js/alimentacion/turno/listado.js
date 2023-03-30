@@ -51,8 +51,11 @@ function buscarTurnos(){
             $('#total_turno').html(data.resultado.length)
             
             let contador=0
+            globalThis.IdturnosArray=[]
 			$.each(data.resultado,function(i, item){
 
+                IdturnosArray.push(item.idturno)
+               
                 let estado=""
                
                 if(item.estado_turno=="Generado"){
@@ -65,7 +68,7 @@ function buscarTurnos(){
 				$('#table_persona').append(`<tr>
                                                 <td style="width:10%">
                                                     ${item.cedula}
-                                                    <input type="hidden" name="idturno_comida[]"  value="${item.idturno}">
+                                                   
                                                 </td>
                                                 <td style="width:30%; text-align:left">${item.nombres}</td>
                                                 <td style="width:20%; text-align:left">${item.puesto}</td>
@@ -92,12 +95,15 @@ function buscarTurnos(){
 
 
 function aprobarTurno(){
+
+    console.log(IdturnosArray);
+    array_turnos=IdturnosArray
     
-    var array_turnos=[];
-    $("input[name='idturno_comida[]']").each(function(indice, elemento) {
-        array_turnos.push($(elemento).val());
-    });
-    console.log(array_turnos)
+    // var array_turnos=[];
+    // $("input[name='idturno_comida[]']").each(function(indice, elemento) {
+    //     array_turnos.push($(elemento).val());
+    // });
+    // console.log(array_turnos)
 
     var comida_sel=$('#idalimento').val()
     var fecha_sele=$('#txt_fecha').val()

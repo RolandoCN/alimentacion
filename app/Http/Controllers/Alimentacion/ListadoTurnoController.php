@@ -205,6 +205,7 @@ class ListadoTurnoController extends Controller
         }
     }
 
+     
     public function descargarPdf($archivo){
         try{   
         

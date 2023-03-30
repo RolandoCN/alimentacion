@@ -114,7 +114,8 @@
                         </div> 
 
                         <div class="col-md-12 text-center" style="margin-top:10px; margin-bottom:10px">
-                            <button type="button" class="btn btn-success btn-sm btn_descargar" onclick="descargarAprobacion()">Descargar</button>
+                            <button type="button" class="btn btn-success btn-sm btn_descargar" onclick="descargarAprobacion()">Descargar PDF</button>
+
                         </div>
                      
                         <div class="col-md-12">
