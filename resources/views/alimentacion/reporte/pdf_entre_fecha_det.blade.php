@@ -76,7 +76,7 @@
 
         <table class="ltable" style="" border="0" width="100%" style="padding-bottom:2px !important">
           
-            <tr style="font-size: 11px"  class="fuenteSubtitulo " style=""> 
+            <tr style="font-size: 10px"  class="fuenteSubtitulo " style=""> 
                 <th colspan="11" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  >DETALLADO POR FECHA <br>
                 DESDE {{date('d-m-Y',strtotime($desde))}} HASTA  {{date('d-m-Y',strtotime($hasta))}}<br><br>
               
@@ -121,7 +121,7 @@
                             $cont_dias=0;
                         @endphp
                         @foreach($lista as $e=>$dato)
-                            <tr style="font-size: 10px !important; line-height:20px">                                    
+                            <tr style="font-size: 8px !important; line-height:18px">                                    
                                 
                                
 

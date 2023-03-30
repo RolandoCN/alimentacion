@@ -172,7 +172,7 @@ class ListadoTurnoController extends Controller
            
             // enviamos a la vista para crear el documento que los datos repsectivos
             $crearpdf=PDF::loadView('alimentacion.turno.pdf_aprobado_dia_alimento',['datos'=>$turnos]);
-            $crearpdf->setPaper("A4", "landscape");
+            $crearpdf->setPaper("A4", "portrait");
             $estadoarch = $crearpdf->stream();
 
             //lo guardamos en el disco temporal
@@ -306,7 +306,7 @@ class ListadoTurnoController extends Controller
                     }
                     //correos parametrizados
                     $correos_enviar=explode(",", $correo_db_par);
-                    
+                   
                     try{
                         
                         foreach($correos_enviar as $email){

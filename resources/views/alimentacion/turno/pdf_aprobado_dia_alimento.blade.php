@@ -76,26 +76,26 @@
 
         <table class="ltable" style="" border="0" width="100%" style="padding-bottom:2px !important">
           
-            <tr style="font-size: 11px"  class="fuenteSubtitulo " style=""> 
+            <tr style="font-size: 10px"  class="fuenteSubtitulo " style=""> 
                 <th colspan="11" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  >LISTADO DE PERSONAL CON DERECHO  AL SERVICIO DE ALIMENTACIÓN<br>
-                FECHA {{date('d-m-Y',strtotime($datos[0]->fecha_turno))}} <br><br>
+                FECHA {{date('d-m-Y',strtotime($datos[0]->fecha_turno))}} <br>
                 {{strtoupper($datos[0]->comida)}}
             </th>
             
             </tr>
           
         </table>
-        <div style="margin-top:12px;">
+        <div style="margin-top:10px;">
             <table class="ltable"  border="0" width="100%" style="padding-bottom:2px !important">
                 
-                <tr style="font-size: 10px !important; background-color: #D3D3D3;line-height:10px; "> 
+                <tr style="font-size: 9px !important; background-color: #D3D3D3;line-height:10px; "> 
                     
-                    <th width="10%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:20px">CÉDULA</th>
-                    <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center">FUNCIONARIO</th>
-                    <th width="35%" style="border-right: 0px;border-top: 0px; border-bottom:0px;border-color: #D3D3D3; text-align: center">PUESTO</th>
+                    <th width="10%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">CÉDULA</th>
+                    <th width="34%" style="border: 0px; ;border-color: #D3D3D3; text-align: center">FUNCIONARIO</th>
+                    <th width="32%" style="border-right: 0px;border-top: 0px; border-bottom:0px;border-color: #D3D3D3; text-align: center">PUESTO</th>
                 
-                    <th width="20%" style="border: 0px; text-align: center">ÁREA</th>
-                    <th width="10%" style="border: 0px; text-align: center">HORARIO</th>
+                    <th width="16%" style="border: 0px; text-align: center">ÁREA</th>
+                    <th width="8%" style="border: 0px; text-align: center">HORARIO</th>
                     
                 </tr>
             
@@ -103,7 +103,7 @@
                     
                     @if(isset($datos))
                         @foreach($datos as $e=>$dato)
-                            <tr style="font-size: 10px !important; line-height:20px">                                    
+                            <tr style="font-size: 8px !important; line-height:18px">                                    
                                 
                                 <td align="center" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3">
                                     {{$dato->cedula}}

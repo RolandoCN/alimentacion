@@ -61,14 +61,44 @@ class VerificaTurnoController extends Controller
         ->where('e.cedula',$cedula)      
         ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','h.hora_ini as hora_ini', 'h.hora_fin as hora_fin', 'tu.id as idturno','tu.start as fecha_turno', 'al.descripcion as comida', 'tc.estado as estado_turno','tc.id_turno_comida as id_turno_comida',
         'tc.hora_retira_comida','tc.estado_retira_comida')
-        ->first();
-       
+        ->first(); 
+
         if(is_null($turnos_aprobado)){
+
+            $turnos_dias=DB::table('al_turno_comida as tc')
+            ->leftJoin('alimento as al', 'al.idalimento','tc.id_alimento')
+            ->leftJoin('al_turno as tu', 'tu.id','tc.id_turno')
+            ->leftJoin('horario as h', 'h.id_horario','tu.id_horario')
+            ->leftJoin('empleado as e', 'e.id_empleado','tu.id_persona')
+            ->leftJoin('puesto as pu', 'pu.id_puesto','e.id_puesto')
+            ->leftJoin('area as a', 'a.id_area','e.id_area')
+            ->whereDate('tu.start', date('Y-m-d'))
+            ->where('tc.estado','!=','Eliminado')  
+            ->where('e.cedula',$cedula)      
+            ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','h.hora_ini as hora_ini', 'h.hora_fin as hora_fin', 'tu.id as idturno','tu.start as fecha_turno', 'al.descripcion as comida', 'tc.estado as estado_turno','tc.id_turno_comida as id_turno_comida',
+            'tc.hora_retira_comida','tc.estado_retira_comida')
+            ->first(); 
+
+            if(!is_null($turnos_dias)){
+                return response()->json([
+                    'error'=>true,
+                    'mensaje'=>'El alimento está fuera de su horario laboral, que es de '.$turnos_dias->hora_ini.' a '.$turnos_dias->hora_fin
+                ]);
+
+            }else{
+                return response()->json([
+                    'error'=>true,
+                    'mensaje'=>'La persona no tiene asignado horarios de alimentos el día de hoy'
+                ]);
+            }
+
+
             return response()->json([
                 'error'=>true,
-                'mensaje'=>'No se encontró alimentos disponibles con el número de identificación ingresado'
+                'mensaje'=>'No se encontró alimento aprobado para el número de identificación ingresado'
             ]);
         }
+
 
         if($turnos_aprobado->estado_retira_comida=="Si"){
             return response()->json([

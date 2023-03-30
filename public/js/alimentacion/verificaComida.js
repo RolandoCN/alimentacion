@@ -35,32 +35,32 @@ $("#form_valida").submit(function(e){
        processData:false, 
 
        success: function(data){
-          
-           vistacargando("");                
-           if(data.error==true){
-                
+            console.log(data)
+            vistacargando("");                
+            if(data.error==true){ 
+                $('#cedula_func').val('')               
                 alertNotificar(data.mensaje,'error');
                 $('#audio').attr("src", "./rechazado.mp4")
-                audio.play();
-                $('#cedula_func').val('')
+                audio.play();                
                 return;                      
-           }
-           $('#audio').attr("src", "./aprobado.mp4")
-           alertNotificar("Aprobado exitosamente","success");
-           $('#modal_aprobacion').modal({backdrop: 'static', keyboard: false})
-           $('#identificacion_Apr').html(data.data.cedula)
-           $('#puesto_Apr').html(data.data.puesto)
-           $('#comida_Apr').html(data.data.comida)
-           $('#user_Apr').html(data.data.nombres)
-           $('#area_Apr').html(data.data.area)
-           $('#horario_Apr').html(data.data.hora_ini+" -- "+data.data.hora_fin)
-           audio.play();
+            }
+
+            $('#audio').attr("src", "./aprobado.mp4")
+            alertNotificar("Aprobado exitosamente","success");
+            $('#modal_aprobacion').modal({backdrop: 'static', keyboard: false})
+            $('#identificacion_Apr').html(data.data.cedula)
+            $('#puesto_Apr').html(data.data.puesto)
+            $('#comida_Apr').html(data.data.comida)
+            $('#user_Apr').html(data.data.nombres)
+            $('#area_Apr').html(data.data.area)
+            $('#horario_Apr').html(data.data.hora_ini+" -- "+data.data.hora_fin)
+            audio.play();
 
            //bloqueamos el boton de cerrar x 10 segundos para que le de chance de verficar la aprobacion
             setTimeout(() => {
                 $('#btn_cancelar').prop('disabled',false)
                 cerrar()
-            }, "10000");
+            }, "5000");
 
             $('#btn_cancelar').prop('disabled',true)
          
