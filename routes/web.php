@@ -14,9 +14,7 @@ use App\Http\Controllers\Alimentacion\VerificaTurnoController;
 use App\Http\Controllers\Alimentacion\ReporteController;
 use App\Http\Controllers\Alimentacion\EmpleadoController;
 use App\Http\Controllers\Alimentacion\ExtraController;
-
-
-use App\Http\Controllers\Bodega\IngresoController;
+use App\Http\Controllers\Alimentacion\AuditoriaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -181,11 +179,9 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     Route::post('/pdf-extra', [ExtraController::class, 'reporteExtraFechas']);
 
 
-
-    ///***************INGRESO */
-
-    Route::get('/ingreso', [IngresoController::class, 'index']);
-   
+    ///AUDITORIA TURNOS
+    Route::get('/auditoria', [AuditoriaController::class, 'index'])->middleware('validarRuta');
+    Route::get('/auditoria-turnos/{f_ini}/{f_fin}', [AuditoriaController::class, 'buscarInfoTurnos']);
 
 
 });
