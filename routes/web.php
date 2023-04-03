@@ -126,6 +126,10 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     Route::post('/aprobar-turno', [ListadoTurnoController::class, 'aprobacionTurno']);
 
 
+    //GESTION DE TURNOS AGREGADOS SIN OPCION A APROBAR
+    Route::get('/turnos-generados', [ListadoTurnoController::class, 'turnosGenerados'])->middleware('validarRuta');
+    Route::get('/turno-fecha/{fecha}/{alim}', [ListadoTurnoController::class, 'turnosFecha']);
+   
     //TURNOS APROBADOS
 
     Route::get('/turnos-aprobados', [ListadoTurnoController::class, 'vistaAprobado'])->middleware('validarRuta');

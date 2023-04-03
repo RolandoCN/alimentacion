@@ -24,6 +24,14 @@ class ListadoTurnoController extends Controller
         ]);
     }
 
+    //vista para ver el listado sin opcion a aprobar
+    public function turnosGenerados(){
+        $alimento=DB::table('alimento')->where('estado','A')->get();
+        return view('alimentacion.turno.listado_generado',[
+            "alimento"=>$alimento
+        ]);
+    }
+
     //listado de los turnos comidas diferente de eliminado
     public function turnosFecha($fecha, $idalimento){
        
