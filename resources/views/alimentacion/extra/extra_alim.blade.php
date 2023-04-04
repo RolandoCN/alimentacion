@@ -110,7 +110,7 @@
 
                             <label for="inputPassword3" class="col-sm-3 control-label">Motivo</label>
                             <div class="col-sm-8">
-                                <input type="text" minlength="1" maxlength="100" onKeyPress="if(this.value.length==100) return false;"  class="form-control" id="motivo" name="motivo" placeholder="Motivo">
+                                <input type="text" minlength="1" maxlength="200" onKeyPress="if(this.value.length==200) return false;"  class="form-control" id="motivo" name="motivo" placeholder="Motivo">
                                 
                             </div>
                            
