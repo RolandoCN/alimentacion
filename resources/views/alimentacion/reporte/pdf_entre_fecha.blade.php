@@ -200,27 +200,27 @@
                     @endif
                 </tbody>
                 <tfoot >
-                    <tr style="font-size:9px !important;line-height:5px" style="">
+                    <tr style="font-size:10px !important;line-height:25px" style="">
                         <td  colspan="1"style="font-size:9px;border: 0px; border-color: #D3D3D3;  text-align: right;">
                             <b>TOTAL</b>
                         </td>
-                        <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:9px">
+                        <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:10px">
                            {{$cont_desayu}} Platos
                            
                         </td>
-                        <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:9px">
+                        <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:10px">
                             {{$cont_almuerzo}} Platos
                         </td>
 
-                        <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:9px">
+                        <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:10px">
                             {{$cont_merienda}} Platos
                         </td>
 
-                        <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:9px">
+                        <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:10px">
                             {{$cont_cena}} Platos
                         </td>
 
-                        <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:9px">
+                        <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:10px">
                             {{$cont_dias}} Platos
                         </td>
 

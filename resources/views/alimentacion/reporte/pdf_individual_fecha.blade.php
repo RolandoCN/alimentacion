@@ -219,7 +219,7 @@
                     @endif
                 </tbody>
                 <tfoot >
-                    <tr style="font-size:9px !important;line-height:5px" style="">
+                    <tr style="font-size:10px !important;line-height:5px" style="">
                         <td  colspan="1"style="font-size:9px;border: 0px; border-color: #D3D3D3;  text-align: right;">
                             <b>TOTAL</b>
                         </td>

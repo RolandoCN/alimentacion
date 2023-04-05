@@ -300,9 +300,10 @@ class ReporteController extends Controller
             ->where('tc.estado','=','Aprobado') //aprobado
             ->where('tc.estado_retira_comida','=','Si')   //retirado desde comedor     
             ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','h.hora_ini as hora_ini', 'h.hora_fin as hora_fin', 'tu.id as idturno', 'al.descripcion as comida', 'tc.estado as estado_turno','tu.id_persona', 'tu.start as fecha_turno')
+            ->orderBy('fecha_turno','asc')
             ->get();
 
-
+         
             #agrupamos por dias
             $lista_final_agrupada=[];
             foreach ($turnos as $key => $item){                
@@ -417,7 +418,7 @@ class ReporteController extends Controller
             }
            
             
-            $nombre="reporte_fechas_detallado".date('d-m-Y',strtotime($turnos[0]->fecha_turno)).".pdf";
+            $nombre="reporte_fechas_detallado_".date('d-m-Y',strtotime($turnos[0]->fecha_turno)).".pdf";
 
             $pdf=PDF::loadView('alimentacion.reporte.pdf_entre_fecha_det',['datos'=>$turnos,'lista'=>$lista_final_agrupada, 'desde'=>$fecha_ini, 'hasta'=>$fecha_fin]);
             $pdf->setPaper("A4", "landscape");
@@ -460,6 +461,7 @@ class ReporteController extends Controller
             ->where('tc.estado','=','Aprobado') //aprobado
             ->where('tc.estado_retira_comida','=','Si')   //retirado desde comedor     
             ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','h.hora_ini as hora_ini', 'h.hora_fin as hora_fin', 'tu.id as idturno', 'al.descripcion as comida', 'tc.estado as estado_turno','tu.id_persona', 'tu.start as fecha_turno')
+            ->orderBy('fecha_turno','asc')
             ->get();
 
             #agrupamos por dias
@@ -474,7 +476,7 @@ class ReporteController extends Controller
             }
            
             
-            $nombrePDF="reporte_fechas_detallado".date('d-m-Y',strtotime($turnos[0]->fecha_turno)).".pdf";
+            $nombrePDF="reporte_fechas_detallado_".date('d-m-Y',strtotime($turnos[0]->fecha_turno)).".pdf";
 
             $pdf=PDF::loadView('alimentacion.reporte.pdf_entre_fecha_det',['datos'=>$turnos,'lista'=>$lista_final_agrupada, 'desde'=>$fecha_ini, 'hasta'=>$fecha_fin]);
             $pdf->setPaper("A4", "landscape");
