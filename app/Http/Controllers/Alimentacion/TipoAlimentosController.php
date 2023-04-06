@@ -39,7 +39,7 @@ class TipoAlimentosController extends Controller
             $horario->save();
             return response()->json([
                 'error'=>false,
-                'resultado'=>$horario
+                'mensaje'=>"Informacion actualizada exitosamente"
             ]);
         }catch (\Throwable $e) {
             Log::error('TipoAlimentosController => actualizaHoraAprob => mensaje => '.$e->getMessage());
