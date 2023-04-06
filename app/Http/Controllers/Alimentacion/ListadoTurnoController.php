@@ -233,7 +233,7 @@ class ListadoTurnoController extends Controller
 
    
     public function aprobacionTurno(Request $request){
-        // dd($request->all());
+      
         $transaction=DB::transaction(function() use($request){ 
             try{
               
@@ -281,12 +281,14 @@ class ListadoTurnoController extends Controller
                 }
                 //cambiamos el estado de la tabla turno
                 $aprobar=Turno::whereIn('id',$request->array_turnos)
+                ->where('estado', 'P')
                 ->update(["estado"=>'A', "fecha_act"=>date('Y-m-d H:i:s'),
                 "id_usuario_act"=>auth()->user()->id]);
 
                 //aprobamos la tabla turno_comida
                 $aprobar_turno_comida=TurnoComida::whereIn('id_turno',$request->array_turnos)
                 ->where('id_alimento',$id_comida)
+                ->where('estado', 'Generado')
                 ->update(['estado'=>'Aprobado', 'id_usuario_aprueba'=>auth()->user()->id,
                 'fecha_aprobacion'=>date('Y-m-d H:i:s')]);
 
