@@ -32,14 +32,18 @@ class TipoAlimentosController extends Controller
         }
     }
 
-    public function actualizaHoraAprob($idali, $hora){
+    public function actualizaHoraAprob(Request $request){
+       
         try{
+            $idali=$request->IdAliEdit;
             $horario=Alimento::find($idali);
-            $horario->hora_max_aprobacion=$hora;
+            $horario->hora_max_aprobacion=$request->hora_cambia;
             $horario->save();
+          
             return response()->json([
                 'error'=>false,
-                'mensaje'=>"Informacion actualizada exitosamente"
+                'mensaje'=>"Informacion actualizada exitosamente",
+                
             ]);
         }catch (\Throwable $e) {
             Log::error('TipoAlimentosController => actualizaHoraAprob => mensaje => '.$e->getMessage());

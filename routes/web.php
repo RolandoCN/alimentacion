@@ -124,7 +124,8 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     //TIPOS ALIMENTOS
     Route::get('/tipo-alimentos', [TipoAlimentosController::class, 'index'])->middleware('auth');
     Route::get('/listado-tipo-alimentos', [TipoAlimentosController::class, 'listar']);
-    Route::get('/cambia-hora-aprob/{idAli}/{hora}', [TipoAlimentosController::class, 'actualizaHoraAprob']);
+    // Route::get('/cambia-hora-aprob/{idAli}/{hora}', [TipoAlimentosController::class, 'actualizaHoraAprob']);
+    Route::post('/cambia-hora-aprob', [TipoAlimentosController::class, 'actualizaHoraAprob']);
 
 
     //GESTION APROBACION DE TURNOS

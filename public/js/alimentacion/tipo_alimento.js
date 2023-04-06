@@ -7,7 +7,7 @@ function llenar_tabla_tipo_ali(){
    
     
     $.get("listado-tipo-alimentos/", function(data){
-        console.log(data)
+      
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
             $("#tabla_tipo_ali tbody").html(`<tr><td colspan="${num_col}" style="padding:40px; 0px; font-size:20px;"><center>No se encontraron datos</center></td></tr>`);
@@ -92,22 +92,35 @@ function editarHorario(id, descripcion, hora){
 function actualizarHoraAp(){
     vistacargando("m","Espere por favor")
     let hora_cambia=$('#hora_aprobacion').val()
-    $.get("cambia-hora-aprob/"+IdAliEdit+"/"+hora_cambia, function(data){
-        console.log(data)
-        vistacargando("")
-        if(data.error==true){
-            alertNotificar(data.mensaje,"error");
-            return;   
+    
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
-       
-        alertNotificar(data.mensaje,"success")
-        llenar_tabla_tipo_ali()
-        cerrar()
-       
-    }).fail(function(){
-        vistacargando("")
-        alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
     });
+    
+    $.ajax({
+        type: "POST",
+        url: 'cambia-hora-aprob',
+        data: { _token: $('meta[name="csrf-token"]').attr('content'),
+        IdAliEdit:IdAliEdit, hora_cambia:hora_cambia },
+        success: function(data){
+           
+            vistacargando("");                
+            if(data.error==true){
+                alertNotificar(data.mensaje,'error');
+                return;                      
+            }
+            alertNotificar(data.mensaje,"success")
+            llenar_tabla_tipo_ali()
+            cerrar()
+                            
+        }, error:function (data) {
+            vistacargando("");
+            alertNotificar('Ocurrió un error','error');
+        }
+    });
+    
 }
 
 function cerrar(){
