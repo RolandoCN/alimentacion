@@ -15,6 +15,7 @@ use App\Http\Controllers\Alimentacion\ReporteController;
 use App\Http\Controllers\Alimentacion\EmpleadoController;
 use App\Http\Controllers\Alimentacion\ExtraController;
 use App\Http\Controllers\Alimentacion\AuditoriaController;
+use App\Http\Controllers\Alimentacion\TipoAlimentosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -119,6 +120,12 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     Route::get('/horario-alimentos/{id}', [HorarioAlimentosController::class, 'alimentosHorario']);
     Route::get('/alimento-por-horario/{alimento}/{tipo}/{horario}', [HorarioAlimentosController::class, 'mantenimientoAlimentoHorario']);
 
+    
+    //TIPOS ALIMENTOS
+    Route::get('/tipo-alimentos', [TipoAlimentosController::class, 'index'])->middleware('auth');
+    Route::get('/listado-tipo-alimentos', [TipoAlimentosController::class, 'listar']);
+    Route::get('/cambia-hora-aprob/{idAli}/{hora}', [TipoAlimentosController::class, 'actualizaHoraAprob']);
+
 
     //GESTION APROBACION DE TURNOS
     Route::get('/listado-turno', [ListadoTurnoController::class, 'index'])->middleware('validarRuta');
@@ -142,6 +149,8 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
 
     Route::get('/verificar-alimento', [VerificaTurnoController::class, 'vistaVerifica'])->middleware('validarRuta');
     Route::post('/valida-comida-empleado', [VerificaTurnoController::class, 'validarComida']);
+
+
 
 
     //REPORTES
