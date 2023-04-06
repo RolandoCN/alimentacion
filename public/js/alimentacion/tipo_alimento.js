@@ -93,6 +93,7 @@ function actualizarHoraAp(){
     vistacargando("m","Espere por favor")
     let hora_cambia=$('#hora_aprobacion').val()
     $.get("cambia-hora-aprob/"+IdAliEdit+"/"+hora_cambia, function(data){
+        console.log(data)
         vistacargando("")
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
