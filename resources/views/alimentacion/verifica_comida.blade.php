@@ -41,22 +41,22 @@
 
 <body style="background: #ecf0f5" onload="mueveReloj()">
     <div class="container">
-        <div class="col-md-2"></div>
-        <div class="col-md-8 " style="margin-top: 100px">
+        <div class="col-md-1"></div>
+        <div class="col-md-10 " style="margin-top: 100px">
             <div class="box box-primary">
                 <div class="box-body box-profile">
                     <a href="{{asset('/')}}"><img class="profile-user-img img-responsive img-circle" src="{{ asset('dist/img/logomsp.png')}}" alt="User profile picture"></a>
                     <h3 class="profile-username text-center">Hospital General Dr. Napoleón Dávila Córdova</h3>
-                    <p class="text-muted text-center">Sistema Alimentación</p>
+                    <p class="text-muted text-center" style="color:black;font-weight:500">Sistema Alimentación</p>
                     <div class="" style="margin-bottom:12px;text-align:center" >
-                       <input type="text" style="text-align:center" name="reloj" id="reloj" size="10" disabled>
+                       <input type="text" style="text-align:center;color:black; font-weight:600"  name="reloj" id="reloj" size="20" disabled>
                     </div>
                        
                     <ul class="list-group list-group-unbordered">
                         @foreach($alimento as $ali)                        
                             <li class="list-group-item">
-                                <b>{{$ali->descripcion}}</b> 
-                                <a class="pull-right">{{$ali->hora_min}} -- {{$ali->hora_max}}</a>
+                                <b style="margin-left:70px">{{$ali->descripcion}}</b> 
+                                <b class="pull-right"  style="margin-right:70px">{{$ali->hora_min}} -- {{$ali->hora_max}}</b>
                             </li>
                         @endforeach
                     </ul>
@@ -78,7 +78,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-2"></div>
+        <div class="col-md-1"></div>
     </div>
     @include('divcargando')
 
