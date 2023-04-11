@@ -4,10 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SisAlim | Log in</title>
-    
+    <title>SisAli | Log in</title>
     <link rel="icon" href="{{asset('logo_icono.png')}}" sizes="32x32" />
-
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -19,7 +17,7 @@
     <link rel="stylesheet" href="{{asset('bower_components/Ionicons/css/ionicons.min.css')}}">
 
     <link rel="stylesheet" href="{{asset('dist/css/AdminLTE.min.css')}}">
-
+    
 
     <style>
         .login-page,
@@ -33,14 +31,20 @@
 </head>
 
 
+
+
 <body class="hold-transition login-page">
     <div class="login-box">
         <div class="login-logo">
-            <a href="#"><b style="font-size: 16px; color:black ">Hospital General Dr. Napoleón Dávila Córdova</a>
+            <a href="../../index2.html"><b style="font-size: 16px; color:black "></a>
         </div>
 
         <div class="login-box-body">
-            <p class="login-box-msg">SisAlim</p>
+           
+            <div class="text-center" style="margin-bottom:12px">
+                <span class="login-box-msg">SisAli</span>
+                <img src="img/logo.jpg" width="80%" height="90px" style="opacity: 0.6">
+            </div>
             <form action="{{ route('login') }}" method="post">
               @csrf
                 <div class="form-group has-feedback">
@@ -81,7 +85,7 @@
 
     <script src="{{asset('bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
 
-   
+  
 </body>
 
 </html>
