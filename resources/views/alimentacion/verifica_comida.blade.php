@@ -42,14 +42,14 @@
 <body style="background: #ecf0f5" onload="mueveReloj()">
     <div class="container">
         <div class="col-md-1"></div>
-        <div class="col-md-10 " style="margin-top: 100px">
+        <div class="col-md-10 " style="margin-top: 80px">
             <div class="box box-primary">
                 <div class="box-body box-profile">
                     <a href="{{asset('/')}}"><img class="profile-user-img img-responsive img-circle" src="{{ asset('dist/img/logomsp.png')}}" alt="User profile picture"></a>
-                    <h3 class="profile-username text-center">Hospital General Dr. Napoleón Dávila Córdova</h3>
-                    <p class="text-muted text-center" style="color:black;font-weight:500">Sistema Alimentación</p>
+                    <h3 class="profile-username text-center" style="font-weight:500">Hospital General Dr. Napoleón Dávila Córdova</h3>
+                    <p class="text-muted text-center" style="color:black;font-weight:520">Sistema Alimentación</p>
                     <div class="" style="margin-bottom:12px;text-align:center" >
-                       <input type="text" style="text-align:center;color:black; font-weight:600"  name="reloj" id="reloj" size="20" disabled>
+                       <input type="text" style="text-align:center;color:black; font-weight:600; font-size:17px"  name="reloj" id="reloj" size="20"  disabled>
                     </div>
                        
                     <ul class="list-group list-group-unbordered">
