@@ -29,7 +29,7 @@ class EmpleadoController extends Controller
             $empleado=DB::table('empleado as e')
             ->leftJoin('puesto as pu', 'pu.id_puesto','e.id_puesto')
             ->leftJoin('area as a', 'a.id_area','e.id_area')
-            ->where('e.estado','!=','E')        
+            ->where('e.estado','=','A')        
             ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','e.id_empleado')
             ->get();
             return response()->json([
@@ -95,7 +95,44 @@ class EmpleadoController extends Controller
                     "error"=>true,
                     "mensaje"=>"El numero de identificacion ingresado no es valido"
                 ]);
-            }          
+            }  
+            
+            //validar que la cedula no se repita
+            $validar_cedula=Empleado::where('cedula', $request->cedula)
+            ->whereIn('estado',['A','I'])
+            ->first();
+         
+            if(!is_null($validar_cedula)){
+                if($validar_cedula->estado=="A"){
+                    return response()->json([
+                        'error'=>true,
+                        'mensaje'=>'El número de identificación ya existe'
+                    ]);
+                }else{
+                    //ha sido eliminado lo actualizamos
+
+                    $actualiza_empleado= Empleado::find($validar_cedula->id_empleado);
+                    $actualiza_empleado->cedula=$request->cedula;
+                    $actualiza_empleado->nombres=$request->nombres;
+                    $actualiza_empleado->id_puesto=$request->idpuesto;
+                    $actualiza_empleado->id_area=$request->idarea;
+                    $actualiza_empleado->id_usuario_act=auth()->user()->id;
+                    $actualiza_empleado->fecha_act=date('Y-m-d H:i:s');
+                    $actualiza_empleado->estado="A";
+
+                    if($actualiza_empleado->save()){
+                        return response()->json([
+                            'error'=>false,
+                            'mensaje'=>'Información registrada exitosamente'
+                        ]);
+                    }else{
+                        return response()->json([
+                            'error'=>true,
+                            'mensaje'=>'No se pudo registrar la información'
+                        ]);
+                    }
+                }
+            }
 
             $guarda_empleado=new Empleado();
             $guarda_empleado->cedula=$request->cedula;
@@ -105,18 +142,6 @@ class EmpleadoController extends Controller
             $guarda_empleado->id_usuario_reg=auth()->user()->id;
             $guarda_empleado->fecha_reg=date('Y-m-d H:i:s');
             $guarda_empleado->estado="A";
-
-            //validar que la cedula no se repita
-            $valida_cedula=Empleado::where('cedula', $guarda_empleado->cedula)
-            ->where('estado','A')
-            ->first();
-
-            if(!is_null($valida_cedula)){
-                return response()->json([
-                    'error'=>true,
-                    'mensaje'=>'El número de cédula ya existe, en otro empleado'
-                ]);
-            }
 
            
             if($guarda_empleado->save()){

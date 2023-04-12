@@ -32,6 +32,7 @@ class TurnoController extends Controller
                 $query->where('nombres', 'like', '%'.$text.'%')
                 ->orWhere('cedula', 'like', '%'.$text.'%');
             })
+            ->where('estado','A')
             ->take(10)->get();
         }
         
