@@ -20,7 +20,7 @@ class ExtraController extends Controller
         return view('alimentacion.extra.extra_alim',[
             "alimento"=>$alimento
         ]);
-    }
+    } 
 
 
     public function listar(){
@@ -28,9 +28,11 @@ class ExtraController extends Controller
             $extra_ali=DB::table('al_alimentos_extra as ae')
             ->leftJoin('empleado as e', 'e.id_empleado','ae.id_empleado')
             ->leftJoin('alimento as a', 'a.idalimento','ae.id_alimento')
+            ->leftJoin('users as u', 'u.id','ae.id_usuario_reg')
+            ->leftJoin('persona as p', 'p.idpersona','u.id_persona')
             ->where('ae.estado', 'A')
             ->select('ae.idalimentos_extra', 'ae.fecha', 'ae.motivo', 'a.descripcion as alimento', 
-            'e.cedula','e.nombres')
+            'e.cedula','e.nombres','p.nombres as nombre_u','p.apellidos as apellido_u','ae.fecha_reg')
             ->get();
             return response()->json([
                 'error'=>false,

@@ -36,10 +36,10 @@
                     <table id="tabla_extra" width="100%"class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>Cédula</th>
-                                <th>Nombres</th>
-                                <th>Alimento</th>
-                                <th>Motivo</th>
+                                <th style="text-align: center">Funcionario</th>
+                                <th style="text-align: center">Auditoria</th>
+                                <th style="text-align: center">Detalle</th>
+                                <th style="text-align: center">Motivo</th>
                                 <th style="min-width: 30%">Opciones</th>
                             </tr>
                         </thead>

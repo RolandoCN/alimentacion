@@ -191,6 +191,10 @@ class ReporteController extends Controller
         
         try{
 
+            set_time_limit(0);
+            ini_set("memory_limit",-1);
+            ini_set('max_execution_time', 0);
+
             $turnos=DB::table('al_turno_comida as tc')
             ->leftJoin('alimento as al', 'al.idalimento','tc.id_alimento')
             ->leftJoin('al_turno as tu', 'tu.id','tc.id_turno')
@@ -283,6 +287,11 @@ class ReporteController extends Controller
     public function reportePeriodo(Request $request){
         
         try{
+            
+            set_time_limit(0);
+            ini_set("memory_limit",-1);
+            ini_set('max_execution_time', 0);
+
             $fecha_ini=$request->fecha_inicial_rep;
             $fecha_fin=$request->fecha_final_rep;
            

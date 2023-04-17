@@ -116,7 +116,7 @@ function llenar_tabla_extra(){
    
     
     $.get("listado-extra/", function(data){
-      
+       
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
             $("#tabla_extra tbody").html(`<tr><td colspan="${num_col}" style="padding:40px; 0px; font-size:20px;"><center>No se encontraron datos</center></td></tr>`);
@@ -134,17 +134,17 @@ function llenar_tabla_extra(){
                 "destroy":true,
                 pageLength: 10,
                 autoWidth : true,
-                order: [[ 1, "desc" ]],
+                order: [[ 2, "desc" ]],
                 sInfoFiltered:false,
                 language: {
                     url: 'json/datatables/spanish.json',
                 },
                 columnDefs: [
-                    { "width": "10%", "targets": 0 },
-                    { "width": "30%", "targets": 1 },
-                    { "width": "10%", "targets": 2 },
-                    { "width": "30%", "targets": 3 },
-                    { "width": "10%", "targets": 4 },
+                    { "width": "30%", "targets": 0 },
+                    { "width": "25%", "targets": 1 },
+                    { "width": "15%", "targets": 2 },
+                    { "width": "24%", "targets": 3 },
+                    { "width": "5%", "targets": 4 },
                    
                 ],
                 data: data.resultado,
@@ -156,6 +156,22 @@ function llenar_tabla_extra(){
                         {data: "idalimentos_extra"},
                 ],    
                 "rowCallback": function( row, data ) {
+                    $('td', row).eq(2).html(`   
+                                                <li><b>Fecha: </b>${data.fecha}
+                                                <li><b>Alimento: </b>${data.alimento}</li>
+                                            
+                                            `)
+                    $('td', row).eq(0).html(`   
+                                            <li><b>Cedula: </b>${data.cedula}
+                                            <li><b>Nombres: </b>${data.nombres}</li>
+                                        
+                                        `)
+
+                    $('td', row).eq(1).html(`   
+                                        <li><b>Usuario: </b>${data.nombre_u} ${data.apellido_u}
+                                        <li><b>Fecha: </b>${data.fecha_reg}</li>
+                                    
+                                    `)
                     $('td', row).eq(4).html(`
                                   
                                             
