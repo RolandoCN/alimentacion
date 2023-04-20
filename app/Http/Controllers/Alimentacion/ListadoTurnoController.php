@@ -17,7 +17,7 @@ class ListadoTurnoController extends Controller
 {
     //vista para buscar y aprobar 
     public function index(){
-
+       
         $alimento=DB::table('alimento')->where('estado','A')->get();
         return view('alimentacion.turno.listado',[
             "alimento"=>$alimento
@@ -365,6 +365,183 @@ class ListadoTurnoController extends Controller
             }
         });
         return $transaction;
+    }
+
+    //para realizar la aprobacion desde el job en caso de que se olviden realizarlo 
+    public function aprobarAlimentoJob($idalimento){
+        $transaction=DB::transaction(function() use($idalimento){ 
+            try{
+
+                $fecha=date('Y-m-d');                
+                $turnos=DB::table('al_turno_comida as tc')
+                ->leftJoin('alimento as al', 'al.idalimento','tc.id_alimento')
+                ->leftJoin('al_turno as tu', 'tu.id','tc.id_turno')
+                ->leftJoin('horario as h', 'h.id_horario','tu.id_horario')
+                ->where('tc.id_alimento',$idalimento)
+                ->whereDate('tu.start', $fecha)
+                ->where('tc.estado','=','Generado')        
+                ->select('tu.id as idturno')
+                ->get();
+            
+                $id_turnos_array=[];
+                foreach($turnos as $data){
+                    array_push($id_turnos_array, $data->idturno);
+                }
+                
+                //informacion de la comida
+                $comida_con=DB::table('alimento')
+                ->where('idalimento',$idalimento)
+                ->first();
+                $comida=$comida_con->descripcion;
+                //si existen generados listos para aprobar
+                if(sizeof($id_turnos_array)>0){
+
+                    // cambiamos el estado de la tabla turno
+                    $aprobar=Turno::whereIn('id',$id_turnos_array)
+                    ->where('estado', 'P')
+                    ->update(["estado"=>'A', "fecha_act"=>date('Y-m-d H:i:s'),
+                    "id_usuario_act"=>1, "job_aprueba"=>'S']);
+
+                    // aprobamos la tabla turno_comida
+                    $aprobar_turno_comida=TurnoComida::whereIn('id_turno',$id_turnos_array)
+                    ->where('id_alimento',$idalimento)
+                    ->where('estado', 'Generado')
+                    ->update(['estado'=>'Aprobado', 'id_usuario_aprueba'=>1,
+                    'fecha_aprobacion'=>date('Y-m-d H:i:s'), "job_aprueba"=>'S']);
+
+                                
+                    //mandamos a generar el documento para enviarlo x correo
+                    $generaPdf=$this->generarPdfAprobacion($idalimento, $fecha);
+                    if($generaPdf['error']==false){
+                        
+                        //se creo lo enviamos
+                        $fecha_apr=date('d-m-Y',strtotime($fecha));
+                        $archivo=Storage::disk('public')->get($generaPdf['pdf']);
+                        $nombrearchivo=$generaPdf['pdf'];
+                        
+                        //ECAA==ENVIA CORREO APROBACION ALIMENTOS
+                        //consultamos el correo donde enviaremos el documento
+                        $correo_param=DB::table('al_parametros')
+                        ->where('codigo','ECAA')->first();
+                        if(!is_null($correo_param)){
+                            $correo_db_par=$correo_param->valor;
+                        }else{
+                            $correo_db_par="juanrolandocn@gmail.com";
+                        }
+                    
+                        //correos parametrizados
+                        $correos_enviar=explode(",", $correo_db_par);
+                    
+                        try{
+                            
+                            foreach($correos_enviar as $email){
+
+                                $correo_envio=$email;
+
+                                Mail::send('email_documentos.aprobacion_alimento', ['comida'=>$comida,"fecha_apr"=>$fecha_apr, "correo"=>$correo_envio], function ($m) use ($correo_envio,$archivo, $nombrearchivo, $comida, $fecha_apr) {
+                                    $m->to($correo_envio)
+                                    ->subject("Aprobación de ".$comida." del ".$fecha_apr)
+                                    
+                                    ->attachData($archivo, $nombrearchivo, [
+                                        'mime' => 'application/pdf',
+                                    ]);
+                                
+                                });  
+                            }
+
+                            $archivo=Storage::disk('public')->delete($nombrearchivo);
+
+                            Log::info('Información aprobada y enviada exitosamente desde JOB, del alimento '.$comida. ' del día '.date('d-m-Y'));
+                            return 'Información aprobada y enviada exitosamente desde JOB';
+
+                        } catch (\Throwable $th) {
+                        
+                            $archivo=Storage::disk('public')->delete($nombrearchivo);
+
+                            Log::error('ListadoTurnoController, enviarCorreoAprobacion '.$th->getMessage()." Linea ".$th->getLine());
+
+                            return 'Información fué aprobada exitosamente, pero no se pudo enviar al correo ';
+                        }
+                    }else{
+                        
+                        Log::error('No se pudo generar ni enviar el pdf al correo de aprobacion mediante JOB, del alimento '.$comida. ' del día '.date('d-m-Y'));
+
+                        return 'No se pudo generar ni enviar el pdf al correo de aprobacion mediante JOB, del alimento '.$comida. ' del día '.date('d-m-Y');
+
+                    }
+                }else{
+
+                    Log::error('No existen turnos disponibles para aprobar mediante JOB, del alimento '.$comida. ' del día '.date('d-m-Y').' la información ya fué aprobada manualmente o no se realizó el registro de la misma');
+
+                    return 'No existen turnos disponibles para aprobar mediante JOB, del alimento '.$comida. ' del día '.date('d-m-Y').' la información ya fué aprobada manualmente o no se realizó el registro de la misma';
+
+                }
+            } catch (\Throwable $e) {  
+                DB::Rollback();                  
+                Log::error('ListadoTurnoController => aprobarAlimentoJob => mensaje => '.$e->getMessage(). ' linea => '.$e->getLine() );
+                return 'Ocurrió un error, intentelo más tarde ';
+            }
+        });
+        return $transaction;
+    }
+
+    public function generarPdfAprobacion($idalimento, $fecha){
+        try{
+            $turnos=DB::table('al_turno_comida as tc')
+            ->leftJoin('users as u', 'u.id','tc.id_usuario_aprueba')
+            ->leftJoin('persona as p', 'p.idpersona','u.id_persona')
+            ->leftJoin('alimento as al', 'al.idalimento','tc.id_alimento')
+            ->leftJoin('al_turno as tu', 'tu.id','tc.id_turno')
+            ->leftJoin('horario as h', 'h.id_horario','tu.id_horario')
+            ->leftJoin('empleado as e', 'e.id_empleado','tu.id_persona')
+            ->leftJoin('puesto as pu', 'pu.id_puesto','e.id_puesto')
+            ->leftJoin('area as a', 'a.id_area','e.id_area')
+            ->where('tc.id_alimento',$idalimento)
+            ->whereDate('tu.start', $fecha)
+            ->where('tc.estado','=','Aprobado')        
+            ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','h.hora_ini as hora_ini', 'h.hora_fin as hora_fin', 'tu.id as idturno', 'tu.start as fecha_turno' , 'al.descripcion as comida', 'tc.estado as estado_turno', 'p.nombres as nombre_user_apr', 'p.apellidos as apellido_user_apr', 'u.id as iduser', 'tc.fecha_aprobacion')
+            ->get();
+
+            if(sizeof($turnos)==0){
+                Log::error('ListadoTurnoController => generarPdfAprobacion => mensaje => No se encontró turnos de alimentos aprobados ---JOB--');
+                return [
+                    'error'=>true,
+                    'mensaje'=>'Ocurrió un error'
+                ];
+            }
+
+            $nombrePDF="reporte_listado_comida_".date('d-m-Y',strtotime($turnos[0]->fecha_turno)).".pdf";
+           
+            // enviamos a la vista para crear el documento que los datos repsectivos
+            $crearpdf=PDF::loadView('alimentacion.turno.pdf_aprobado_dia_alimento',['datos'=>$turnos]);
+            $crearpdf->setPaper("A4", "portrait");
+            $estadoarch = $crearpdf->stream();
+
+            //lo guardamos en el disco temporal
+            Storage::disk('public')->put(str_replace("", "",$nombrePDF), $estadoarch);
+            $exists_destino = Storage::disk('public')->exists($nombrePDF); 
+            if($exists_destino){ 
+                return [
+                    'error'=>false,
+                    'pdf'=>$nombrePDF
+                ];
+            }else{
+                Log::error('ListadoTurnoController => generarPdfAprobacion => mensaje =>No se pudo crear el documento ---JOB--');
+                return [
+                    'error'=>true,
+                    'mensaje'=>'No se pudo crear el documento'
+                ];
+            }
+
+
+        }catch (\Throwable $e) {
+            Log::error('ListadoTurnoController => generarPdfAprobacion => mensaje => '.$e->getMessage());
+            return [
+                'error'=>true,
+                'mensaje'=>'Ocurrió un error, intentelo más tarde'
+            ];
+            
+        }
     }
 
 }

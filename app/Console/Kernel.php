@@ -13,9 +13,20 @@ class Kernel extends ConsoleKernel
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
+
+    protected $commands = [
+        // aprobacion x job
+        'App\Console\Commands\AprobarAlmuerzo',
+        'App\Console\Commands\AprobarMerienda',
+        'App\Console\Commands\AprobarCena',
+    ];
+
+
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        
+        //job para aprobar almuerzo en caso de no haberse realizado la aprobacion desde TH
     }
 
     /**

@@ -198,6 +198,10 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     Route::get('/auditoria-turnos/{f_ini}/{f_fin}', [AuditoriaController::class, 'buscarInfoTurnos']);
 
 
+    //TEST JOBS APROBACION
+    Route::get('/job-aprobacion-ali/{id}', [ListadoTurnoController::class, 'aprobarAlimentoJob'])->middleware('auth');
+
+
 });
 
 Route::get('/clear', function() {
