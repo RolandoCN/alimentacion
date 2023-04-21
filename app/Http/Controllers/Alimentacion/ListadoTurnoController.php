@@ -397,7 +397,7 @@ class ListadoTurnoController extends Controller
                     //si encuentra uno aprobado 
                     if($data->estado_ap=='Aprobado'){
                        
-                        Log::error('No se pudo realizar la aprobación mediante JOB del alimento '.$comida. ' del día '.date('d-m-Y'). ' ya que ya se encuentra aprobada manualmente');
+                        Log::info('No se pudo realizar la aprobación mediante JOB del alimento '.$comida. ' del día '.date('d-m-Y'). ' ya que ya se encuentra aprobada manualmente');
 
                         return 'No se pudo realizar la aprobación mediante JOB del alimento '.$comida. ' del día '.date('d-m-Y'). ' ya que ya se encuentra aprobada manualmente';
 
