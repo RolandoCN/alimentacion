@@ -372,27 +372,41 @@ class ListadoTurnoController extends Controller
         $transaction=DB::transaction(function() use($idalimento){ 
             try{
 
-                $fecha=date('Y-m-d');                
+                $fecha=date('Y-m-d');  
+               
+                //informacion de la comida
+                $comida_con=DB::table('alimento')
+                ->where('idalimento',$idalimento)
+                ->first();
+                $comida=$comida_con->descripcion;
+               
+                //consultamos los de estados generados y aprobado
                 $turnos=DB::table('al_turno_comida as tc')
                 ->leftJoin('alimento as al', 'al.idalimento','tc.id_alimento')
                 ->leftJoin('al_turno as tu', 'tu.id','tc.id_turno')
                 ->leftJoin('horario as h', 'h.id_horario','tu.id_horario')
                 ->where('tc.id_alimento',$idalimento)
                 ->whereDate('tu.start', $fecha)
-                ->where('tc.estado','=','Generado')        
-                ->select('tu.id as idturno')
+                ->whereIn('tc.estado',['Generado','Aprobado'])        
+                ->select('tu.id as idturno','tc.estado as estado_ap')
                 ->get();
-            
+                
+               
                 $id_turnos_array=[];
                 foreach($turnos as $data){
-                    array_push($id_turnos_array, $data->idturno);
+                    //si encuentra uno aprobado 
+                    if($data->estado_ap=='Aprobado'){
+                       
+                        Log::error('No se pudo realizar la aprobación mediante JOB del alimento '.$comida. ' del día '.date('d-m-Y'). ' ya que ya se encuentra aprobada manualmente');
+
+                        return 'No se pudo realizar la aprobación mediante JOB del alimento '.$comida. ' del día '.date('d-m-Y'). ' ya que ya se encuentra aprobada manualmente';
+
+                    }else{
+                        array_push($id_turnos_array, $data->idturno);
+                    }
+                   
                 }
-                
-                //informacion de la comida
-                $comida_con=DB::table('alimento')
-                ->where('idalimento',$idalimento)
-                ->first();
-                $comida=$comida_con->descripcion;
+
                 //si existen generados listos para aprobar
                 if(sizeof($id_turnos_array)>0){
 
