@@ -155,7 +155,7 @@ function accesos(id_perfil, abiertaModal=null){
                 alertNotificar("No se encontró datos","error");
                 return;  
             }
-         
+                     
             $('#tabla_menu').DataTable({
                 "destroy":true,
                 pageLength: 10,
@@ -163,7 +163,7 @@ function accesos(id_perfil, abiertaModal=null){
                 order: [[ 1, "desc" ]],
                 sInfoFiltered:false,
                 language: {
-                    url: '/json/datatables/spanish.json',
+                    url: 'json/datatables/spanish.json',
                 },
                 columnDefs: [
                     { "width": "20%", "targets": 0 },
