@@ -172,7 +172,7 @@ class ListadoTurnoController extends Controller
             if(sizeof($turnos)==0){
                 return [
                     'error'=>true,
-                    'mensaje'=>'Ocurrió un error'
+                    'mensaje'=>'No se encontró información disponibles para aprobar'
                 ];
             }
 
@@ -352,6 +352,11 @@ class ListadoTurnoController extends Controller
                             'mensaje'=>'Información fué aprobada exitosamente, pero no se pudo enviar al correo '
                         ]);
                     }
+                }else{
+                    return response()->json([
+                        'error'=>true,
+                        'mensaje'=>$generaPdf['mensaje']
+                    ]); 
                 }
 
             }catch (\Throwable $e) {
