@@ -62,7 +62,7 @@ class ExtraController extends Controller
         $rules = [
             'id_empleado' =>"required|string|max:10",
             'fecha' =>"required",
-            'motivo' =>"required|string|max:100",
+            'motivo' =>"required|string|max:200",
             'id_alimento' =>"required",
                      
         ];
