@@ -5,6 +5,8 @@ $(document).keyup(function(event) {
     }
 });
 $("#form_valida").submit(function(e){
+   
+
     e.preventDefault();
     let cedula_func=$('#cedula_func').val()
    
@@ -38,10 +40,22 @@ $("#form_valida").submit(function(e){
             console.log(data)
             vistacargando("");                
             if(data.error==true){ 
-                $('#cedula_func').val('')               
+                $('#cedula_func').val('')   
+                //mostramos una ventana principal el error x 8 segundos
+                $('.confirm').prop('disabled',false)
+              
+                swal(data.mensaje, "¡Ocurrió un error!", "error");
+                setTimeout(() => {
+                    $('.confirm').prop('disabled',true)
+                    $('.confirm').click();
+                }, "8000");
+              
                 alertNotificar(data.mensaje,'error');
+
                 $('#audio').attr("src", "./rechazado.mp4")
-                audio.play();                
+                audio.play();        
+                
+                
                 return;                      
             }
 

@@ -4,7 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SisAlim | Log in</title>
+    <title>SisAlim | Verifica</title>
+
+    <link rel="stylesheet" href="{{asset('plugins/sweetalert/sweetalert.css')}}">
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -166,7 +168,7 @@
         <script src="{{asset('bower_components/pnotify/dist/pnotify.buttons.js')}}"></script>
 
     <script src="{{ asset('js/alimentacion/verificaComida.js?v='.rand())}}"></script>
-
+    <script src="{{asset('plugins/sweetalert/sweetalert.js')}}"></script>
 
     <script>
         function mueveReloj(){
