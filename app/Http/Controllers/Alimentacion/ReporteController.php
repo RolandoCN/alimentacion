@@ -433,7 +433,7 @@ class ReporteController extends Controller
                 }
             }
 
-            $nombrePDF="reporte_entre_fecha_".date('d-m-Y').".pdf";
+            $nombrePDF="reporte_entre_fecha_aprobados".date('d-m-Y').".pdf";
 
             $pdf=PDF::loadView('alimentacion.reporte.pdf_entre_fecha_aprobado',['datos'=>$turnos,'lista'=>$lista_final_agrupada, 'desde'=>$fecha_ini, 'hasta'=>$fecha_fin]);
             $pdf->setPaper("A4", "portrait");
