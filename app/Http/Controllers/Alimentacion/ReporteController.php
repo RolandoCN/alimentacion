@@ -354,6 +354,116 @@ class ReporteController extends Controller
         }
     }
 
+    //vista para visualizar los datos de comidas entre fechas (aprobadas)
+    public function informePeriodoAprobados(){
+        return view('alimentacion.reporte.entre_fecha_aprobados');
+    }
+
+    //listado de los alimentos servidos x fechas (consolidado)
+    public function alimentoAprobadoPeriodo($fecha_ini, $fecha_fin){
+        
+        try{
+
+            $turnos=DB::table('al_turno_comida as tc')
+            ->leftJoin('alimento as al', 'al.idalimento','tc.id_alimento')
+            ->leftJoin('al_turno as tu', 'tu.id','tc.id_turno')
+            ->leftJoin('horario as h', 'h.id_horario','tu.id_horario')
+            ->leftJoin('empleado as e', 'e.id_empleado','tu.id_persona')
+            ->leftJoin('puesto as pu', 'pu.id_puesto','e.id_puesto')
+            ->leftJoin('area as a', 'a.id_area','e.id_area')
+            ->where(function($c)use($fecha_ini, $fecha_fin) {
+                $c->whereDate('tu.start', '>=', $fecha_ini)
+                ->whereDate('tu.start', '<=', $fecha_fin);
+            })
+            ->where('tc.estado','=','Aprobado') //aprobado
+            ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','h.hora_ini as hora_ini', 'h.hora_fin as hora_fin', 'tu.id as idturno', 'al.descripcion as comida', 'tc.estado as estado_turno','tu.id_persona', 'tu.start')
+            ->get();
+
+            return response()->json([
+                'error'=>false,
+                'resultado'=>$turnos
+            ]);
+        }catch (\Throwable $e) {
+            Log::error('ReporteController => alimentoAprobadoPeriodo => mensaje => '.$e->getMessage());
+            return response()->json([
+                'error'=>true,
+                'mensaje'=>'Ocurrió un error'
+            ]);
+            
+        }
+    }
+
+      //reporte entre fechas
+      public function reportePeriodoAprob(Request $request){
+        
+        try{
+            
+            set_time_limit(0);
+            ini_set("memory_limit",-1);
+            ini_set('max_execution_time', 0);
+
+            $fecha_ini=$request->fecha_inicial_rep;
+            $fecha_fin=$request->fecha_final_rep;
+           
+            $turnos=DB::table('al_turno_comida as tc')
+            ->leftJoin('alimento as al', 'al.idalimento','tc.id_alimento')
+            ->leftJoin('al_turno as tu', 'tu.id','tc.id_turno')
+            ->leftJoin('horario as h', 'h.id_horario','tu.id_horario')
+            ->leftJoin('empleado as e', 'e.id_empleado','tu.id_persona')
+            ->leftJoin('puesto as pu', 'pu.id_puesto','e.id_puesto')
+            ->leftJoin('area as a', 'a.id_area','e.id_area')
+            ->where(function($c)use($fecha_ini, $fecha_fin) {
+                $c->whereDate('tu.start', '>=', $fecha_ini)
+                ->whereDate('tu.start', '<=', $fecha_fin);
+            })
+            ->where('tc.estado','=','Aprobado') //aprobado
+            ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','h.hora_ini as hora_ini', 'h.hora_fin as hora_fin', 'tu.id as idturno', 'al.descripcion as comida', 'tc.estado as estado_turno','tu.id_persona', 'tu.start as fecha_turno')
+            ->orderBy('fecha_turno','asc')
+            ->get();
+
+         
+            #agrupamos por dias
+            $lista_final_agrupada=[];
+            foreach ($turnos as $key => $item){                
+                if(!isset($lista_final_agrupada[$item->fecha_turno])) {
+                    $lista_final_agrupada[$item->fecha_turno]=array($item);
+            
+                }else{
+                    array_push($lista_final_agrupada[$item->fecha_turno], $item);
+                }
+            }
+
+            $nombrePDF="reporte_entre_fecha_".date('d-m-Y').".pdf";
+
+            $pdf=PDF::loadView('alimentacion.reporte.pdf_entre_fecha_aprobado',['datos'=>$turnos,'lista'=>$lista_final_agrupada, 'desde'=>$fecha_ini, 'hasta'=>$fecha_fin]);
+            $pdf->setPaper("A4", "portrait");
+            $estadoarch = $pdf->stream();
+
+            //lo guardamos en el disco temporal
+            Storage::disk('public')->put(str_replace("", "",$nombrePDF), $estadoarch);
+            $exists_destino = Storage::disk('public')->exists($nombrePDF); 
+            if($exists_destino){ 
+                return response()->json([
+                    'error'=>false,
+                    'pdf'=>$nombrePDF
+                ]);
+            }else{
+                return response()->json([
+                    'error'=>true,
+                    'mensaje'=>'No se pudo crear el documento'
+                ]);
+            }
+        }catch (\Throwable $e) {
+            Log::error('ReporteController => reportePeriodoAprob => mensaje => '.$e->getMessage(). ' linea => '.$e->getLine());
+            return response()->json([
+                'error'=>true,
+                'mensaje'=>'Ocurrió un error'
+            ]);
+            
+        }
+    }
+
+
     //vista para visualizar los datos de comidas entre fechas (detallado)
     public function informeDetallado(){
         return view('alimentacion.reporte.entre_fecha_detallado');

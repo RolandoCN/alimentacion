@@ -171,6 +171,10 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     Route::get('/test-fecha-det/{f_ini}/{f_fin}', [ReporteController::class, 'testReporteFechaDet']);
     Route::post('/reporte-detallado', [ReporteController::class, 'reporteDetallado']);
 
+    Route::get('/aprobados-fechas', [ReporteController::class, 'informePeriodoAprobados'])->middleware('validarRuta');
+    Route::get('/alimento-aprobado-periodo/{f_ini}/{f_fin}', [ReporteController::class, 'alimentoAprobadoPeriodo']);
+    Route::post('/reporte-periodo-aprobado', [ReporteController::class, 'reportePeriodoAprob']);
+   
 
     //EMPLEADO
     Route::get('/empleado', [EmpleadoController::class, 'index'])->middleware('validarRuta');
