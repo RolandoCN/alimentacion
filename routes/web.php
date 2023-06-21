@@ -151,9 +151,7 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     Route::get('/verificar-alimento', [VerificaTurnoController::class, 'vistaVerifica'])->middleware('validarRuta');
     Route::post('/valida-comida-empleado', [VerificaTurnoController::class, 'validarComida']);
 
-
-
-
+    
     //REPORTES
 
     Route::get('/informe-por-usuario', [ReporteController::class, 'informeUsuario'])->middleware('validarRuta');
@@ -207,6 +205,12 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
 
 
 });
+
+//COMPROBACION DE ALIMENTOS POR EMPLEADOS
+Route::get('/comprobar-alimento', [VerificaTurnoController::class, 'vistaComprobar']);
+Route::post('/consulta-comida-empleado', [VerificaTurnoController::class, 'consultaComida']);
+Route::post('/confirmados-empleado', [VerificaTurnoController::class, 'confirmaComidas']);
+
 
 Route::get('/clear', function() {
 

@@ -288,7 +288,8 @@ class ListadoTurnoController extends Controller
                 //aprobamos la tabla turno_comida
                 $aprobar_turno_comida=TurnoComida::whereIn('id_turno',$request->array_turnos)
                 ->where('id_alimento',$id_comida)
-                ->where('estado', 'Generado')
+                // ->where('estado', 'Generado')
+                ->where('estado', 'Confirmado')
                 ->update(['estado'=>'Aprobado', 'id_usuario_aprueba'=>auth()->user()->id,
                 'fecha_aprobacion'=>date('Y-m-d H:i:s')]);
 
@@ -392,7 +393,8 @@ class ListadoTurnoController extends Controller
                 ->leftJoin('horario as h', 'h.id_horario','tu.id_horario')
                 ->where('tc.id_alimento',$idalimento)
                 ->whereDate('tu.start', $fecha)
-                ->whereIn('tc.estado',['Generado','Aprobado'])        
+                // ->whereIn('tc.estado',['Generado','Aprobado']) 
+                ->whereIn('tc.estado',['Confirmado','Aprobado'])        
                 ->select('tu.id as idturno','tc.estado as estado_ap')
                 ->get();
                 
@@ -424,7 +426,8 @@ class ListadoTurnoController extends Controller
                     // aprobamos la tabla turno_comida
                     $aprobar_turno_comida=TurnoComida::whereIn('id_turno',$id_turnos_array)
                     ->where('id_alimento',$idalimento)
-                    ->where('estado', 'Generado')
+                    // ->where('estado', 'Generado')
+                    ->where('estado', 'Confirmado')
                     ->update(['estado'=>'Aprobado', 'id_usuario_aprueba'=>1,
                     'fecha_aprobacion'=>date('Y-m-d H:i:s'), "job_aprueba"=>'S']);
 

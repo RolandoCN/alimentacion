@@ -61,6 +61,9 @@ function buscarTurnos(){
                 if(item.estado_turno=="Generado"){
                     estado="Pendiente"
                    
+                }else if(item.estado_turno=="Confirmado"){
+                    estado="Confirmado"
+                    // contador=contador+1
                 }else{
                     estado="Aprobado"
                     contador=contador+1

@@ -216,7 +216,25 @@ class TurnoController extends Controller
                         'dataArray'=>[]
                     ]);
                 }
-               
+                if($Turno->estado=="E"){
+                    return response()->json([
+                        'error'=>true,
+                        'mensaje'=>'El turno ya fué elimiado',
+                        'dataArray'=>[]
+                    ]);
+                }
+
+                //verificamos si el empleado no ha confirmado al menos un alimento asociado a ese turno
+                $turno_ali_emp=TurnoComida::where('estado','Confirmado')
+                ->where('id_turno',$request->id)->first();
+                if(!is_null($turno_ali_emp)){
+                    return response()->json([
+                        'error'=>true,
+                        'mensaje'=>'El turno ya fué verificado por el empleado y no se puede eliminar',
+                        'dataArray'=>[]
+                    ]);
+                }
+              
                 $Turno->estado="E";
                 $Turno->id_usuario_act=auth()->user()->id;
                 $Turno->fecha_act=date('Y-m-d H:i:s');
