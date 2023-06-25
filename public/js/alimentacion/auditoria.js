@@ -43,7 +43,7 @@ function buscarTurnos(){
     $('#fecha_fin_rep').html('')
     
     $.get('auditoria-turnos/'+fecha_inicial+'/'+fecha_final, function(data){
-
+        console.log(data)
         if(data.error==true){
 			$("#tabla_auditoria tbody").html('');
 			$("#tabla_auditoria tbody").html(`<tr><td colspan="${num_col}">No existen registros</td></tr>`);
@@ -67,15 +67,20 @@ function buscarTurnos(){
             let contador=0
 			$.each(data.resultado,function(i, item){
                 let estado=""
-               
+                
                 if(item.estado_turno=="P"){
-                    estado="Pendiente"
+                    // estado="Pendiente"
+                    estado=(`<span style="min-width: 90px !important;font-size: 12px" class="label label-primary estado_validado"><i class="fa fa-question-circle"></i>&nbsp;  Pendiente</span>`)
                    
                 }else if(item.estado_turno=="A"){
-                    estado="Aprobado"
+                    // estado="Aprobado"                    
+                    estado=(`<span style="min-width: 90p !important;font-size: 12px" class="label label-success estado_validado"><i class="fa fa-thumbs-up"></i> &nbsp; Aprobado</span>`
+                    );
+                
                    
                 }else{
-                    estado="Eliminado"
+                    // estado="Eliminado"
+                    estado=(`<span onclick="verDetalleElimin('${item.motivo_elimina}')" style="min-width: 90px !important;font-size: 12px" class="label label-danger estado_validado"><i class="fa fa-thumbs-down"></i>&nbsp; Eliminado</span>`)
                 }
                 let usuario_act=""
                 if(item.nombre_user_actualiza==null){
@@ -105,9 +110,7 @@ function buscarTurnos(){
                                                 <td style="width:15%; text-align:center">
                                                     ${item.desc_horario} <br>  ${item.hora_ini}- ${item.hora_fin}
                                                 </td>
-                                                <td style="width:8%; text-align:center">
-                                                    ${estado}
-                                                </td>
+                                               
                                                 <td style="width:25%; text-align:left">
                                                     <li> <b>Usuario:</b>${item.nombre_user_ingresa} ${item.apellidos_user_ingresa}
                                                     <li> <b>Fecha:</b>  ${item.fecha_reg}
@@ -118,7 +121,9 @@ function buscarTurnos(){
                                                     <li> <b>Fecha:</b> ${fecha_actual}
                                                 </td>
 
-                                              
+                                                <td style="width:8%; text-align:center; vertical-align:middle">
+                                                    ${estado}
+                                                </td>
 											
 										</tr>`);
 			})
@@ -134,42 +139,18 @@ function buscarTurnos(){
 
 }
 
-
-function descargarAprobacion(){
-
-    let fecha_inicial_rep=$('#fecha_ini').val()
-    let fecha_final_rep=$('#fecha_fin').val()
-
-    vistacargando("m","Espere por favor");           
-
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
+function verDetalleElimin(detalle){
+    $('#motivo_txt').html('')
+    $('#modal_Detalle_Eli').modal('show')
+   
+    if(detalle=='null' || detalle==""){
+        $('#motivo_txt').html('')
+    }else{
+        $('#motivo_txt').html(detalle)
+    }
     
-    $.ajax({
-        type: "POST",
-        url: 'reporte-detallado',
-        data: { _token: $('meta[name="csrf-token"]').attr('content'),
-        fecha_inicial_rep:fecha_inicial_rep, fecha_final_rep:fecha_final_rep },
-        success: function(data){
-           
-            vistacargando("");                
-            if(data.error==true){
-                alertNotificar(data.mensaje,'error');
-                return;                      
-            }
-            alertNotificar("El documento se descargará en unos segundos...","success");
-            window.location.href="descargar-reporte/"+data.pdf
-                            
-        }, error:function (data) {
-            vistacargando("");
-            alertNotificar('Ocurrió un error','error');
-        }
-    });
-
 }
+// 
 function cargar_estilos_datatable(idtabla){
 	$("#"+idtabla).DataTable({
 		'paging'      : true,

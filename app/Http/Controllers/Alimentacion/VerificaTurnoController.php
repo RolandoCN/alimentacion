@@ -58,14 +58,16 @@ class VerificaTurnoController extends Controller
         ->leftJoin('area as a', 'a.id_area','e.id_area')
         ->where('tc.id_alimento',$verificarRangoFecha->idalimento)
         ->whereDate('tu.start', date('Y-m-d'))
-        ->where('tc.estado','=','Aprobado')  
+        // ->where('tc.estado','=','Aprobado')  //quitado ultimos consideraciones
+        ->whereIn('tc.estado',['Aprobado','Eliminado']) //agg ultimos consideraciones
+        ->where('tc.confirma_empleado','=','Si') //agg ultimos consideraciones  
         ->where('e.cedula',$cedula)      
         ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','h.hora_ini as hora_ini', 'h.hora_fin as hora_fin', 'tu.id as idturno','tu.start as fecha_turno', 'al.descripcion as comida', 'tc.estado as estado_turno','tc.id_turno_comida as id_turno_comida',
-        'tc.hora_retira_comida','tc.estado_retira_comida')
+        'tc.hora_retira_comida','tc.estado_retira_comida','tc.confirma_empleado','tc.fecha_elimina as fecha_eli')
         ->first(); 
-
+        
         if(is_null($turnos_aprobado)){
-
+            //si no tiene en la comida solicitada buscamos todas las de ese dia (asi no este aprobada x th)
             $turnos_dias=DB::table('al_turno_comida as tc')
             ->leftJoin('alimento as al', 'al.idalimento','tc.id_alimento')
             ->leftJoin('al_turno as tu', 'tu.id','tc.id_turno')
@@ -77,15 +79,30 @@ class VerificaTurnoController extends Controller
             ->where('tc.estado','!=','Eliminado')  
             ->where('e.cedula',$cedula)      
             ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','h.hora_ini as hora_ini', 'h.hora_fin as hora_fin', 'tu.id as idturno','tu.start as fecha_turno', 'al.descripcion as comida', 'tc.estado as estado_turno','tc.id_turno_comida as id_turno_comida',
-            'tc.hora_retira_comida','tc.estado_retira_comida')
-            ->first(); 
+            'tc.hora_retira_comida','tc.estado_retira_comida','al.idalimento','tc.confirma_empleado')
+            ->get(); 
+   
+            if(sizeof($turnos_dias)>0){
+               
+                foreach($turnos_dias as $data){
+                    //si esta pendiente(generado) y confirma_empleado es diferente de Si 
+                    if($data->estado_turno=="Generado" &&  $data->confirma_empleado!="Si"){
+                        //si la hora laboral esta en el rango de la hora solicitado del alimento
+                        if(strtotime($data->hora_ini) <= strtotime($hora_actual) && strtotime($data->hora_fin) >= strtotime($hora_actual)){
+                            return response()->json([
+                                'error'=>true,
+                                'mensaje'=>'El alimento solicitado no fué confirmado por usted en la hora respectiva'
+                            ]); 
+                        }  
 
-            if(!is_null($turnos_dias)){
-                return response()->json([
-                    'error'=>true,
-                    'mensaje'=>'El alimento está fuera de su horario laboral, que es de '.$turnos_dias->hora_ini.' a '.$turnos_dias->hora_fin
-                ]);
+                        return response()->json([
+                            'error'=>true,
+                            'mensaje'=>'El alimento está fuera de su horario laboral, que es de '.$data->hora_ini.' a '.$data->hora_fin
+                        ]);
 
+                    }
+                }
+        
             }else{
                 return response()->json([
                     'error'=>true,
@@ -93,13 +110,20 @@ class VerificaTurnoController extends Controller
                 ]);
             }
 
-
+           
             return response()->json([
                 'error'=>true,
                 'mensaje'=>'No se encontró alimento aprobado para el número de identificación ingresado'
             ]);
         }
-
+       
+        //si fue confirmado x el empleado, pero eliminado por th
+        if($turnos_aprobado->estado_turno=="Eliminado"){
+            return response()->json([
+                'error'=>true,
+                'mensaje'=>'Su turno confirmado del/la  '.$turnos_aprobado->comida. ' fué eliminado por Talento Humano a las '.date("H:i", strtotime($turnos_aprobado->fecha_eli))
+            ]);
+        }
 
         if($turnos_aprobado->estado_retira_comida=="Si"){
             return response()->json([
@@ -187,11 +211,13 @@ class VerificaTurnoController extends Controller
         ->leftJoin('puesto as pu', 'pu.id_puesto','e.id_puesto')
         ->leftJoin('area as a', 'a.id_area','e.id_area')
         ->whereDate('tu.start', date('Y-m-d'))
-        ->whereIn('tc.estado',['Generado','Confirmado'])  
+        ->where('tu.estado','!=','E')
+        // ->whereIn('tc.estado',['Generado','Confirmado'])  
         ->where('e.cedula',$cedula)      
         ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','h.hora_ini as hora_ini', 'h.hora_fin as hora_fin', 'tu.id as idturno','tu.start as fecha_turno', 'al.descripcion as comida', 'tc.estado as estado_turno','tc.id_turno_comida as id_turno_comida','tc.id_alimento',
-        'tc.hora_retira_comida','tc.estado_retira_comida')
+        'tc.hora_retira_comida','tc.estado_retira_comida','tc.confirma_empleado')
         ->get(); 
+        // dd($turnos_registrados);
 
         if(sizeof($turnos_registrados)==0){
 
@@ -218,6 +244,7 @@ class VerificaTurnoController extends Controller
                         $menuDelDia[$key]->id_turno_comida=$lista_t->id_turno_comida;
                         $menuDelDia[$key]->comida=$lista_t->comida;
                         $menuDelDia[$key]->estado_comida=$lista_t->estado_turno;
+                        $menuDelDia[$key]->confirma_empleado=$lista_t->confirma_empleado;
                     }
                 }
             }
@@ -243,7 +270,17 @@ class VerificaTurnoController extends Controller
     public function confirmaComidas (Request $request){
         $transaction=DB::transaction(function() use($request){
             try{
-                // dd($request->all());
+                //controlamos que no haya sido confirmada (otra pc o navegador simultaneamente)
+                $control_Ali=TurnoComida::where('estado','Confirmado')
+                ->whereIn('id_turno_comida',$request->alimentos_chequeados)->first();
+                if(!is_null($control_Ali)){
+                    return response()->json([
+                        'error'=>true,
+                        'mensaje'=>"La confirmación del/los alimento(s) del día ya fué realizada a las ".date("H:i", strtotime($control_Ali->fecha_hora_confirma_emp)),
+                        
+                    ]);
+                }
+
                 $array_errores=[];
                 $aprobados=0;
                 //actualizamos el estado de los turno (alimento seleccionado)
@@ -284,19 +321,22 @@ class VerificaTurnoController extends Controller
                         return response()->json([
                             'error'=>true,
                             'mensaje'=>$array_errores,
+                            "inconsistencia"=>'S',
                         ]);
                     }
                     return response()->json([
                         'error'=>true,
-                        'mensaje'=>"No se pudo afirmar el alimento",
+                        'mensaje'=>"No se pudo confirmar el alimento",
+                        
                     ]);
                 }else{
                     if(sizeof($array_errores)>0){
                         $error_cant=sizeof($array_errores);
                         return response()->json([
                             'error'=>false,
-                            'mensaje'=>"Fueron aprobado(s) ".$aprobados. " alimentos y ".$error_cant. " no se pudieron aprobar",
-                            "inconsistencia"=>'S'
+                            'mensaje'=>"Fueron confirmados(s) ".$aprobados. " alimentos y ".$error_cant. " no se pudo confirmar",
+                            "inconsistencia"=>'S',
+                            'lista_error'=>$array_errores
                         ]);
                     }else{
                         return response()->json([
@@ -312,7 +352,7 @@ class VerificaTurnoController extends Controller
                 Log::error('VerificaTurnoController => confirmaComidas => mensaje => '.$e->getMessage().' linea_error => '.$e->getLine());
                 return response()->json([
                     'error'=>true,
-                    'mensaje'=>'Ocurrió un error',
+                    'mensaje'=>'Ocurrió un error, intentelo mas tarde',
                 ]);
                 
             }

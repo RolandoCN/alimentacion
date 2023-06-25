@@ -60,34 +60,28 @@ function buscarTurnos(){
                              
                 let estado=""
                 let color_fila=""
-                let elimina_accion=""
-                let accionX=""
+               
                 if(item.estado_turno=="Generado"){
                     estado="Pendiente" 
                     contador_pend=contador_pend+1
                     color_fila="color_pendiente"
-                    elimina_accion=`eliminaConfirmado('G')`
-                    accionX="label-disabled"
+                   
                 }else if(item.estado_turno=="Confirmado"){
                     estado="Confirmado"
                     color_fila="color_confirmado"
                     contador_conf=contador_conf+1
                     IdturnosArray.push(item.idturno)
-                    elimina_accion=`eliminaConfirmado(${item.id_turno_comida})`
-                    accionX="label-danger"
                 }else{
                     estado="Aprobado"
                     contador=contador+1
                     color_fila="color_aprobacion"
-                    elimina_accion=`eliminaConfirmado('A')`
-                    accionX="label-disabled"
                 }
 				$('#table_persona').append(`<tr class="${color_fila}">
                                                 <td style="width:10%">
                                                     ${item.cedula}
                                                    
                                                 </td>
-                                                <td style="width:25%; text-align:left">${item.nombres}</td>
+                                                <td style="width:30%; text-align:left">${item.nombres}</td>
                                                 <td style="width:20%; text-align:left">${item.puesto}</td>
                                                 <td style="width:20%; text-align:left">${item.area}</td>
                                                 <td style="width:10%">${item.hora_ini} - ${item.hora_fin}</td>
@@ -96,11 +90,7 @@ function buscarTurnos(){
                                                     ${estado}
                                                 </td>
 
-                                                <td style="width:5%">
-                                                    
-                                                    <span onclick="${elimina_accion}" style="min-width: 90p !important;font-size: 12px" class="label ${accionX} estado_validado"><i class="fa fa-times"></i> </span>
-                                                </td>
-											
+                                               
 										</tr>`);
 			})
 
@@ -121,27 +111,14 @@ function buscarTurnos(){
     })  
 
 }
-function eliminaConfirmado(valor){
-    $('#id_turno_ali_sel').val('')
-    if(valor=="G"){
-        alertNotificar("No es posible eliminar datos que no hayan sido confirmados", "error")
-        return
-    }else if(valor=="A"){
-        alertNotificar("No es posible eliminar datos que hayan sido aprobados", "error")
-        return
-    }else{
-        $('#id_turno_ali_sel').val(valor)
-        $('#modal_Detalle_Eli').modal('show')
-    }
-}
+
 function aprobarTurno(){
     if(IdturnosArray.length==0){
         alertNotificar("No existen turnos confirmados para aprobar", "error")
         return
     }
-    let sms="¿Desea aprobar los "+IdturnosArray.length+" turnos confirmados?"
     swal({
-        title: sms,
+        title: "¿Desea aprobar la solicitud?",
         type: "warning",
         showCancelButton: true,
         confirmButtonClass: "btn-danger",
@@ -158,71 +135,6 @@ function aprobarTurno(){
     });      
 }   
 
-function eliminacion_comida(){
-    var motivo_elim=$('#motivo_elim').val()
-    
-    if(motivo_elim==""){
-        alertNotificar("Debe ingresar el motivo", "error")
-        return
-    }
-    swal({
-        title: "¿Desea eliminar la informacion?",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonClass: "btn-danger",
-        confirmButtonText: "Si, continuar",
-        cancelButtonText: "No, cancelar",
-        closeOnConfirm: false,
-        closeOnCancel: false
-    },
-    function(isConfirm) {
-        if (isConfirm) { 
-            procede_eliminacion();
-        }
-        sweetAlert.close();   // ocultamos la ventana de pregunta
-    });      
-} 
-function procede_eliminacion(){
-
-    var motivo_elim=$('#motivo_elim').val()
-    var idturno_comida=$('#id_turno_ali_sel').val()
-    if(motivo_elim==""){
-        alertNotificar("Debe ingresar el motivo", "error")
-        return
-    }
-    vistacargando("m","Espere por favor");           
-
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-     
-    $.ajax({
-        type: "POST",
-        url: 'elimina-turno-comida',
-        data: { _token: $('meta[name="csrf-token"]').attr('content'),
-        motivo_elim:motivo_elim, idturno_comida:idturno_comida},
-        success: function(data){
-            $('#modal_Detalle_Eli').modal('hide')
-            vistacargando("");                
-            if(data.error==true){
-                alertNotificar(data.mensaje,'error');
-                buscarTurnos()
-                
-                return;                      
-            }
-            alertNotificar(data.mensaje,"success");
-            buscarTurnos()
-                            
-        }, error:function (data) {
-            vistacargando("");
-            // buscarTurnos()
-            alertNotificar('Ocurrió un error','error');
-        }
-    });
-
-}
 
 
 function realizar_aprobacion(){
@@ -249,11 +161,6 @@ function realizar_aprobacion(){
            
             vistacargando("");                
             if(data.error==true){
-                if(data.diferencia=="S"){
-                    alertNotificar(data.mensaje,'error');
-                    buscarTurnos()
-                    return;    
-                }
                 alertNotificar(data.mensaje,'error');
                 return;                      
             }

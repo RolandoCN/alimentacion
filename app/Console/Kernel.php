@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\AprobarAlmuerzo',
         'App\Console\Commands\AprobarMerienda',
         'App\Console\Commands\AprobarCena',
+        'App\Console\Commands\RegistraCabeceraMenu',
     ];
 
 

@@ -1,6 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+      
+    .color_aprobacion{
+        background: #d7f7e7 !important
+    }
+
+    .color_confirmado{
+       
+        background: #9ae5f7  !important
+    }
+
+    .color_pendiente{
+        background: #f3d5d5  !important
+    }
+</style>
     <section class="content-header">
         <h1>
             Listado de Turno
@@ -67,7 +82,7 @@
                             </form>
                         </div>
 
-                     
+                      
                     </div>
                 </div>
 
@@ -89,9 +104,26 @@
                             
                         </div>  
 
+                       
                         <div class="col-md-6">
                             <ul class="nav nav-pills nav-stacked"style="margin-left:50px">
-                                <li style="border-color: white"><a><i class="fa fa-sort-numeric-asc text-blue"></i> <b class="text-black" style="font-weight: 650 !important">Total</b>: <span  id="total_turno"> </span></a></li>
+                                <li style="border-color: white"><a><i class="fa fa-user text-blue"></i> <b class="text-black" style="font-weight: 650 !important">Usuario</b>: <span  id="usuario">{{auth()->user()->persona->nombres}} {{auth()->user()->persona->apellidos}} </span></a></li>
+                            
+                            </ul>
+                            
+                        </div> 
+
+                        <div class="col-md-6">
+                            <ul class="nav nav-pills nav-stacked"style="margin-left:50px">
+                                <li style="border-color: white"><a><i class="fa fa-sort-numeric-asc text-blue"></i> <b class="text-black" style="font-weight: 650 !important">Pendientes</b>: <span  id="total_pendientes"> </span></a></li>
+                            
+                            </ul>
+                            
+                        </div>  
+
+                        <div class="col-md-6 confir_secc">
+                            <ul class="nav nav-pills nav-stacked"style="margin-left:50px">
+                                <li style="border-color: white"><a><i class="fa fa-edit text-blue"></i> <b class="text-black" style="font-weight: 650 !important">Confirmados</b>: <span  id="total_confirmados"> </span></a></li>
                             
                             </ul>
                             
@@ -99,7 +131,7 @@
 
                         <div class="col-md-6">
                             <ul class="nav nav-pills nav-stacked"style="margin-left:50px">
-                                <li style="border-color: white"><a><i class="fa fa-user text-blue"></i> <b class="text-black" style="font-weight: 650 !important">Usuario</b>: <span  id="usuario">{{auth()->user()->persona->nombres}} {{auth()->user()->persona->apellidos}} </span></a></li>
+                                <li style="border-color: white"><a><i class="fa fa-check-square text-blue"></i> <b class="text-black" style="font-weight: 650 !important">Aprobados</b>: <span  id="total_apro"> </span></a></li>
                             
                             </ul>
                             
@@ -139,7 +171,7 @@
 
 {{-- <script src="/js/alimentacion/turno/listado.js"></script> --}}
 
-<script src="{{ asset('js/alimentacion/turno/listado.js?v='.rand())}}"></script>
+<script src="{{ asset('js/alimentacion/turno/listado_busca.js?v='.rand())}}"></script>
     
 <script>
 

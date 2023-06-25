@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SisAlim | Verifica</title>
+    <title>SisAlim | Comprobar</title>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -45,6 +45,10 @@
         .color_aprobacion{
             background: #d7f7e7 !important
         }
+
+        .color_elim{
+            background:#e3c8cb !important
+        }
     </style>
 </head>
 
@@ -57,7 +61,7 @@
                 <div class="box-body box-profile">
                     <a href="{{asset('/')}}"><img class="profile-user-img img-responsive img-circle" src="{{ asset('dist/img/logomsp.png')}}" alt="User profile picture"></a>
                     <h3 class="profile-username text-center" style="font-weight:500">Hospital General Dr. Napoleón Dávila Córdova</h3>
-                    <p class="text-muted text-center" style="color:black;font-weight:520">Sistema Alimentación</p>
+                    <p class="text-muted text-center" style="color:black;font-weight:520">Confirmación Alimentación</p>
                     <div class="" style="margin-bottom:12px;text-align:center" >
                        <input type="text" style="text-align:center;color:black; font-weight:600; font-size:17px"  name="reloj" id="reloj" size="20"  disabled>
                     </div>
@@ -81,6 +85,8 @@
                               
                             </div>
                             <button type="submit" class="btn btn-primary btn-block" ><b>Consultar</b></button>
+
+                           
                         </form>
                     </div>
 
@@ -119,27 +125,31 @@
                                                 <li style="border-color: white"><a><i class="fa fa-credit-card text-blue"></i> <b class="text-black" style="font-weight: 650 !important">Identificación</b>: <span  id="identificacion_Apr">  </span></a></li>
                                                
                                             </ul>
-                                            <ul class="nav nav-pills nav-stacked"style="margin-left:0px">
-                                                <li style="border-color: white"><a><i class="fa fa-briefcase text-blue"></i> <b class="text-black" style="font-weight: 650 !important"> Puesto</b>: <span  id="puesto_Apr"></span></a></li>
-                                               
-                                            </ul>
+
                                             <ul class="nav nav-pills nav-stacked"style="margin-left:0px">
                                                 <li style="border-color: white"><a><i class="fa fa-calendar text-blue"></i> <b class="text-black" style="font-weight: 650 !important"> Fecha</b>: <span  id="fecha_Act"></span></a></li>
                                                
                                             </ul>
+                                            <ul class="nav nav-pills nav-stacked"style="margin-left:0px">
+                                                <li style="border-color: white"><a><i class="fa fa-briefcase text-blue"></i> <b class="text-black" style="font-weight: 650 !important"> Puesto</b>: <span  id="puesto_Apr"></span></a></li>
+                                               
+                                            </ul>
+                                          
                                         </div>     
                                         <div class="col-md-6">
                                             <ul class="nav nav-pills nav-stacked" style="margin-left:12px">
                                                 <li style="border-color: white"><a><i class="fa fa-user text-blue"></i> <b class="text-black" style="font-weight: 650 !important">Usuario:</b> <span  id="user_Apr"> </span></a></li>
                                                 
                                             </ul>
+                                          
+
                                             <ul class="nav nav-pills nav-stacked" style="margin-left:12px">
-                                                <li style="border-color: white"><a><i class="fa fa-home text-blue"></i> <b class="text-black" style="font-weight: 650 !important">Area:</b> <span  id="area_Apr"> </span></a></li>
+                                                <li style="border-color: white"><a><i class="fa fa-clock-o text-blue"></i> <b class="text-black" style="font-weight: 650 !important">Horario:</b> <span  id="horario_Apr"> </span></a></li>
                                                 
                                             </ul>
 
                                             <ul class="nav nav-pills nav-stacked" style="margin-left:12px">
-                                                <li style="border-color: white"><a><i class="fa fa-clock-o text-blue"></i> <b class="text-black" style="font-weight: 650 !important">Horario:</b> <span  id="horario_Apr"> </span></a></li>
+                                                <li style="border-color: white"><a><i class="fa fa-home text-blue"></i> <b class="text-black" style="font-weight: 650 !important">Area:</b> <span  id="area_Apr"> </span></a></li>
                                                 
                                             </ul>
                                         </div>  
@@ -179,9 +189,8 @@
                                 <div class="col-md-12" style="margin-top: 15px !important">
                                     <center>
                                         <button onclick="aprobarConfirmacion()"  id="btn_aprobar" type="button" class="btn btn-success" ><span class="fa fa-check-circle-o"></span> Aprobar</button>
-                                        <button onclick="cerrar()"  id="btn_cancelar" type="button" class="btn btn-danger" ><span class="fa fa-times"></span> Cerrar</button>
-                                       
-    
+                                        <button onclick="cerrar()"  id="btn_cancelar_" type="button" class="btn btn-danger" ><span class="fa fa-times"></span> Cerrar</button>
+                                           
     
                                     </center>
                                 </div>

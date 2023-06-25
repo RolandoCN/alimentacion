@@ -19,5 +19,9 @@ class Turno extends Model
         ->where('estado','A')->with('puesto','area');
     }
 
+    public function usuario_aprueba(){
+        return $this->belongsTo('App\Models\User', 'id_usuario_act', 'id')->with('persona');
+    }
+
 }
 ?>

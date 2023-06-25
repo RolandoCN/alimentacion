@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-
+<link rel="stylesheet" href="{{asset('plugins/sweetalert/sweetalert.css')}}">
 <link rel="stylesheet" href="{{asset('bower_components/fullcalendar/dist/fullcalendar.min.css')}}">
 <link rel="stylesheet" href="{{asset('bower_components/fullcalendar/dist/fullcalendar.print.min.css')}}" media="print">
  
@@ -116,11 +116,7 @@
                         </div> 
                     </div>
                     
-                    {{-- <div class="box-body" style="display:none">                
-                        <div class="col-md-10">   
-                            <div id='calendar'  style=""></div>
-                        </div> 
-                    </div> --}}
+                    
                 </div>
             </div>
         </div>
@@ -130,6 +126,9 @@
     </section>
 @endsection
 @section('scripts')
+
+<script src="{{ asset('js/alimentacion/consultarComidaEmpl.js?v='.rand())}}"></script>
+<script src="{{asset('plugins/sweetalert/sweetalert.js')}}"></script>
 <script src="{{asset('bower_components/moment/moment.js')}}"></script>
 <script src="{{asset('bower_components/fullcalendar/dist/fullcalendar.min.js')}}"></script>
 <script src="{{asset('bower_components/fullcalendar/dist/locale/es.js')}}"></script>

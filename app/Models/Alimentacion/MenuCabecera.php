@@ -15,6 +15,10 @@ class MenuCabecera extends Model
         ->where('estado','A');
     }
 
+    public function alimento(){
+        return $this->belongsTo('App\Models\Alimentacion\Alimento', 'id_alimento', 'idalimento')
+        ->where('estado','A');
+    }
    
 }
 ?>

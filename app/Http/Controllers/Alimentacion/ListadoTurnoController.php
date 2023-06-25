@@ -47,7 +47,7 @@ class ListadoTurnoController extends Controller
             ->where('tc.id_alimento',$idalimento)
             ->whereDate('tu.start', $fecha)
             ->where('tc.estado','!=','Eliminado')        
-            ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','h.hora_ini as hora_ini', 'h.hora_fin as hora_fin', 'tu.id as idturno', 'al.descripcion as comida', 'tc.estado as estado_turno')
+            ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','h.hora_ini as hora_ini', 'h.hora_fin as hora_fin', 'tu.id as idturno', 'al.descripcion as comida', 'tc.estado as estado_turno', 'tc.id_turno_comida')
             ->get();
 
             return response()->json([
@@ -236,9 +236,7 @@ class ListadoTurnoController extends Controller
       
         $transaction=DB::transaction(function() use($request){ 
             try{
-              
-                //validaciones
-
+                              
                 $valida_estado=Turno::whereIn('id', $request->array_turnos)
                 ->where('estado','!=', 'E') //solo si no ha sido eliminado
                 ->first();
@@ -249,11 +247,25 @@ class ListadoTurnoController extends Controller
                 if(strtotime($fecha_turno) < strtotime(date('Y-m-d'))){
                     return response()->json([
                         'error'=>true,
-                        'mensaje'=>'La fecha de aprobación no puede menor a la fecha actual'
+                        'mensaje'=>'La fecha de aprobación no puede ser menor a la fecha actual'
                     ]);
                 }
 
                 $id_comida=$request->comida_sel;
+
+                //comprobamos si no ha sido aporbado
+                $valida_aprobado=TurnoComida::with('usuario_aprueba')
+                ->whereIn('id_turno', $request->array_turnos)
+                ->where('estado','=', 'Aprobado') 
+                ->where('id_alimento','=', $id_comida) 
+                ->first();
+               
+                if(!is_null($valida_aprobado)){
+                    return response()->json([
+                        'error'=>true,
+                        'mensaje'=>'La informacion ya fue aprobada por '.$valida_aprobado->usuario_aprueba->persona->nombres." ".$valida_aprobado->usuario_aprueba->persona->apellidos." a las ".date("H:i", strtotime($valida_aprobado->fecha_aprobacion))
+                    ]);
+                }
 
                 //validamos que segun el tipo de comida eleccionada controle la hora maxima de aprobacion
                 $hora_valida=DB::table('alimento')
@@ -279,6 +291,26 @@ class ListadoTurnoController extends Controller
                         ]);
                     }
                 }
+
+                //comprobamos que la cantidad confirmada no haya cambiado durante el proceso de envio
+                $turnos_confirmados=DB::table('al_turno_comida as tc')
+                ->leftJoin('alimento as al', 'al.idalimento','tc.id_alimento')
+                ->leftJoin('al_turno as tu', 'tu.id','tc.id_turno')
+                ->leftJoin('horario as h', 'h.id_horario','tu.id_horario')
+                ->where('tc.id_alimento',$id_comida)
+                ->whereDate('tu.start', $fecha_turno)
+                ->where('tc.estado','Confirmado')        
+                ->select('tu.id as idturno','tc.estado as estado_ap')
+                ->get();
+
+                if(sizeof($turnos_confirmados) != sizeof($request->array_turnos)){
+                    return response()->json([
+                        'error'=>true,
+                        'mensaje'=>'La cantidad de confirmados aumento por favor vuelve a enviar la solicitud',
+                        'diferencia'=>'S'
+                    ]);
+                }             
+                
                 //cambiamos el estado de la tabla turno
                 $aprobar=Turno::whereIn('id',$request->array_turnos)
                 ->where('estado', 'P')
@@ -309,7 +341,7 @@ class ListadoTurnoController extends Controller
                     
                     //consultamos el correo donde enviaremos el documento
                     $correo_param=DB::table('al_parametros')
-                    ->where('codigo','ECAA')->first();
+                    ->where('codigo','ECAA_')->first();
                     if(!is_null($correo_param)){
                         $correo_db_par=$correo_param->valor;
                     }else{
@@ -444,7 +476,7 @@ class ListadoTurnoController extends Controller
                         //ECAA==ENVIA CORREO APROBACION ALIMENTOS
                         //consultamos el correo donde enviaremos el documento
                         $correo_param=DB::table('al_parametros')
-                        ->where('codigo','ECAA')->first();
+                        ->where('codigo','ECAA_')->first();
                         if(!is_null($correo_param)){
                             $correo_db_par=$correo_param->valor;
                         }else{
@@ -558,6 +590,54 @@ class ListadoTurnoController extends Controller
 
         }catch (\Throwable $e) {
             Log::error('ListadoTurnoController => generarPdfAprobacion => mensaje => '.$e->getMessage());
+            return [
+                'error'=>true,
+                'mensaje'=>'Ocurrió un error, intentelo más tarde'
+            ];
+            
+        }
+    }
+
+    public function eliminacionTurnoComida(Request $request){
+       
+        try{
+            
+            //eliminados el turno comida
+            $turno_comida=TurnoComida::where('id_turno_comida',$request->idturno_comida)
+            ->first();
+          
+            if(!is_null($turno_comida)){
+                if($turno_comida->estado=="Eliminado"){
+                    return [
+                        'error'=>true,
+                        'mensaje'=>'La informacion ya fue eliminada'
+                    ];
+                }
+                if($turno_comida->estado=="Generado"){
+                    return [
+                        'error'=>true,
+                        'mensaje'=>'La informacion no ha sido confirmada'
+                    ];
+                }
+               
+                $turno_comida->estado="Eliminado";
+                $turno_comida->motivo_eliminacion=$request->motivo_elim;
+                $turno_comida->id_usuario_aprueba=auth()->user()->id;
+                $turno_comida->fecha_elimina=date('Y-m-d H:i:s');
+                $turno_comida->save();
+
+                return [
+                    'error'=>true,
+                    'mensaje'=>'Informacion eliminada exitosamente'
+                ];
+            }
+            return [
+                'error'=>true,
+                'mensaje'=>'No se encontro informacion'
+            ];
+
+        }catch (\Throwable $e) {
+            Log::error('ListadoTurnoController => eliminacionTurnoComida => mensaje => '.$e->getMessage(). ' linea => '.$e->getLine());
             return [
                 'error'=>true,
                 'mensaje'=>'Ocurrió un error, intentelo más tarde'

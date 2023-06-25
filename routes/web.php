@@ -16,6 +16,7 @@ use App\Http\Controllers\Alimentacion\EmpleadoController;
 use App\Http\Controllers\Alimentacion\ExtraController;
 use App\Http\Controllers\Alimentacion\AuditoriaController;
 use App\Http\Controllers\Alimentacion\TipoAlimentosController;
+use App\Http\Controllers\Alimentacion\MenuAlimentoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -132,6 +133,7 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     Route::get('/listado-turno', [ListadoTurnoController::class, 'index'])->middleware('validarRuta');
     Route::get('/turno-fecha/{fecha}/{alim}', [ListadoTurnoController::class, 'turnosFecha']);
     Route::post('/aprobar-turno', [ListadoTurnoController::class, 'aprobacionTurno']);
+    Route::post('/elimina-turno-comida', [ListadoTurnoController::class, 'eliminacionTurnoComida']);
 
 
     //GESTION DE TURNOS AGREGADOS SIN OPCION A APROBAR
@@ -203,6 +205,16 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     //TEST JOBS APROBACION
     Route::get('/job-aprobacion-ali/{id}', [ListadoTurnoController::class, 'aprobarAlimentoJob'])->middleware('auth');
 
+
+    //PERFILES
+    Route::get('/menu-dia', [MenuAlimentoController::class, 'index']);
+    Route::get('/listado-menu-dia', [MenuAlimentoController::class, 'listar']);
+    Route::get('/menu-alimento/{id}', [MenuAlimentoController::class, 'menuAlimento']);
+    Route::post('/guardar-menu-ali', [MenuAlimentoController::class, 'guardarMenuAli']);
+    Route::get('/editar-menu-ali/{id}', [MenuAlimentoController::class, 'editarMenuAli']);
+    Route::put('/actualizar-menu-ali/{id}', [MenuAlimentoController::class, 'actualizar']);
+    Route::get('/eliminar-menu-ali/{id}', [MenuAlimentoController::class, 'eliminarMenuAli']);
+   
 
 });
 

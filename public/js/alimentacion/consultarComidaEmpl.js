@@ -8,8 +8,8 @@ $(document).keyup(function(event) {
 globalThis.AbrirModal="S";
 globalThis.fueAprobado='N'
 $("#form_valida").submit(function(e){
-   
 
+   
     e.preventDefault();
     let cedula_func=$('#cedula_func').val()
    
@@ -40,7 +40,7 @@ $("#form_valida").submit(function(e){
     var FrmData=$("#form_valida").serialize();
    
     $.ajax({
-           
+            
        type: "POST",
        url: "consulta-comida-empleado",
        method: "POST",             
@@ -66,7 +66,7 @@ $("#form_valida").submit(function(e){
 
                 return;                      
             }
-            alert(AbrirModal)
+           
             if(AbrirModal=="S"){
                 $('#modal_aprobacion').modal({backdrop: 'static', keyboard: false})
             }
@@ -100,10 +100,14 @@ $("#form_valida").submit(function(e){
                 let checkear=""
                 let clase="";
                
-                if(item.estado_comida=="Confirmado"){
+                // if(item.estado_comida=="Confirmado"){
+                if(item.confirma_empleado=="Si"  && item.estado_comida!="Eliminado"){
                     checkear="checked"
                     clase="color_aprobacion"
                     confirmado=confirmado+1
+                }else if(item.estado_comida=="Eliminado"){
+                    checkear=""
+                    clase="color_elim"
                 }else{
                     checkear=""
                     clase=""
@@ -221,13 +225,44 @@ var lenguajeTabla = {
     }
 };
 
-
 function aprobarConfirmacion(){
+    $("#sms_errores").html('')
+    $("#sms_errores").hide()
     if(fueAprobado=='S'){
         alertNotificar("La confirmación del/los alimento(s) del día ya fué realizada","error")
         $('#btn_aprobar').prop('disabled',true)
         return
     }
+    var alimentos_chequeados=[];
+    $("input[name='comida_chequeada[]']").each(function(indice, elemento) {
+        console.log(elemento)
+        alimentos_chequeados.push($(elemento).val());
+    });
+
+    if(alimentos_chequeados.length<=0){
+        alertNotificar("Seleccione al menos un alimento","error")
+        return
+    }
+    let txt= "¿Desea confirmar el/los "+alimentos_chequeados.length+ " alimentos seleccionados"
+    swal({
+        title: txt,
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonClass: "btn-danger",
+        confirmButtonText: "Si, continuar",
+        cancelButtonText: "No, cancelar",
+        closeOnConfirm: false,
+        closeOnCancel: false
+    },
+    function(isConfirm) {
+        if (isConfirm) { 
+            realizar_confirmacion();
+        }
+        sweetAlert.close();   // ocultamos la ventana de pregunta
+    });     
+}
+function realizar_confirmacion(){
+   
     $("#sms_errores").html('')
     $("#sms_errores").hide()
     $.ajaxSetup({
@@ -247,11 +282,8 @@ function aprobarConfirmacion(){
         return
     }
 
-    console.log(alimentos_chequeados)
-
     vistacargando("m","Espere por favor");           
 
-  
     $.ajax({
        
         type: "POST",
@@ -259,28 +291,62 @@ function aprobarConfirmacion(){
         method: "POST",             
         data: {alimentos_chequeados:alimentos_chequeados},     
         success: function(data){
-           
-            vistacargando("");                
+            console.log(data)
+
+            vistacargando("");   
+                
             if(data.error==true){
+                let sms_error=""
+                if(data.inconsistencia=="S"){
+                    var set=[''];
+                    var hr='';
+                    $.each(data.mensaje, function(i, item){
+                           
+                        if(i>=0){hr=`<li style="padding-bottom:5px">`;}
+                        set[i]= ` ${hr} ${item}`;
+                            
+                    });
+                    sms_error=set
+                    alertNotificar("No se pudo aprobar ningun alimento", "error")
+                }else{
+                    sms_error=data.mensaje
+                }
+               
                 $("#sms_errores").append(`<div class="alert alert-danger alert-dismissible">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                     <h4><i class="icon fa fa-ban"></i> Mensaje!</h4>
-                        ${data.mensaje}
+                        ${sms_error}
                     </div>`)
                 $("#sms_errores").show()
+                $("input[name='comida_chequeada[]']").val('')
+                $("#comida_chequeada").html('')
+                AbrirModal="N"
+                $("#form_valida").submit();
                 return;                      
             }
+            let sms_error=""
             if(data.inconsistencia=="S"){
+               
+                var set=[''];
+                var hr='';
+                $.each(data.lista_error, function(i, item){
+                       
+                    if(i>=0){hr=`<li style="padding-bottom:5px">`;}
+                    set[i]= ` ${hr} ${item}`;
+                        
+                });
+                sms_error=set
                 var error_sms="info"
                 var icono="fa-ban"
             }else{
                 var error_sms="success"
                 var icono="fa-check"
+                sms_error=""
             }          
             $("#sms_errores").append(`<div class="alert alert-${error_sms} alert-dismissible">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                     <h4><i class="icon fa ${icono}"></i> Mensaje!</h4>
-                    ${data.mensaje}
+                    ${data.mensaje}  ${sms_error}
             </div>`)
             AbrirModal="N"
             $("#sms_errores").show()
@@ -331,6 +397,9 @@ $("#modal_aprobacion").on("hidden.bs.modal", function () {
     $("#sms_errores").html('')
     $("#sms_errores").hide()
     $('#btn_aprobar').prop('disabled', false)
+    $("input[name='comida_chequeada[]']").val('')
+    $("#comida_chequeada").html('')
+    $('#cedula_func').val('')
 })
 function limpiar(){
     AbrirModal="S"
@@ -345,6 +414,8 @@ function limpiar(){
     $("#sms_errores").html('')
     $("#sms_errores").hide()
     $('#btn_aprobar').prop('disabled', false)
+    $("input[name='comida_chequeada[]']").val('')
+    $("#comida_chequeada").html('')
 }
 
 function cerrar(){
@@ -353,11 +424,12 @@ function cerrar(){
     $('#modal_aprobacion').modal('hide')
     limpiar()
     $('#cedula_func').val('')
-    audio.pause();
-    audio.currentTime = 0;
+   
     $("#sms_errores").html('')
     $("#sms_errores").hide()
     $('#btn_aprobar').prop('disabled', false)
+    $("input[name='comida_chequeada[]']").val('')
+    $("#comida_chequeada").html('')
 }
 
 function alertNotificar(texto, tipo,time=7000){

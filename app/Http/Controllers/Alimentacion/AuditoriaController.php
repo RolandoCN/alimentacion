@@ -26,10 +26,8 @@ class AuditoriaController extends Controller
             ->leftJoin('persona as pui', 'pui.idpersona','ui.id_persona') 
             ->leftJoin('users as ua', 'ua.id','t.id_usuario_act') 
             ->leftJoin('persona as pua', 'pua.idpersona','ua.id_persona')    
-            ->select('t.start as fecha_comida', 't.estado as estado_turno', 't.fecha_reg',
-            'pui.nombres as nombre_user_ingresa','pui.apellidos as apellidos_user_ingresa',
-            'pua.nombres as nombre_user_actualiza','pua.apellidos as apellidos_user_actualiza',
-            't.fecha_act', 'h.descripcion as desc_horario','h.hora_ini','h.hora_fin','e.nombres as nombre_empleado')
+            ->select('t.start as fecha_comida', 't.estado as estado_turno',
+             't.motivo_elimina', 't.fecha_reg','pui.nombres as nombre_user_ingresa','pui.apellidos as apellidos_user_ingresa','pua.nombres as nombre_user_actualiza','pua.apellidos as apellidos_user_actualiza','t.fecha_act', 'h.descripcion as desc_horario','h.hora_ini','h.hora_fin','e.nombres as nombre_empleado')
             ->where(function($query)use($ini, $fin){
                 $query->whereDate('t.fecha_reg', '>=', $ini)
                 ->whereDate('t.fecha_reg', '<=',  $fin);

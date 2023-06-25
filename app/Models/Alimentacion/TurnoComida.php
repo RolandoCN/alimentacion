@@ -10,6 +10,9 @@ class TurnoComida extends Model
     protected $primaryKey  = 'id_turno_comida';
     public $timestamps = false;
 
+    public function usuario_aprueba(){
+        return $this->belongsTo('App\Models\User', 'id_usuario_aprueba', 'id')->with('persona');
+    }
     
 }
 ?>

@@ -102,30 +102,11 @@ function verCale(){
             $('#fecha_ini').val(date.format())
         }, 
         eventClick: function (calEvent, jsEvent, view) {
-
-            swal({
-                title: "¿Quieres eliminar el registro?",
-                text: "Motivo:",
-                type: "input",
-                showCancelButton: true,
-                confirmButtonClass: "btn-danger",
-                cancellButtonClass: "btn-primary",
-                confirmButtonText: "Si",
-                cancelButtonText: "No",
-                closeOnConfirm: false,
-                animation: "slide-from-top",
-                inputPlaceholder: "Ingrese el motivo"
-            },
-            function(inputValue){
-                if (inputValue === null) return false;
+            
+            var deleteMsg = confirm("¿Quieres eliminar el turno?");
+           
                 
-                if (inputValue === "") {
-                    swal.showInputError("Necesitas ingresar el motivo!");
-                    return false
-                }
-                if(inputValue!=""){
-                    sweetAlert.close();
-                   
+                if (deleteMsg) {
                     vistacargando("m", "Espere por favor")
                     $.ajaxSetup({
                         headers: {
@@ -137,7 +118,6 @@ function verCale(){
                         url: 'eliminar-turno-comida',
                         data: {
                             id: calEvent.id,
-                            motivo: inputValue,
                             type: 'delete'
                         },
                         success: function (response) {
@@ -156,13 +136,10 @@ function verCale(){
                             vistacargando("")
                             $('#calendar').fullCalendar('refetchEvents');
                             alertNotificar(" Inconvenientes al procesar la solicitud intente nuevamente","error")
-                        
+                       
                         }
                     });
-                   
                 }
-                
-            });
         },  
         eventDrop: function (event, delta) {
             
