@@ -123,6 +123,8 @@ function buscarTurnos(){
 }
 function eliminaConfirmado(valor){
     $('#id_turno_ali_sel').val('')
+    $('#motivo_elim').val('')
+
     if(valor=="G"){
         alertNotificar("No es posible eliminar datos que no hayan sido confirmados", "error")
         return
@@ -133,6 +135,10 @@ function eliminaConfirmado(valor){
         $('#id_turno_ali_sel').val(valor)
         $('#modal_Detalle_Eli').modal('show')
     }
+}
+
+function cancelaEliminacion(){
+    $('#modal_Detalle_Eli').modal('hide')
 }
 function aprobarTurno(){
     if(IdturnosArray.length==0){

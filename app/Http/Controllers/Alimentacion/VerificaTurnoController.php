@@ -215,7 +215,7 @@ class VerificaTurnoController extends Controller
         // ->whereIn('tc.estado',['Generado','Confirmado'])  
         ->where('e.cedula',$cedula)      
         ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','h.hora_ini as hora_ini', 'h.hora_fin as hora_fin', 'tu.id as idturno','tu.start as fecha_turno', 'al.descripcion as comida', 'tc.estado as estado_turno','tc.id_turno_comida as id_turno_comida','tc.id_alimento',
-        'tc.hora_retira_comida','tc.estado_retira_comida','tc.confirma_empleado')
+        'tc.hora_retira_comida','tc.estado_retira_comida','tc.confirma_empleado','tc.motivo_eliminacion')
         ->get(); 
         // dd($turnos_registrados);
 
@@ -245,6 +245,7 @@ class VerificaTurnoController extends Controller
                         $menuDelDia[$key]->comida=$lista_t->comida;
                         $menuDelDia[$key]->estado_comida=$lista_t->estado_turno;
                         $menuDelDia[$key]->confirma_empleado=$lista_t->confirma_empleado;
+                        $menuDelDia[$key]->motivo_eliminacion=$lista_t->motivo_eliminacion;
                     }
                 }
             }

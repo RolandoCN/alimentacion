@@ -187,7 +187,7 @@
                         <div class="row">
                            
                             <div class="col-md-12">
-                                <form id="frm_buscarPersona" class="form-horizontal" action="" autocomplete="off">
+                                <form id="frm_Motivo" class="form-horizontal" action="" autocomplete="off">
                                     {{ csrf_field() }}
                                     <input type="hidden" name="id_turno_ali_sel"  id="id_turno_ali_sel">
                                     <div class="form-group">

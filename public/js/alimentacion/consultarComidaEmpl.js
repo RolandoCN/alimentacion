@@ -131,7 +131,7 @@ $("#form_valida").submit(function(e){
                         ${set}
                     </td>
                     <td  width="15%"style=" vertical-align: middle; text-align:center"  class="paddingTR">
-                        <input type="checkbox"  onclick="accionVerifica(${item.id_turno_comida})"  name="array_alim[]" id="id_alime_${item.id_turno_comida}" value="${item.id_turno_comida}" ${checkear}>
+                        <input type="checkbox"  onclick="accionVerifica('${item.id_turno_comida}','${item.estado_comida}','${item.motivo_eliminacion}')"  name="array_alim[]" id="id_alime_${item.id_turno_comida}" value="${item.id_turno_comida}" ${checkear}>
                     </td> 
 
 
@@ -360,14 +360,20 @@ function realizar_confirmacion(){
     });
 }
 
-function accionVerifica(id){
+function accionVerifica(id, estado, motivo){
 
     if( $('#id_alime_'+id).is(':checked') ){
+
         if(fueAprobado=='S'){
             $('#fila_sele_'+id).removeClass('color_aprobacion');
             $("#id_alime_"+id).prop('checked', false)
         }else{        
             $('#fila_sele_'+id).addClass('color_aprobacion');
+        }
+
+        if(estado=="Eliminado"){
+            // alert("Eliminadp")
+            swal('¡Mensaje!', motivo, "info");
         }
         //añadimos
         $("#comida_chequeada").append(`
@@ -379,7 +385,9 @@ function accionVerifica(id){
         `);
        
     } else {
+       
         if(fueAprobado=='S'){
+           
             $('#fila_sele_'+id).addClass('color_aprobacion');
             $("#id_alime_"+id).prop('checked', true)
         }else{
