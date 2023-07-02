@@ -119,7 +119,7 @@ $("#form_valida").submit(function(e){
                 $('#tabla_menu_comida').append(`<tr role="row" class="odd ${clase}" id="fila_sele_${item.id_turno_comida}">
 
                     <td  width="5%" colspan="1"  style=" vertical-align: middle; text-align:center"  class="paddingTR">
-                        ${item['idal_menu_comida']}
+                        ${i+1}
                     </td>
 
                     <td  width="20%" colspan="1"  style=" vertical-align: middle; text-align:center"  class="paddingTR">

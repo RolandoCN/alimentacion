@@ -361,4 +361,9 @@ class VerificaTurnoController extends Controller
         return $transaction;
     }
 
+    //funcion que es ejecutada mediante job para confirmar asistencia cuando el turno es imposible de confirmar, (tema tiempo de aprobacion y llegada al hospital)
+    public function confirmacionJob(){
+        //ids de horario 
+    }
+
 }
