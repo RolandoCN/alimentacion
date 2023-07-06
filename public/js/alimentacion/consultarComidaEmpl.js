@@ -145,6 +145,8 @@ $("#form_valida").submit(function(e){
             if(confirmado>0){
                 $('#btn_aprobar').prop('disabled', true)
                 fueAprobado="S"
+            }else{
+                $('#btn_aprobar').prop('disabled', false)
             }
 
             cargar_estilos_tabla("tabla_menu_comida",10);
@@ -226,6 +228,7 @@ var lenguajeTabla = {
 };
 
 function aprobarConfirmacion(){
+   
     $("#sms_errores").html('')
     $("#sms_errores").hide()
     if(fueAprobado=='S'){
@@ -262,7 +265,7 @@ function aprobarConfirmacion(){
     });     
 }
 function realizar_confirmacion(){
-   
+    vistacargando("m","Espere por favor");  
     $("#sms_errores").html('')
     $("#sms_errores").hide()
     $.ajaxSetup({
@@ -281,9 +284,14 @@ function realizar_confirmacion(){
         alertNotificar("Seleccione al menos un alimento","error")
         return
     }
+    $('#body_tabla').html('');
+    $('#tabla_menu_comida').DataTable().destroy();
+    $('#tabla_menu_comida tbody').empty();  
 
-    vistacargando("m","Espere por favor");           
-
+    var num_col = $("#tabla_menu_comida thead tr th").length; //obtenemos el numero de columnas de la tabla
+	$("#tabla_menu_comida tbody").html(`<tr><td colspan="${num_col}" style="padding:40px; 0px; font-size:20px;"><center><span class="spinner-border" role="status" aria-hidden="true"></span><b> Obteniendo información</b></center></td></tr>`);
+             
+    $('#btn_aprobar').prop('disabled', true)
     $.ajax({
        
         type: "POST",
@@ -355,7 +363,9 @@ function realizar_confirmacion(){
                             
         }, error:function (data) {
             vistacargando("");
-            alertNotificar('Ocurrió un error','error');
+            alertNotificar('Ocurrió un error, intentelo más tarde','error');
+            AbrirModal="N"
+            $("#form_valida").submit();
         }
     });
 }
@@ -453,9 +463,6 @@ function alertNotificar(texto, tipo,time=7000){
     });
 }
 
-function vistacargando(estado){
-    mostarOcultarVentanaCarga(estado,'');
-}
 
 function vistacargando(estado, mensaje){
     mostarOcultarVentanaCarga(estado, mensaje);

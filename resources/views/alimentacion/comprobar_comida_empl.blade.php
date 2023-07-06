@@ -9,6 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="stylesheet" href="{{asset('plugins/sweetalert/sweetalert.css')}}">
+    <link rel="stylesheet" href="{{asset('css/spinners.css')}}">
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
