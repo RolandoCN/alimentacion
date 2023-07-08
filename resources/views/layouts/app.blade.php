@@ -184,7 +184,7 @@
                                 @foreach($menu['rutas'] as $key2=> $gestion)
 
                                     {{-- @if (url($_SERVER['REQUEST_URI']) == url($gestion->menu->url)) --}}
-                                    @if ('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] == url($gestion->menu->url))
+                                    @if ('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] == url($gestion->menu->url) || 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] == url($gestion->menu->url))
                                         <li class="active"><a href="{{url($gestion->menu->url)}}">
                                             <i class="fa fa-circle-o"></i> {{($gestion->menu->descripcion)}}</a>
                                         </li>
