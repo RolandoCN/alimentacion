@@ -63,6 +63,7 @@
                     <a href="{{asset('/')}}"><img class="profile-user-img img-responsive img-circle" src="{{ asset('dist/img/logomsp.png')}}" alt="User profile picture"></a>
                     <h3 class="profile-username text-center" style="font-weight:500">Hospital General Dr. Napoleón Dávila Córdova</h3>
                     <p class="text-muted text-center" style="color:black;font-weight:520">Confirmación Alimentación</p>
+                    
                     <div class="" style="margin-bottom:12px;text-align:center" >
                        <input type="text" style="text-align:center;color:black; font-weight:600; font-size:17px"  name="reloj" id="reloj" size="20"  disabled>
                     </div>
@@ -108,6 +109,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
                     <h4 class="modal-title">CONFIRMACIÓN DE ASISTENCIA ALIMENTACIÓN</h4>
+                    
                 </div>
                 <div class="modal-body">
                     <div class="row ">
@@ -138,18 +140,18 @@
                                           
                                         </div>     
                                         <div class="col-md-6">
-                                            <ul class="nav nav-pills nav-stacked" style="margin-left:12px">
+                                            <ul class="nav nav-pills nav-stacked" style="margin-left:0px">
                                                 <li style="border-color: white"><a><i class="fa fa-user text-blue"></i> <b class="text-black" style="font-weight: 650 !important">Usuario:</b> <span  id="user_Apr"> </span></a></li>
                                                 
                                             </ul>
                                           
 
-                                            <ul class="nav nav-pills nav-stacked" style="margin-left:12px">
+                                            <ul class="nav nav-pills nav-stacked" style="margin-left:0px">
                                                 <li style="border-color: white"><a><i class="fa fa-clock-o text-blue"></i> <b class="text-black" style="font-weight: 650 !important">Horario:</b> <span  id="horario_Apr"> </span></a></li>
                                                 
                                             </ul>
 
-                                            <ul class="nav nav-pills nav-stacked" style="margin-left:12px">
+                                            <ul class="nav nav-pills nav-stacked" style="margin-left:0px">
                                                 <li style="border-color: white"><a><i class="fa fa-home text-blue"></i> <b class="text-black" style="font-weight: 650 !important">Area:</b> <span  id="area_Apr"> </span></a></li>
                                                 
                                             </ul>
@@ -184,9 +186,9 @@
                                         </table>
                                     </div>
                                 </div>   
-                                
-                                
-                            
+                                                                
+                               
+
                                 <div class="col-md-12" style="margin-top: 15px !important">
                                     <center>
                                         <button onclick="aprobarConfirmacion()"  id="btn_aprobar" type="button" class="btn btn-success" ><span class="fa fa-check-circle-o"></span> Aprobar</button>

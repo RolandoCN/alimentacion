@@ -219,8 +219,7 @@
             <div class="pull-right hidden-xs">
                 <b>Version</b> 1
             </div>
-            <strong>TICS {{date('Y')}}.</strong> All rights
-            reserved.
+            <strong>HGNDC TICS {{date('Y')}}</strong>
         </footer>
 
         <!-- Control Sidebar -->

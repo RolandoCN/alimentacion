@@ -78,7 +78,6 @@ $("#form_valida").submit(function(e){
             $('#area_Apr').html(data.data.area)
             $('#horario_Apr').html(data.data.hora_ini+" -- "+data.data.hora_fin)
 
-            console.log(data.detalleMenu.Menu)
             if(data.detalleMenu.Menu.length <= 0){
                 $("#tabla_menu_comida tbody").html(`<tr><td colspan="${num_col}" style="padding:40px; 0px; font-size:20px;"><center>No se encontraron datos</center></td></tr>`);
                 alertNotificar("No se encontró datos","error");

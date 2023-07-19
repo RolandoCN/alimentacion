@@ -185,6 +185,7 @@ class VerificaTurnoController extends Controller
 
     //vista para comprobar que el empleado va a ir a comer (solo los comprobados, podrán ser aprobados desde TH)
     public function vistaComprobar(){
+
         $alimento=DB::table('alimento')->where('estado','A')->get();
         return view('alimentacion.comprobar_comida_empl',[
             "alimento"=>$alimento
@@ -257,11 +258,13 @@ class VerificaTurnoController extends Controller
         }
 
         $detalleMenu=["Menu"=>$menuDelDia, "fecha"=>date('d-m-Y')];
-       
+        log::info("bd ".env('DB_DATABASE'));
+
         return response()->json([
             'error'=>false,
             'data'=>$turnos_registrados[0],
-            'detalleMenu'=>$detalleMenu
+            'detalleMenu'=>$detalleMenu,
+           
         ]);
         
         
