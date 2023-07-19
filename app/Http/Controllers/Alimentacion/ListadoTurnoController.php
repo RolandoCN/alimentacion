@@ -473,7 +473,7 @@ class ListadoTurnoController extends Controller
                         $archivo=Storage::disk('public')->get($generaPdf['pdf']);
                         $nombrearchivo=$generaPdf['pdf'];
                         
-                        //ECAA==ENVIA CORREO APROBACION ALIMENTOS
+                        //ECAA==ENVIA CORREO APROBACION ALIMENTOS.
                         //consultamos el correo donde enviaremos el documento
                         $correo_param=DB::table('al_parametros')
                         ->where('codigo','ECAA')->first();
