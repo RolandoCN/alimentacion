@@ -341,7 +341,7 @@ class ListadoTurnoController extends Controller
                     
                     //consultamos el correo donde enviaremos el documento
                     $correo_param=DB::table('al_parametros')
-                    ->where('codigo','ECAA_')->first();
+                    ->where('codigo','ECAA')->first();
                     if(!is_null($correo_param)){
                         $correo_db_par=$correo_param->valor;
                     }else{
@@ -476,7 +476,7 @@ class ListadoTurnoController extends Controller
                         //ECAA==ENVIA CORREO APROBACION ALIMENTOS
                         //consultamos el correo donde enviaremos el documento
                         $correo_param=DB::table('al_parametros')
-                        ->where('codigo','ECAA_')->first();
+                        ->where('codigo','ECAA')->first();
                         if(!is_null($correo_param)){
                             $correo_db_par=$correo_param->valor;
                         }else{
