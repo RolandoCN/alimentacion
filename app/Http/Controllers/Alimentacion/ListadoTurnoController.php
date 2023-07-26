@@ -622,7 +622,7 @@ class ListadoTurnoController extends Controller
                
                 $turno_comida->estado="Eliminado";
                 $turno_comida->motivo_eliminacion=$request->motivo_elim;
-                $turno_comida->id_usuario_aprueba=auth()->user()->id;
+                $turno_comida->id_usuario_elim=auth()->user()->id;
                 $turno_comida->fecha_elimina=date('Y-m-d H:i:s');
                 $turno_comida->save();
 

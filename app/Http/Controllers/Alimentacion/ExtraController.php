@@ -87,10 +87,10 @@ class ExtraController extends Controller
             ->first();
 
             if(!is_null($valida_cedula)){
-                return response()->json([
-                    'error'=>true,
-                    'mensaje'=>'La solicitud ya existe'
-                ]);
+                // return response()->json([
+                //     'error'=>true,
+                //     'mensaje'=>'La solicitud ya existe'
+                // ]);
             }
 
            

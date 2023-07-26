@@ -105,27 +105,16 @@ function verCale(){
 
             swal({
                 title: "¿Quieres eliminar el registro?",
-                text: "Motivo:",
-                type: "input",
+                type: "warning",
                 showCancelButton: true,
                 confirmButtonClass: "btn-danger",
-                cancellButtonClass: "btn-primary",
-                confirmButtonText: "Si",
-                cancelButtonText: "No",
+                confirmButtonText: "Si, continuar",
+                cancelButtonText: "No, cancelar",
                 closeOnConfirm: false,
-                animation: "slide-from-top",
-                inputPlaceholder: "Ingrese el motivo"
+                closeOnCancel: false
             },
-            function(inputValue){
-                if (inputValue === null) return false;
-                
-                if (inputValue === "") {
-                    swal.showInputError("Necesitas ingresar el motivo!");
-                    return false
-                }
-                if(inputValue!=""){
-                    sweetAlert.close();
-                   
+            function(isConfirm) {
+                if (isConfirm) { 
                     vistacargando("m", "Espere por favor")
                     $.ajaxSetup({
                         headers: {
@@ -137,7 +126,6 @@ function verCale(){
                         url: 'eliminar-turno-comida',
                         data: {
                             id: calEvent.id,
-                            motivo: inputValue,
                             type: 'delete'
                         },
                         success: function (response) {
@@ -159,10 +147,70 @@ function verCale(){
                         
                         }
                     });
-                   
                 }
+                sweetAlert.close();   // ocultamos la ventana de pregunta
+            });     
+ 
+            // swal({
+            //     title: "¿Quieres eliminar el registro?",
+            //     text: "Motivo:",
+            //     type: "input",
+            //     showCancelButton: true,
+            //     confirmButtonClass: "btn-danger",
+            //     cancellButtonClass: "btn-primary",
+            //     confirmButtonText: "Si",
+            //     cancelButtonText: "No",
+            //     closeOnConfirm: false,
+            //     animation: "slide-from-top",
+            //     inputPlaceholder: "Ingrese el motivo"
+            // },
+            // function(inputValue){
+            //     if (inputValue === null) return false;
                 
-            });
+            //     if (inputValue === "") {
+            //         swal.showInputError("Necesitas ingresar el motivo!");
+            //         return false
+            //     }
+            //     if(inputValue!=""){
+            //         sweetAlert.close();
+                   
+            //         vistacargando("m", "Espere por favor")
+            //         $.ajaxSetup({
+            //             headers: {
+            //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //             }
+            //         });
+            //         $.ajax({
+            //             type: "POST",
+            //             url: 'eliminar-turno-comida',
+            //             data: {
+            //                 id: calEvent.id,
+            //                 motivo: inputValue,
+            //                 type: 'delete'
+            //             },
+            //             success: function (response) {
+            //                 vistacargando("")
+
+            //                 if(response.error==true){
+                                
+            //                     alertNotificar(response.mensaje, "error");
+            //                 }else{
+            //                     $('#calendar').fullCalendar('removeEvents', calEvent.id);
+            //                     alertNotificar(response.mensaje, "success");
+            //                 }
+
+
+            //             }, error: function(e){
+            //                 vistacargando("")
+            //                 $('#calendar').fullCalendar('refetchEvents');
+            //                 alertNotificar(" Inconvenientes al procesar la solicitud intente nuevamente","error")
+                        
+            //             }
+            //         });
+                   
+            //     }
+                
+            // });
         },  
         eventDrop: function (event, delta) {
             
