@@ -305,7 +305,7 @@ class VerificaTurnoController extends Controller
                         }else{
                             $formato="PM";
                         }
-                        if(strtotime($hora_valida_ax) < strtotime(date('H:i'))){
+                        if(strtotime($hora_valida_ax) <= strtotime(date('H:i'))){
                             $sms='La hora máxima de aprobación para el tipo de alimento '.$hora_valida->descripcion.' es '.$hora_valida->hora_max_aprobacion. " ".$formato;
                             array_push($array_errores,$sms);
                         }else{
