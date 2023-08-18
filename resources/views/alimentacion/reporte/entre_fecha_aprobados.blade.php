@@ -117,6 +117,8 @@
 
                             <button type="button" class="btn btn-danger btn-sm btn_descargar" onclick="descargarAprobacion('No')" id="pdf_no_retirado" >PDF No Retirados</button>
 
+                            <button type="button" class="btn btn-warning btn-sm btn_descargar" onclick="descargarAreaNoConf()" id="pdf_no_retirado" >PDF No Retirado por Area</button>
+
 
                         </div>
                      
@@ -126,6 +128,7 @@
                                 <tr>
                                     <th>Cédula</th>
                                     <th>Funcionario</th>
+                                    <th>Area</th>
                                     <th>Fecha</th>
                                     <th>Alimento</th>
                                     <th>Horario</th>
@@ -138,7 +141,7 @@
             
                                 <tbody style="font-weight: normal" id="pac_body">
                                     <tr>
-                                    <td colspan="7">Ningún dato disponible en esta tabla</td>
+                                    <td colspan="8">Ningún dato disponible en esta tabla</td>
                                     </tr>
                                 </tbody>
             

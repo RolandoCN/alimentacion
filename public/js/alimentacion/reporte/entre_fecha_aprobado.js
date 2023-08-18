@@ -124,7 +124,10 @@ function buscarTurnos(){
                                                     ${item.cedula}
                                                     <input type="hidden" name="idturno_comida[]"  value="${item.idturno}">
                                                 </td>
-                                                <td style="width:30%; text-align:left; vertical-align:middle">${item.nombres}</td>
+                                                <td style="width:25%; text-align:left; vertical-align:middle">${item.nombres}</td>
+                                                <td style="width:15%; vertical-align:middle">                                            
+                                                    ${item.area}
+                                                </td>
                                                 <td style="width:7%; text-align:center; vertical-align:middle">${item.start}</td>
                                                 <td style="width:8%; text-align:center; vertical-align:middle">${item.comida}</td>
                                                 <td style="width:10%; vertical-align:middle">${item.hora_ini} - ${item.hora_fin}</td>
@@ -189,6 +192,44 @@ function descargarAprobacion(estado){
     });
 
 }
+
+function descargarAreaNoConf(estado){
+
+    let fecha_inicial_rep=$('#fecha_ini').val()
+    let fecha_final_rep=$('#fecha_fin').val()
+
+   
+    vistacargando("m","Espere por favor");           
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    
+    $.ajax({
+        type: "POST",
+        url: 'reporte-conf-no-retirado-area',
+        data: { _token: $('meta[name="csrf-token"]').attr('content'),
+        fecha_inicial_rep:fecha_inicial_rep, fecha_final_rep:fecha_final_rep, estado:estado },
+        success: function(data){
+           
+            vistacargando("");                
+            if(data.error==true){
+                alertNotificar(data.mensaje,'error');
+                return;                      
+            }
+            alertNotificar("El documento se descargará en unos segundos...","success");
+            window.location.href="descargar-reporte/"+data.pdf
+                            
+        }, error:function (data) {
+            vistacargando("");
+            alertNotificar('Ocurrió un error','error');
+        }
+    });
+
+}
+
 function cargar_estilos_datatable(idtabla){
 	$("#"+idtabla).DataTable({
 		'paging'      : true,
