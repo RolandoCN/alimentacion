@@ -3,7 +3,7 @@
 function buscarTurnos(){
     let fecha_inicial=$('#fecha_ini').val()
     let fecha_final=$('#fecha_fin').val()
-    
+    let cmb_retirados=$('#cmb_retirados').val()
    
     if(fecha_inicial==""){ 
         alertNotificar("Seleccione una fecha inicial","error")
@@ -19,6 +19,11 @@ function buscarTurnos(){
     if(fecha_inicial > fecha_final){
         alertNotificar("La fecha de inicio debe ser menor a la fecha final","error")
         $('#fecha_ini').focus()
+        return
+    }
+    if(cmb_retirados ==""){
+        alertNotificar("Seleccione una opcion","error")
+        
         return
     }
    
@@ -41,8 +46,13 @@ function buscarTurnos(){
 
     $('#fecha_ini_rep').html('')
     $('#fecha_fin_rep').html('')
+    $("#retirados").html("")
+    $("#pendientes").html("")
+
+    var pen=0;
+    var pend_=0;
     
-    $.get('alimento-aprobado-periodo/'+fecha_inicial+'/'+fecha_final, function(data){
+    $.get('alimento-aprobado-periodo/'+fecha_inicial+'/'+fecha_final+'/'+cmb_retirados, function(data){
         if(data.error==true){
 			$("#table_persona tbody").html('');
 			$("#table_persona tbody").html(`<tr><td colspan="${num_col}">No existen registros</td></tr>`);
@@ -60,12 +70,37 @@ function buscarTurnos(){
 			
 			$("#table_persona tbody").html('');
             $('#fecha_ini_rep').html(fecha_inicial)
-            $('#fecha_fin_rep').html(fecha_final)
-          
+            $('#fecha_fin_rep').html(fecha_final) 
+            
+            if(cmb_retirados==1){
+                $('#pdf_retirado').removeClass("ocultar");
+                $('#pdf_retirado').addClass("ver");
+
+                $('#pdf_no_retirado').removeClass("ocultar");
+                $('#pdf_no_retirado').addClass("ver");
+
+            }else if(cmb_retirados=="Si"){
+                $('#pdf_retirado').removeClass("ocultar");
+                $('#pdf_retirado').addClass("ver");
+
+                $('#pdf_no_retirado').removeClass("ver");
+                $('#pdf_no_retirado').addClass("ocultar");
+            }else{
+                $('#pdf_retirado').removeClass("ver");
+                $('#pdf_retirado').addClass("ocultar");
+
+                $('#pdf_no_retirado').removeClass("ocultar");
+                $('#pdf_no_retirado').addClass("ver");
+            }
             
             let contador=0
+            let servidos=0
 			$.each(data.resultado,function(i, item){
+
+                let hora_confirma_empl=item.fecha_hora_confirma_emp.split(" ");
+                hora_confirma_empl=hora_confirma_empl[1];
                 let estado=""
+                let estado_serv=""
                
                 if(item.estado_turno=="Generado"){
                     estado="Pendiente"
@@ -74,27 +109,42 @@ function buscarTurnos(){
                     estado="Aprobado"
                     contador=contador+1
                 }
+
+                if(item.estado_retira_comida=="Si"){
+                    estado_serv="Retirado"
+                    servidos=servidos+1
+                   
+                }else{
+                    estado_serv="Pendiente"
+                    
+                }
+
 				$('#table_persona').append(`<tr>
-                                                <td style="width:10%">
+                                                <td style="width:10%; vertical-align:middle">
                                                     ${item.cedula}
                                                     <input type="hidden" name="idturno_comida[]"  value="${item.idturno}">
                                                 </td>
-                                                <td style="width:30%; text-align:left">${item.nombres}</td>
-                                                <td style="width:20%; text-align:center">${item.start}</td>
-                                                <td style="width:20%; text-align:center">${item.comida}</td>
-                                                <td style="width:10%">${item.hora_ini} - ${item.hora_fin}</td>
-                                                <td style="width:10%">
-                                                    
-                                                    ${estado}
+                                                <td style="width:30%; text-align:left; vertical-align:middle">${item.nombres}</td>
+                                                <td style="width:7%; text-align:center; vertical-align:middle">${item.start}</td>
+                                                <td style="width:8%; text-align:center; vertical-align:middle">${item.comida}</td>
+                                                <td style="width:10%; vertical-align:middle">${item.hora_ini} - ${item.hora_fin}</td>
+                                                <td style="width:15%;text-align:left">                                                   
+                                                    <li>IP: ${item.ip_confirma}</li>
+                                                    <li>Hora: ${hora_confirma_empl}</li>
                                                 </td>
+                                                <td style="width:10%; vertical-align:middle">                                                    
+                                                    ${estado_serv}
+                                                </td>
+                                               
 											
 										</tr>`);
 			})
-            if(contador>0){
-                $('.btn_aprobacion').hide()
-            }else{
-                $('.btn_aprobacion').show()
-            }
+           
+            pen=data.resultado.length;
+            pend_=pen -servidos;
+            
+            $("#retirados").html(servidos)
+            $("#pendientes").html(pend_)
 		  
 			cargar_estilos_datatable('table_persona');
 		}
@@ -103,7 +153,7 @@ function buscarTurnos(){
 }
 
 
-function descargarAprobacion(){
+function descargarAprobacion(estado){
 
     let fecha_inicial_rep=$('#fecha_ini').val()
     let fecha_final_rep=$('#fecha_fin').val()
@@ -121,7 +171,7 @@ function descargarAprobacion(){
         type: "POST",
         url: 'reporte-periodo-aprobado',
         data: { _token: $('meta[name="csrf-token"]').attr('content'),
-        fecha_inicial_rep:fecha_inicial_rep, fecha_final_rep:fecha_final_rep },
+        fecha_inicial_rep:fecha_inicial_rep, fecha_final_rep:fecha_final_rep, estado:estado },
         success: function(data){
            
             vistacargando("");                
@@ -148,6 +198,7 @@ function cargar_estilos_datatable(idtabla){
 		'autoWidth'   : true,
 		"destroy":true,
 		pageLength: 10,
+        // order: [[ 1, "desc" ]],
 		sInfoFiltered:false,
 		language: {
 			url: 'json/datatables/spanish.json',

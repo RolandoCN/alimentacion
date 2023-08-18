@@ -359,8 +359,8 @@ class ReporteController extends Controller
         return view('alimentacion.reporte.entre_fecha_aprobados');
     }
 
-    //listado de los alimentos servidos x fechas (consolidado)
-    public function alimentoAprobadoPeriodo($fecha_ini, $fecha_fin){
+    //listado de los alimentos aprobados x fechas (consolidado)
+    public function alimentoAprobadoPeriodo($fecha_ini, $fecha_fin, $estado){
         
         try{
 
@@ -376,7 +376,15 @@ class ReporteController extends Controller
                 ->whereDate('tu.start', '<=', $fecha_fin);
             })
             ->where('tc.estado','=','Aprobado') //aprobado
-            ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','h.hora_ini as hora_ini', 'h.hora_fin as hora_fin', 'tu.id as idturno', 'al.descripcion as comida', 'tc.estado as estado_turno','tu.id_persona', 'tu.start')
+            ->where(function ($query2) use($estado) {
+                if($estado=="Si"){
+                    $query2->where('tc.estado_retira_comida', $estado);
+                }
+                if($estado=="No"){
+                    $query2->where('tc.estado_retira_comida', null);
+                }                    
+            })
+            ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','h.hora_ini as hora_ini', 'h.hora_fin as hora_fin', 'tu.id as idturno', 'al.descripcion as comida', 'tc.estado as estado_turno','tu.id_persona', 'tu.start', 'tc.ip_confirma', 'tc.fecha_hora_confirma_emp', 'tc.estado_retira_comida')
             ->get();
 
             return response()->json([
@@ -393,8 +401,8 @@ class ReporteController extends Controller
         }
     }
 
-      //reporte entre fechas
-      public function reportePeriodoAprob(Request $request){
+    //reporte entre fechas aprobados  empleado y sistema
+    public function reportePeriodoAprob(Request $request){
         
         try{
             
@@ -404,6 +412,7 @@ class ReporteController extends Controller
 
             $fecha_ini=$request->fecha_inicial_rep;
             $fecha_fin=$request->fecha_final_rep;
+            $estado=$request->estado;
            
             $turnos=DB::table('al_turno_comida as tc')
             ->leftJoin('alimento as al', 'al.idalimento','tc.id_alimento')
@@ -417,7 +426,15 @@ class ReporteController extends Controller
                 ->whereDate('tu.start', '<=', $fecha_fin);
             })
             ->where('tc.estado','=','Aprobado') //aprobado
-            ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','h.hora_ini as hora_ini', 'h.hora_fin as hora_fin', 'tu.id as idturno', 'al.descripcion as comida', 'tc.estado as estado_turno','tu.id_persona', 'tu.start as fecha_turno')
+            ->where(function ($query2) use($estado) {
+                if($estado=="Si"){
+                    $query2->where('tc.estado_retira_comida', $estado);
+                }
+                if($estado=="No"){
+                    $query2->where('tc.estado_retira_comida', null);
+                }                    
+            })
+            ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','h.hora_ini as hora_ini', 'h.hora_fin as hora_fin', 'tu.id as idturno', 'al.descripcion as comida', 'tc.estado as estado_turno','tu.id_persona', 'tu.start as fecha_turno', 'tc.estado_retira_comida')
             ->orderBy('fecha_turno','asc')
             ->get();
 
@@ -435,7 +452,7 @@ class ReporteController extends Controller
 
             $nombrePDF="reporte_entre_fecha_aprobados".date('d-m-Y').".pdf";
 
-            $pdf=PDF::loadView('alimentacion.reporte.pdf_entre_fecha_aprobado',['datos'=>$turnos,'lista'=>$lista_final_agrupada, 'desde'=>$fecha_ini, 'hasta'=>$fecha_fin]);
+            $pdf=PDF::loadView('alimentacion.reporte.pdf_entre_fecha_aprobado',['datos'=>$turnos,'lista'=>$lista_final_agrupada, 'desde'=>$fecha_ini, 'hasta'=>$fecha_fin, "estado"=>$estado]);
             $pdf->setPaper("A4", "portrait");
             $estadoarch = $pdf->stream();
 

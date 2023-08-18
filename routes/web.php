@@ -172,7 +172,7 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     Route::post('/reporte-detallado', [ReporteController::class, 'reporteDetallado']);
 
     Route::get('/aprobados-fechas', [ReporteController::class, 'informePeriodoAprobados'])->middleware('validarRuta');
-    Route::get('/alimento-aprobado-periodo/{f_ini}/{f_fin}', [ReporteController::class, 'alimentoAprobadoPeriodo']);
+    Route::get('/alimento-aprobado-periodo/{f_ini}/{f_fin}/{estado}', [ReporteController::class, 'alimentoAprobadoPeriodo']);
     Route::post('/reporte-periodo-aprobado', [ReporteController::class, 'reportePeriodoAprob']);
    
 

@@ -75,9 +75,15 @@
     <div style="margin-bottom:30px; margin-top:12px;">
 
         <table class="ltable" style="" border="0" width="100%" style="padding-bottom:2px !important">
-          
+            @php
+                if($estado=="Si"){
+                    $titulo="SERVIDOS";
+                }else{
+                    $titulo="NO SERVIDOS";
+                }
+            @endphp
             <tr style="font-size: 11px"  class="fuenteSubtitulo " style=""> 
-                <th colspan="11" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  >LISTADO DE ALIMENTOS APROBADOS <br>
+                <th colspan="11" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  >LISTADO DE ALIMENTOS APROBADOS Y {{$titulo}} <br>
                 DESDE {{date('d-m-Y',strtotime($desde))}} HASTA  {{date('d-m-Y',strtotime($hasta))}}<br><br>
               
                 </th>
