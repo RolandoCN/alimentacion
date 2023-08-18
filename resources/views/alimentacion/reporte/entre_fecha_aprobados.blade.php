@@ -113,11 +113,15 @@
                         </div>  
                       
                         <div class="col-md-12 text-center" style="margin-top:10px; margin-bottom:10px">
-                            <button type="button" class="btn btn-success btn-sm btn_descargar" onclick="descargarAprobacion('Si')" id="pdf_retirado" >PDF Retirados</button>
+                            <button type="button" class="btn btn-success btn-sm btn_descargar pdf_retirado" onclick="descargarAprobacion('Si')" >PDF Retirados</button>
 
-                            <button type="button" class="btn btn-danger btn-sm btn_descargar" onclick="descargarAprobacion('No')" id="pdf_no_retirado" >PDF No Retirados</button>
+                            <button type="button" class="btn btn-info btn-sm btn_descargar pdf_retirado" onclick="descargarAreaConf()"  >PDF Retirado por Area</button>
 
-                            <button type="button" class="btn btn-warning btn-sm btn_descargar" onclick="descargarAreaNoConf()" id="pdf_no_retirado" >PDF No Retirado por Area</button>
+                            <button type="button" class="btn btn-danger btn-sm btn_descargar pdf_no_retirado" onclick="descargarAprobacion('No')"  >PDF No Retirados</button>
+
+                            <button type="button" class="btn btn-warning btn-sm btn_descargar pdf_no_retirado" onclick="descargarAreaNoConf()"  >PDF No Retirado por Area</button>
+
+                            <button type="button" class="btn btn-dark btn-sm btn_descargar pdf_ip" onclick="descargarIpConf()"  >PDF Confirmado por Ip</button>
 
 
                         </div>

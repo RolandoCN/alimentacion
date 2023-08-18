@@ -73,24 +73,37 @@ function buscarTurnos(){
             $('#fecha_fin_rep').html(fecha_final) 
             
             if(cmb_retirados==1){
-                $('#pdf_retirado').removeClass("ocultar");
-                $('#pdf_retirado').addClass("ver");
+                $('.pdf_retirado').removeClass("ocultar");
+                $('.pdf_retirado').addClass("ver");
 
-                $('#pdf_no_retirado').removeClass("ocultar");
-                $('#pdf_no_retirado').addClass("ver");
+                $('.pdf_no_retirado').removeClass("ocultar");
+                $('.pdf_no_retirado').addClass("ver");
+
+                $('.pdf_ip').removeClass("ocultar");
+                $('.pdf_ip').addClass("ver");
 
             }else if(cmb_retirados=="Si"){
-                $('#pdf_retirado').removeClass("ocultar");
-                $('#pdf_retirado').addClass("ver");
+                $('.pdf_retirado').removeClass("ocultar");
+                $('.pdf_retirado').addClass("ver");
 
-                $('#pdf_no_retirado').removeClass("ver");
-                $('#pdf_no_retirado').addClass("ocultar");
+                $('.pdf_no_retirado').removeClass("ver");
+                $('.pdf_no_retirado').addClass("ocultar");
+
+                $('.pdf_ip').removeClass("ver");
+                $('.pdf_ip').addClass("ocultar");
+
             }else{
-                $('#pdf_retirado').removeClass("ver");
-                $('#pdf_retirado').addClass("ocultar");
+               
+                $('.pdf_retirado').removeClass("ver");
+                $('.pdf_retirado').addClass("ocultar");
 
-                $('#pdf_no_retirado').removeClass("ocultar");
-                $('#pdf_no_retirado').addClass("ver");
+                $('.pdf_no_retirado').removeClass("ocultar");
+                $('.pdf_no_retirado').addClass("ver");
+
+                $('.pdf_ip').removeClass("ver");
+                $('.pdf_ip').addClass("ocultar");
+
+               
             }
             
             let contador=0
@@ -212,6 +225,80 @@ function descargarAreaNoConf(estado){
         url: 'reporte-conf-no-retirado-area',
         data: { _token: $('meta[name="csrf-token"]').attr('content'),
         fecha_inicial_rep:fecha_inicial_rep, fecha_final_rep:fecha_final_rep, estado:estado },
+        success: function(data){
+           
+            vistacargando("");                
+            if(data.error==true){
+                alertNotificar(data.mensaje,'error');
+                return;                      
+            }
+            alertNotificar("El documento se descargará en unos segundos...","success");
+            window.location.href="descargar-reporte/"+data.pdf
+                            
+        }, error:function (data) {
+            vistacargando("");
+            alertNotificar('Ocurrió un error','error');
+        }
+    });
+
+}
+
+function descargarAreaConf(estado){
+
+    let fecha_inicial_rep=$('#fecha_ini').val()
+    let fecha_final_rep=$('#fecha_fin').val()
+
+   
+    vistacargando("m","Espere por favor");           
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    
+    $.ajax({
+        type: "POST",
+        url: 'reporte-conf-retirado-area',
+        data: { _token: $('meta[name="csrf-token"]').attr('content'),
+        fecha_inicial_rep:fecha_inicial_rep, fecha_final_rep:fecha_final_rep, estado:estado },
+        success: function(data){
+           
+            vistacargando("");                
+            if(data.error==true){
+                alertNotificar(data.mensaje,'error');
+                return;                      
+            }
+            alertNotificar("El documento se descargará en unos segundos...","success");
+            window.location.href="descargar-reporte/"+data.pdf
+                            
+        }, error:function (data) {
+            vistacargando("");
+            alertNotificar('Ocurrió un error','error');
+        }
+    });
+
+}
+
+function descargarIpConf(){
+    
+    let fecha_inicial_rep=$('#fecha_ini').val()
+    let fecha_final_rep=$('#fecha_fin').val()
+
+   
+    vistacargando("m","Espere por favor");           
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    
+    $.ajax({
+        type: "POST",
+        url: 'reporte-conf-ip',
+        data: { _token: $('meta[name="csrf-token"]').attr('content'),
+        fecha_inicial_rep:fecha_inicial_rep, fecha_final_rep:fecha_final_rep },
         success: function(data){
            
             vistacargando("");                

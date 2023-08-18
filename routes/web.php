@@ -175,7 +175,8 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     Route::get('/alimento-aprobado-periodo/{f_ini}/{f_fin}/{estado}', [ReporteController::class, 'alimentoAprobadoPeriodo']);
     Route::post('/reporte-periodo-aprobado', [ReporteController::class, 'reportePeriodoAprob']);
     Route::post('/reporte-conf-no-retirado-area', [ReporteController::class, 'reporteAprobadoNoRetirado']);
-   
+    Route::post('/reporte-conf-retirado-area', [ReporteController::class, 'reporteAprobadoRetiradoArea']);
+    Route::post('/reporte-conf-ip', [ReporteController::class, 'reporteConfirmadoIp']);
 
     //EMPLEADO
     Route::get('/empleado', [EmpleadoController::class, 'index'])->middleware('validarRuta');
