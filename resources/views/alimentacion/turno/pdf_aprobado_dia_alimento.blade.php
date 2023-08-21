@@ -90,7 +90,7 @@
                 
                 <tr style="font-size: 9px !important; background-color: #D3D3D3;line-height:10px; "> 
                     
-                    <th width="10%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">CÉDULA</th>
+                    <th width="10%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">#</th>
                     <th width="34%" style="border: 0px; ;border-color: #D3D3D3; text-align: center">FUNCIONARIO</th>
                     <th width="32%" style="border-right: 0px;border-top: 0px; border-bottom:0px;border-color: #D3D3D3; text-align: center">PUESTO</th>
                 
@@ -106,7 +106,7 @@
                             <tr style="font-size: 8px !important; line-height:18px">                                    
                                 
                                 <td align="center" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3">
-                                    {{$dato->cedula}}
+                                    {{$e+1}}
                                 </td>
 
                                 <td align="left" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3">

@@ -122,7 +122,7 @@
                             <table class="table table-bordered table-hover text-center" id="table_persona">
                                 <thead class="th">
                                 <tr>
-                                    <th>Cédula</th>
+                                    <th>#</th>
                                     <th>Funcionario</th>
                                     <th>Puesto</th>
                                     <th>Área</th>

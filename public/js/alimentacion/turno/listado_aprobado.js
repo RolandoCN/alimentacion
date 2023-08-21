@@ -71,7 +71,7 @@ function buscarTurnos(){
                 }
 				$('#table_persona').append(`<tr>
                                                 <td style="width:10%">
-                                                    ${item.cedula}
+                                                    ${i+1}
                                                     <input type="hidden" name="idturno_comida[]"  value="${item.idturno}">
                                                 </td>
                                                 <td style="width:30%; text-align:left">${item.nombres}</td>

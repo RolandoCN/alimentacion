@@ -78,7 +78,7 @@ function buscarTurnos(){
                 }
 				$('#table_persona').append(`<tr class="${color_fila}">
                                                 <td style="width:10%">
-                                                    ${item.cedula}
+                                                    ${i+1}
                                                    
                                                 </td>
                                                 <td style="width:30%; text-align:left">${item.nombres}</td>
