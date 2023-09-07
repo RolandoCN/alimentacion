@@ -64,8 +64,9 @@ class VerificaTurnoController extends Controller
         ->where('e.cedula',$cedula)      
         ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','h.hora_ini as hora_ini', 'h.hora_fin as hora_fin', 'tu.id as idturno','tu.start as fecha_turno', 'al.descripcion as comida', 'tc.estado as estado_turno','tc.id_turno_comida as id_turno_comida',
         'tc.hora_retira_comida','tc.estado_retira_comida','tc.confirma_empleado','tc.fecha_elimina as fecha_eli','tc.id_turno')
-        ->orderBy('id_turno', 'desc') //ultimo registro (x si eliminan y vuelven a ingresar y aprobar)
+        ->orderBy('id_turno_comida', 'desc') //ultimo registro (x si eliminan y vuelven a ingresar y aprobar)
         ->first(); 
+
         
         if(is_null($turnos_aprobado)){
             //si no tiene en la comida solicitada buscamos todas las de ese dia (asi no este aprobada x th)
@@ -81,7 +82,9 @@ class VerificaTurnoController extends Controller
             ->where('e.cedula',$cedula)      
             ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','h.hora_ini as hora_ini', 'h.hora_fin as hora_fin', 'tu.id as idturno','tu.start as fecha_turno', 'al.descripcion as comida', 'tc.estado as estado_turno','tc.id_turno_comida as id_turno_comida',
             'tc.hora_retira_comida','tc.estado_retira_comida','al.idalimento','tc.confirma_empleado')
-            ->get(); 
+            ->get();  
+
+           
    
             if(sizeof($turnos_dias)>0){
                
