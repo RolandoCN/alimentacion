@@ -140,6 +140,8 @@ function llenar_tabla_empleado(){
                     $('td', row).eq(4).html(`
                                   
                                             <button type="button" class="btn btn-primary btn-xs" onclick="editarEmpleado(${data.id_empleado })">Editar</button>
+
+                                            <button type="button" class="btn btn-danger btn-xs" onclick="eliminar(${data.id_empleado })">Eliminar</button>
                                                                                 
                                         
                                        
@@ -216,7 +218,7 @@ function visualizarListado(){
     limpiarCampos()
 }
 
-function btn_eliminar_tarea(id_empleado){
+function eliminar(id_empleado){
     if(confirm('¿Quiere eliminar el registro?')){
         vistacargando("m","Espere por favor")
         $.get("eliminar-empleado/"+id_empleado, function(data){

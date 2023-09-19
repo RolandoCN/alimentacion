@@ -16,7 +16,7 @@ class Turno extends Model
 
     public function empleado(){
         return $this->belongsTo('App\Models\Alimentacion\Empleado', 'id_persona', 'id_empleado')
-        ->where('estado','A')->with('puesto','area');
+        ->with('puesto','area');
     }
 
     public function usuario_aprueba(){

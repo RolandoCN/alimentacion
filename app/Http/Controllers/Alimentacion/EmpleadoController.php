@@ -246,7 +246,7 @@ class EmpleadoController extends Controller
     public function eliminar($id){
         try{
             //verificamos que no este asociado a un turno
-            $veri_Turno=DB::table('al_turno')
+            /*$veri_Turno=DB::table('al_turno')
             ->where('id_persona',$id)
             ->where('estado','!=','E')
             ->first();
@@ -255,11 +255,12 @@ class EmpleadoController extends Controller
                     'error'=>true,
                     'mensaje'=>'La persona está relacionada, no se puede eliminar'
                 ]);
-            }
+            }*/
 
             $empleado=Empleado::find($id);
+          
             $empleado->id_usuario_act=auth()->user()->id;
-            $empleado->fecha_actualiza=date('Y-m-d H:i:s');
+            $empleado->fecha_act=date('Y-m-d H:i:s');
             $empleado->estado="I";
             if($empleado->save()){
                 return response()->json([
