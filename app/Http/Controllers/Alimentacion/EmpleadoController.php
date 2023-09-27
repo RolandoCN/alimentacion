@@ -12,8 +12,7 @@ use Illuminate\Http\Request;
 
 class EmpleadoController extends Controller
 {
-    
-  
+      
     public function index(){
         $area=Area::where('estado','A')->get();
         $puesto=Puesto::where('estado','A')->get();
@@ -30,11 +29,28 @@ class EmpleadoController extends Controller
             ->leftJoin('puesto as pu', 'pu.id_puesto','e.id_puesto')
             ->leftJoin('area as a', 'a.id_area','e.id_area')
             ->where('e.estado','=','A')        
-            ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','e.id_empleado')
+            ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','e.id_empleado','e.notificado','e.telefono','e.pin','e.id_empleado')
             ->get();
+
+            foreach($empleado as $key =>$data){
+                if($data->pin){
+                    $empleado[$key]->generad="Generado";
+                }else{
+                    $empleado[$key]->generad="Pendiente";
+                }
+
+                if($data->notificado){
+                    $empleado[$key]->notifi="Enviado";
+                }else{
+                    $empleado[$key]->notifi="Pendiente";
+                }
+            }
+            $superAdmin=auth()->user()->perfil->nombre_perfil->descripcion;
+           
             return response()->json([
                 'error'=>false,
-                'resultado'=>$empleado
+                'resultado'=>$empleado,
+                'superAdmin'=>$superAdmin
             ]);
         }catch (\Throwable $e) {
             Log::error('EmpleadoController => listar => mensaje => '.$e->getMessage());
@@ -279,6 +295,82 @@ class EmpleadoController extends Controller
             return response()->json([
                 'error'=>true,
                 'mensaje'=>'Ocurrió un error, intentelo más tarde'
+            ]);
+            
+        }
+    }
+
+    public function notifica($id){
+        try{
+            $empleado=Empleado::find($id);
+          
+            $empleado->id_usuario_act=auth()->user()->id;
+            $empleado->fecha_act=date('Y-m-d H:i:s');
+            $empleado->notificado="S";
+            if($empleado->save()){
+                return response()->json([
+                    'error'=>false,
+                    'mensaje'=>'Información actualizada exitosamente'
+                ]);
+            }else{
+                return response()->json([
+                    'error'=>false,
+                    'mensaje'=>'No se pudo actualizar la información'
+                ]);
+            }
+               
+        }catch (\Throwable $e) {
+            Log::error('EmpleadoController => notifica => mensaje => '.$e->getMessage());
+            return response()->json([
+                'error'=>true,
+                'mensaje'=>'Ocurrió un error, intentelo más tarde'
+            ]);
+            
+        }
+    }
+
+    public function vistaPin(){
+        
+        $pin=rand(1000,9999);
+        // dd($pin);
+        return view('alimentacion.pin_empleado');
+    }
+
+
+    public function listarPin(){
+        try{
+            $empleado=DB::table('empleado as e')
+            ->leftJoin('puesto as pu', 'pu.id_puesto','e.id_puesto')
+            ->leftJoin('area as a', 'a.id_area','e.id_area')
+            ->where('e.estado','=','A')        
+            ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','e.id_empleado','e.notificado','e.telefono','e.pin','e.id_empleado')
+            ->get();
+
+            foreach($empleado as $key =>$data){
+                if($data->pin){
+                    $empleado[$key]->generad="Generado";
+                }else{
+                    $empleado[$key]->generad="Pendiente";
+                }
+
+                if($data->notificado){
+                    $empleado[$key]->notifi="Enviado";
+                }else{
+                    $empleado[$key]->notifi="Pendiente";
+                }
+            }
+            $superAdmin=auth()->user()->perfil->nombre_perfil->descripcion;
+           
+            return response()->json([
+                'error'=>false,
+                'resultado'=>$empleado,
+                'superAdmin'=>$superAdmin
+            ]);
+        }catch (\Throwable $e) {
+            Log::error('EmpleadoController => listarPin => mensaje => '.$e->getMessage());
+            return response()->json([
+                'error'=>true,
+                'mensaje'=>'Ocurrió un error'
             ]);
             
         }

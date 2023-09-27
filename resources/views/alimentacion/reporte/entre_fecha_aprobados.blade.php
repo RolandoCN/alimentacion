@@ -123,6 +123,9 @@
 
                             <button type="button" class="btn btn-dark btn-sm btn_descargar pdf_ip" onclick="descargarIpConf()"  >PDF Confirmado por Ip</button>
 
+                            <button type="button" class="btn btn-danger btn-sm btn_descargar pdf_ip" onclick="descargarAmbos()"  >PDF Ambos</button>
+
+
 
                         </div>
                      

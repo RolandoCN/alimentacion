@@ -174,6 +174,7 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     Route::get('/aprobados-fechas', [ReporteController::class, 'informePeriodoAprobados'])->middleware('validarRuta');
     Route::get('/alimento-aprobado-periodo/{f_ini}/{f_fin}/{estado}', [ReporteController::class, 'alimentoAprobadoPeriodo']);
     Route::post('/reporte-periodo-aprobado', [ReporteController::class, 'reportePeriodoAprob']);
+    Route::post('/reporte-periodo-aprobado-todos', [ReporteController::class, 'reportePeriodoAprobTodos']);
     Route::post('/reporte-conf-no-retirado-area', [ReporteController::class, 'reporteAprobadoNoRetirado']);
     Route::post('/reporte-conf-retirado-area', [ReporteController::class, 'reporteAprobadoRetiradoArea']);
     Route::post('/reporte-conf-ip', [ReporteController::class, 'reporteConfirmadoIp']);
@@ -185,6 +186,10 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     Route::get('/editar-empleado/{id}', [EmpleadoController::class, 'editar']);
     Route::put('/actualizar-empleado/{id}', [EmpleadoController::class, 'actualizar']);
     Route::get('/eliminar-empleado/{id}', [EmpleadoController::class, 'eliminar']);
+    Route::get('/notifica-whatsapp/{id}', [EmpleadoController::class, 'notifica']);
+
+    Route::get('/pin-empleado', [EmpleadoController::class, 'vistaPin'])->middleware('validarRuta');
+    Route::get('/listado-empleado-pin', [EmpleadoController::class, 'listarPin']);
 
     //PEDIDO POR MOTIVOS EXTRA
     Route::get('/extra', [ExtraController::class, 'index'])->middleware('validarRuta');

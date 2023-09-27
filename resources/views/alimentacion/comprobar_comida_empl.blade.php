@@ -81,11 +81,20 @@
                         <form id="form_valida" autocomplete="off" method="post"
                         action="">
                             {{ csrf_field() }}
-                            <div class="form-group has-feedback">
+                            <div class="form-group has-feedback col-m-11">
                                 <input id="cedula_func" type="number" class="form-control" name="cedula_func" minlength="1" maxlength="10" onKeyPress="if(this.value.length==10) return false;"  required autocomplete="tx_login" autofocus placeholder="Ingrese su número de cédula">
-                                <span class="glyphicon glyphicon-envelope form-control-feedback" ></span>
+                                <span class="glyphicon glyphicon-user form-control-feedback" ></span>
                               
                             </div>
+
+                            <div class="form-group has-feedback" id="telef">
+                                <input id="telef_pin" type="text" class="form-control" name="telef_pin" minlength="1" maxlength="10" onKeyPress="if(this.value.length==10) return false;"   autocomplete="tx_telefono" autofocus placeholder="Ingrese su número de telefono o pin">
+                                <span class="glyphicon glyphicon-phone form-control-feedback" ></span>
+                              
+                            </div>
+
+                          
+
                             <button type="submit" class="btn btn-primary btn-block" ><b>Consultar</b></button>
 
                            

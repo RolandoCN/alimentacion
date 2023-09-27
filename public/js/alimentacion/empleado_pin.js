@@ -1,95 +1,5 @@
 
 
-$("#form_registro_empleado").submit(function(e){
-    e.preventDefault();
-    
-    //validamos los campos obligatorios
-    let cedula=$('#cedula').val()
-    let nombres=$('#nombres').val()
-    let idpuesto=$('#idpuesto').val()
-    let idarea=$('#idarea').val()
-        
-    if(cedula=="" || cedula==null){
-        alertNotificar("Debe ingresar la cédula","error")
-        $('#cedula').focus()
-        return
-    } 
-
-    if(nombres=="" || nombres==null){
-        alertNotificar("Ingrese los nombres","error")
-        $('#nombres').focus()
-        return
-    } 
-
-    if(idpuesto=="" || idpuesto==null){
-        alertNotificar("Seleccione el puesto","error")
-        $('#idpuesto').focus()
-        return
-    } 
-
-    if(idarea=="" || idarea==null){
-        alertNotificar("Seleccione el area","error")
-        $('#idarea').focus()
-        return
-    } 
-    vistacargando("m","Espere por favor")
-
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-
-    //comprobamos si es registro o edicion
-    let tipo=""
-    let url_form=""
-    if(AccionForm=="R"){
-        tipo="POST"
-        url_form="guardar-empleado"
-    }else{
-        tipo="PUT"
-        url_form="actualizar-empleado/"+idEmpleadoEditar
-    }
-  
-    var FrmData=$("#form_registro_empleado").serialize();
-
-    $.ajax({
-            
-        type: tipo,
-        url: url_form,
-        method: tipo,             
-		data: FrmData,      
-		
-        processData:false, 
-
-        success: function(data){
-            vistacargando("");                
-            if(data.error==true){
-                alertNotificar(data.mensaje,'error');
-                return;                      
-            }
-            limpiarCampos()
-            alertNotificar(data.mensaje,"success");
-            $('#form_ing').hide(200)
-            $('#listado_empleado').show(200)
-            llenar_tabla_empleado()
-                            
-        }, error:function (data) {
-            console.log(data)
-
-            vistacargando("");
-            alertNotificar('Ocurrió un error','error');
-        }
-    });
-})
-
-function limpiarCampos(){
-    $('#cedula').val('')
-    $('#nombres').val('')
-    $('#idpuesto').val('').trigger('change.select2')
-    $('#idarea').val('').trigger('change.select2')
-}
-
 function llenar_tabla_empleado(){
     var num_col = $("#tabla_empleado thead tr th").length; //obtenemos el numero de columnas de la tabla
 	$("#tabla_empleado tbody").html(`<tr><td colspan="${num_col}" style="padding:40px; 0px; font-size:20px;"><center><span class="spinner-border" role="status" aria-hidden="true"></span><b> Obteniendo información</b></center></td></tr>`);
@@ -114,28 +24,28 @@ function llenar_tabla_empleado(){
                 "destroy":true,
                 pageLength: 10,
                 autoWidth : true,
-                order: [[ 4, "asc" ]],
+                order: [[ 5, "asc" ]],
                 sInfoFiltered:false,
                 language: {
                     url: 'json/datatables/spanish.json',
                 },
                 columnDefs: [
-                    { "width": "10%", "targets": 0 },
+                    { "width": "7%", "targets": 0 },
                     { "width": "20%", "targets": 1 },
-                    { "width": "10%", "targets": 2 },
-                    { "width": "20%", "targets": 3 },
+                    { "width": "15%", "targets": 2 },
+                    { "width": "10%", "targets": 3 },
                     { "width": "10%", "targets": 4 },
                     { "width": "10%", "targets": 5 },
-                    { "width": "10%", "targets": 6 },
+                    { "width": "18%", "targets": 6 },
                    
                 ],
                 data: data.resultado,
                 columns:[
                         {data: "cedula"},
                         {data: "nombres" },
-                        {data: "puesto"},
                         {data: "area"},
-                        {data: "generad"},
+                        {data: "telefono"},
+                        {data: "pin"},
                         {data: "notifi" },
                         {data: "cedula" },
                 ],    

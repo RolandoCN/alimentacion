@@ -12,9 +12,15 @@ $("#form_valida").submit(function(e){
    
     e.preventDefault();
     let cedula_func=$('#cedula_func').val()
+    let telef_pin=$('#telef_pin').val()
    
     if(cedula_func.length!=10){
         alertNotificar("Debe ingresar un número de cédula válido de 10 dígitos","error")
+        return
+    }
+
+    if(telef_pin==""){
+        alertNotificar("Debe ingresar su numero telefono o pin de acceso","error")
         return
     }
 
@@ -52,7 +58,7 @@ $("#form_valida").submit(function(e){
             console.log(data)
             vistacargando("");                
             if(data.error==true){ 
-                $('#cedula_func').val('')   
+                // $('#cedula_func').val('')   
                 //mostramos una ventana principal el error x 8 segundos
                 $('.confirm').prop('disabled',false)
               
@@ -417,6 +423,7 @@ $("#modal_aprobacion").on("hidden.bs.modal", function () {
     $("input[name='comida_chequeada[]']").val('')
     $("#comida_chequeada").html('')
     $('#cedula_func').val('')
+    $('#telef_pin').val('')
 })
 function limpiar(){
     AbrirModal="S"
