@@ -234,8 +234,8 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     //COMIDA APROBADAS  A PACIENTE
     Route::get('/dieta-aprobadas', [AlimentosPacientesController::class, 'vistaAprobado'])->middleware('auth');
     Route::get('/listado-paciente-aprobado', [AlimentosPacientesController::class, 'listar']);
-    Route::get('/pdf-paciente-ali-dia', [AlimentosPacientesController::class, 'reportePdfAliPacienteAprobado']);
-   
+    Route::get('/pdf-paciente-ali-dia/{ini}/{fin}', [AlimentosPacientesController::class, 'reportePdfAliPacienteAprobado']);
+    Route::get('visualizardoc/{documentName}', [AlimentosPacientesController::class, 'visualizarDoc']);
     
 
 });

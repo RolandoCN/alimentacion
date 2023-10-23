@@ -105,7 +105,7 @@
     <script src="{{ asset('js/alimentacion/paciente.js?v='.rand())}}"></script>
 
     <script>
-        llenar_tabla_paciente()
+        // llenar_tabla_paciente()
         // limpiarCampos()
     </script>
 

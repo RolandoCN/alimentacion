@@ -94,7 +94,8 @@ function pdf_alimento_pac(){
         if(data.error==false){
             llenar_tabla_paciente()
             alertNotificar("El documento se descargará en unos segundos...","success");
-            window.location.href="descargar-reporte/"+data.pdf
+            // window.location.href="descargar-reporte/"+data.pdf
+            verpdf(data.pdf)
             
         }
     }).fail(function(){
@@ -103,9 +104,47 @@ function pdf_alimento_pac(){
     });
 }
 
+function verpdf(ruta){
+    var iframe=$('#iframePdf');
+    iframe.attr("src", "visualizardoc/"+ruta);   
+    $("#vinculo").attr("href", 'descargar-reporte/'+ruta);
+    $("#documentopdf").modal("show");
+}
+
+$('#documentopdf').on('hidden.bs.modal', function (e) {
+     
+    var iframe=$('#iframePdf');
+    iframe.attr("src", null);
+
+});
+
+$('#descargar').click(function(){
+    $('#documentopdf').modal("hide");
+});
+
 function generarPdf(){
+    var ini=$('#fecha_ini').val()
+    var fin=$('#fecha_fin').val()
+    if(ini==""){
+        alertNotificar("Debe seleccionar la fecha de inicio","error")
+        $('#fecha_ini').focus()
+        return
+    }
+
+    if(fin==""){
+        alertNotificar("Debe seleccionar la fecha de fin","error")
+        $('#fecha_fin').focus()
+        return
+    }
+
+    if(ini>fin){
+        alertNotificar("La fecha de inicio debe ser menor a la final","error")
+        return
+    }
+
+
     vistacargando("m","Espere por favor");
-    $.get("pdf-paciente-ali-dia", function(data){
+    $.get("pdf-paciente-ali-dia/"+ini+"/"+fin, function(data){
        
         vistacargando("");
         if(data.error==true){
@@ -113,7 +152,6 @@ function generarPdf(){
             return;   
         }
         if(data.error==false){
-            llenar_tabla_paciente()
             alertNotificar("El documento se descargará en unos segundos...","success");
             window.location.href="descargar-reporte/"+data.pdf
             

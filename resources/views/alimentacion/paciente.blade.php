@@ -81,6 +81,7 @@
         
 
     </section>
+    @include('alimentacion.modal_doc')
 
 @endsection
 @section('scripts')

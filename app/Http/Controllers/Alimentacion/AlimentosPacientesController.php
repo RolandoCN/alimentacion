@@ -12,6 +12,8 @@ use PDF;
 use SplFileInfo;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Config;
+
 class AlimentosPacientesController extends Controller
 {
     private $clientHosp = null;
@@ -19,8 +21,15 @@ class AlimentosPacientesController extends Controller
     public function __construct(){
         
         try{
+           
+            $url=DB::table('parametro')
+            ->where('estado', 'A')
+            ->where('codigo', 'URL_API')
+            ->select('valor')
+            ->first();
+           
             $this->clientHosp = new Client([
-                'base_uri' => '172.10.40.204/sisInv',
+                'base_uri' =>$url->valor.'/sisInv',
                 'verify' => false,
             ]);
         }catch(Exception $e){
@@ -87,7 +96,9 @@ class AlimentosPacientesController extends Controller
 
               
             }
-            $alimentoPac=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))->get();
+            $alimentoPac=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
+            ->where('estado','Solicitado')
+            ->get();
             return[
                 'error'=>false,
                 'resultado'=>$alimentoPac
@@ -154,12 +165,11 @@ class AlimentosPacientesController extends Controller
                 ];
             }
           
-            $generarAprobacion=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
-            ->where('estado','Solicitado')->update(['fecha_aprobacion'=>date('Y-m-d H:i:s'), 'estado'=>'Aprobado', 'entregado'=>'S']);
+           
 
             $listar=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
-            ->where('estado','Aprobado')
-            ->where('entregado','S')
+            ->where('estado','Solicitado')
+            // ->where('entregado','S')
             ->get();
             
 
@@ -174,6 +184,10 @@ class AlimentosPacientesController extends Controller
             Storage::disk('public')->put(str_replace("", "",$nombrePDF), $estadoarch);
             $exists_destino = Storage::disk('public')->exists($nombrePDF); 
             if($exists_destino){ 
+
+                $generarAprobacion=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
+                ->where('estado','Solicitado')->update(['fecha_aprobacion'=>date('Y-m-d H:i:s'), 'estado'=>'Aprobado', 'entregado'=>'S']);
+
                 return [
                     'error'=>false,
                     'pdf'=>$nombrePDF
@@ -199,7 +213,8 @@ class AlimentosPacientesController extends Controller
         return view('alimentacion.paciente_aprobado');
     }
 
-    public function reportePdfAliPacienteAprobado(){
+    //por rango fecha
+    public function reportePdfAliPacienteAprobado($inicio, $final){
         try{
           
             $listar=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
@@ -215,7 +230,7 @@ class AlimentosPacientesController extends Controller
             $nombrePDF="reporte_listado_comida_pac_dia.pdf";
            
             // enviamos a la vista para crear el documento que los datos repsectivos
-            $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente',['datos'=>$listar]);
+            $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente',['datos'=>$listar,'ini'=>$inicio, 'fin'=>$final]);
             $crearpdf->setPaper("A4", "landscape");
             $estadoarch = $crearpdf->stream();
 
@@ -242,5 +257,27 @@ class AlimentosPacientesController extends Controller
             ]);
              
         }
+    }
+
+    public function visualizarDoc($documentName){
+        try {
+             
+            $info = new SplFileInfo($documentName);
+            $extension = $info->getExtension();
+            if($extension!= "pdf" && $extension!="PDF"){
+                return \Storage::disk('public')->download($documentName);
+            }else{
+                // obtenemos el documento del disco en base 64
+                $documentEncode= base64_encode(\Storage::disk('public')->get($documentName));
+                return view("alimentacion.vistaPrevia")->with([
+                    "documentName"=>$documentName,
+                    "documentEncode"=>$documentEncode
+                ]);        
+            }            
+        } catch (\Throwable $th) {
+            Log::error("AprobacionEntregaController =>visualizardoc => Mensaje =>".$th->getMessage());
+            abort("404");
+        }
+
     }
 }
