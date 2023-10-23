@@ -77,7 +77,7 @@
         <table class="ltable" style="" border="0" width="100%" style="padding-bottom:2px !important">
           
             <tr style="font-size: 11px"  class="fuenteSubtitulo " style=""> 
-                <th colspan="11" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  >ALIMENTACIÓN PACIENTE              
+                <th colspan="11" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  >ALIMENTACIÓN PACIENTE               
                 </th>
              
             </tr>
