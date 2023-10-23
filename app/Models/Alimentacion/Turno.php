@@ -23,5 +23,9 @@ class Turno extends Model
         return $this->belongsTo('App\Models\User', 'id_usuario_act', 'id')->with('persona');
     }
 
+    public function detalle(){
+        return $this->hasMany('App\Models\Alimentacion\TurnoComida', 'id_turno', 'id');
+    }
+
 }
 ?>

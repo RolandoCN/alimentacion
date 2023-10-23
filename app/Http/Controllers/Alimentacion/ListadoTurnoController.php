@@ -17,6 +17,25 @@ class ListadoTurnoController extends Controller
 {
     //vista para buscar y aprobar 
     public function index(){
+
+       /* $turno=Turno::with('detalle')->where('start','2023-10-07')
+        ->where('estado','P')->get();
+        foreach($turno as $data){
+            $turnoComida=TurnoComida::where('estado','Generado')
+            ->where('id_turno',$data->id)
+            ->where('id_alimento',2)
+            ->first();
+            if(!is_null($turnoComida)){
+                $turnoComida->confirma_empleado="Si";
+                $turnoComida->ip_confirma="0.0.0.0";
+                $turnoComida->estado="Confirmado";
+                $turnoComida->fecha_hora_confirma_emp=date("Y-m-d H:i:s");
+                $turnoComida->save();
+            }
+           
+        }
+        dd("ss");*/
+
        
         $alimento=DB::table('alimento')->where('estado','A')->get();
         return view('alimentacion.turno.listado',[
@@ -233,7 +252,7 @@ class ListadoTurnoController extends Controller
 
    
     public function aprobacionTurno(Request $request){
-      
+       
         $transaction=DB::transaction(function() use($request){ 
             try{
                               

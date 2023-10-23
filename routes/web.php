@@ -17,6 +17,7 @@ use App\Http\Controllers\Alimentacion\ExtraController;
 use App\Http\Controllers\Alimentacion\AuditoriaController;
 use App\Http\Controllers\Alimentacion\TipoAlimentosController;
 use App\Http\Controllers\Alimentacion\MenuAlimentoController;
+use App\Http\Controllers\Alimentacion\AlimentosPacientesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -221,7 +222,21 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     Route::get('/editar-menu-ali/{id}', [MenuAlimentoController::class, 'editarMenuAli']);
     Route::put('/actualizar-menu-ali/{id}', [MenuAlimentoController::class, 'actualizar']);
     Route::get('/eliminar-menu-ali/{id}', [MenuAlimentoController::class, 'eliminarMenuAli']);
+
+
+    //COMIDA SOLICITADA DE MEDICO A PACIENTE
+    Route::get('/dieta-solicitada', [AlimentosPacientesController::class, 'index'])->middleware('validarRuta');
+    Route::get('/listado-paciente-ali', [AlimentosPacientesController::class, 'listar']);
+    Route::get('/pdf-paciente-ali', [AlimentosPacientesController::class, 'reportePdfAliPaciente']);
+
+    Route::get('/job-ali-pacientes', [AlimentosPacientesController::class, 'aprobarAliPaciente']);
+
+    //COMIDA APROBADAS  A PACIENTE
+    Route::get('/dieta-aprobadas', [AlimentosPacientesController::class, 'vistaAprobado'])->middleware('auth');
+    Route::get('/listado-paciente-aprobado', [AlimentosPacientesController::class, 'listar']);
+    Route::get('/pdf-paciente-ali-dia', [AlimentosPacientesController::class, 'reportePdfAliPacienteAprobado']);
    
+    
 
 });
 
