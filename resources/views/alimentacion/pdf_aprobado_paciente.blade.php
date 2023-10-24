@@ -79,21 +79,23 @@
                 $ini=date('d-m-Y', strtotime($ini));
                 $fin=date('d-m-Y', strtotime($fin));
                 $titulo="DESDE EL ".$ini. " HASTA EL ".$fin;
+            }else{
+                $titulo=" DEL ".date('d-m-Y');
             }
         @endphp
         <table class="ltable" style="" border="0" width="100%" style="padding-bottom:2px !important">
           
             <tr style="font-size: 11px"  class="fuenteSubtitulo " style=""> 
-                <th colspan="11" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  >ALIMENTACIÓN PACIENTE {{$titulo}}               
+                <th colspan="11" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  >ALIMENTACIÓN PACIENTE DE DIALISIS {{$titulo}}               
                 </th>
              
             </tr>
 
             <tr style="font-size: 11px"  class="fuenteSubtitulo " style=""> 
-                <td colspan="6" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  > <b>GENERADO: </b> {{strtoupper(auth()->user()->persona->nombres)}} {{strtoupper(auth()->user()->persona->apellidos)}}              
+                <td colspan="6" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  > <b>APROBADO POR: </b> SISTEMA             
                 </td>
 
-                <td colspan="5" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  ><b>FECHA IMPRESION: </b>{{date('d-m-Y H:i:s')}}              
+                <td colspan="5" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  ><b>FECHA APROBACION: </b>{{date('d-m-Y H:i:s', strtotime($f_aprobacion))}}              
                 </td>
              
             </tr>
@@ -105,15 +107,17 @@
                 
                 <tr style="font-size: 10px !important; background-color: #D3D3D3;line-height:10px; "> 
                     
-                    <th width="10%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">FECHA</th>
+                    <th width="10%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">HORA SOLIC.</th>
 
-                    <th width="20%" style="border: 0px; ;border-color: #D3D3D3; text-align: center">PACIENTE</th>
+                    <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center">PACIENTE</th>
 
-                    <th width="15%" style="border-right: 0px;border-top: 0px; border-bottom:0px;border-color: #D3D3D3; text-align: center">SERVICIO</th>
+                    <th width="10%" style="border-right: 0px;border-top: 0px; border-bottom:0px;border-color: #D3D3D3; text-align: center">SERVICIO</th>
                 
-                    <th width="20%" style="border: 0px; text-align: center">DIETA</th>
+                    <th width="17%" style="border: 0px; text-align: center">DIETA</th>
 
-                    <th width="25%" style="border: 0px; text-align: center">SOLICTADO</th>
+                    <th width="30%" style="border: 0px; text-align: center">SOLICTADO</th>
+
+                    <th width="33%" style="border: 0px; text-align: center">OBSERVACIÓN</th>
              
                 </tr>
             
@@ -123,12 +127,12 @@
                     @foreach($datos as $e=>$dato)
                         <tr style="font-size: 10px !important; line-height:20px">                                    
                             
-                            <td align="left" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3">
-                                {{$dato->fecha_solicita}}
+                            <td align="left" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3; line-height:8px">
+                                {{date('H:i', strtotime($dato->fecha_solicita))}}
                             </td>
 
                                 
-                            <td align="left" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3">
+                            <td align="left" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3; line-height:8px">
                                 {{$dato->paciente}}
                             </td>
 
@@ -142,6 +146,10 @@
 
                             <td align="left" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3">
                                 {{$dato->responsable}}
+                            </td>
+
+                            <td align="left" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3">
+                                {{$dato->observacion}}
                             </td>
 
                         </tr>
