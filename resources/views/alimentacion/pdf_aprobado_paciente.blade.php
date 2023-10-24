@@ -95,8 +95,13 @@
                 <td colspan="6" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  > <b>APROBADO POR: </b> SISTEMA             
                 </td>
 
-                <td colspan="5" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  ><b>FECHA APROBACION: </b>{{date('d-m-Y H:i:s', strtotime($f_aprobacion))}}              
-                </td>
+                @if($f_aprobacion<>0)
+                    <td colspan="5" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  ><b>FECHA APROBACION: </b>{{date('d-m-Y H:i:s', strtotime($f_aprobacion))}}              
+                    </td>
+                @else
+                    <td colspan="5" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  ><b>FECHA IMPRESION: </b>{{date('d-m-Y H:i:s')}}              
+                    </td>
+                @endif
              
             </tr>
      
