@@ -86,7 +86,8 @@
         <table class="ltable" style="" border="0" width="100%" style="padding-bottom:2px !important">
           
             <tr style="font-size: 11px"  class="fuenteSubtitulo " style=""> 
-                <th colspan="11" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  >ALIMENTACIÓN PACIENTE DE DIALISIS {{$titulo}}               
+                <th colspan="11" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  >
+                   ALIMENTACIÓN PACIENTES {{$titulo}} <br>  {{mb_strtoupper($tipo)}}            
                 </th>
              
             </tr>
@@ -110,37 +111,36 @@
         <div style="margin-top:5px;">
             <table class="ltable"  border="0" width="100%" style="padding-bottom:2px !important">
                 
-                <tr style="font-size: 9px !important; background-color: #D3D3D3;line-height:10px; "> 
+                <tr style="font-size: 10px !important; background-color: #D3D3D3;line-height:10px; "> 
                     
                     <th width="10%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">HORA SOLIC.</th>
 
-                    <th width="30%" style="border: 0px; ;border-color: #D3D3D3; text-align: center">PACIENTE</th>
+                    <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center">PACIENTE</th>
 
                     <th width="10%" style="border-right: 0px;border-top: 0px; border-bottom:0px;border-color: #D3D3D3; text-align: center">SERVICIO</th>
                 
-                    <th width="15%" style="border: 0px; text-align: center">DIETA</th>
+                    <th width="17%" style="border: 0px; text-align: center">DIETA</th>
 
                     <th width="30%" style="border: 0px; text-align: center">SOLICTADO</th>
 
-                    <th width="31%" style="border: 0px; text-align: center">OBSERVACIÓN</th>
+                    <th width="33%" style="border: 0px; text-align: center">OBSERVACIÓN</th>
              
                 </tr>
             
                 <tbody>
                     
-                   
-                    @foreach($datos as $e=>$dato)
+                        @foreach($datos as $e=>$dato)
                         <tr style="font-size: 9px !important; line-height:12px !important">                                    
                             
                             <td align="left" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3; vertical-align:middle">
-                               
+                            
                                 <p> {{date('H:i', strtotime($dato->fecha_solicita))}}</p>
                             </td>
 
                                 
                             <td align="left" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3;vertical-align:middle">
                                 <p >{{$dato->paciente}}</p>
-                               
+                            
                             </td>
 
                             <td align="left" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3">
@@ -150,12 +150,12 @@
                             </td>
 
                             <td align="left" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3;vertical-align:middle">
-                               
-                              <p>{{$dato->dieta}}</p>
+                            
+                            {{$dato->dieta}}
                             </td>
 
                             <td align="left" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3;vertical-align:middle">
-                               
+                            
                                 <p >{{$dato->responsable}}</p>
                             </td>
 
@@ -165,7 +165,6 @@
 
                         </tr>
                     @endforeach		
-                   
                 </tbody>
                
 

@@ -303,6 +303,7 @@ class VerificaTurnoController extends Controller
                 ->leftJoin('area as a', 'a.id_area','e.id_area')
                 ->whereDate('tu.start', date('Y-m-d'))
                 ->where('tu.estado','!=','E')
+                
                 // ->whereIn('tc.estado',['Generado','Confirmado'])  
                 ->where('e.cedula',$cedula)      
                 ->select('e.cedula', 'e.nombres', 'pu.nombre as puesto','a.nombre as area','h.hora_ini as hora_ini', 'h.hora_fin as hora_fin', 'tu.id as idturno','tu.start as fecha_turno', 'al.descripcion as comida', 'tc.estado as estado_turno','tc.id_turno_comida as id_turno_comida','tc.id_alimento',

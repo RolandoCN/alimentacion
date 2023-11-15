@@ -104,6 +104,17 @@ function pdf_alimento_pac(){
     });
 }
 
+function servicioCombo(){
+    var serv=$('#servicio_cmb').val()
+    if(serv==""){return}
+    if(serv=="Dialisis"){
+        $('#com_hosp').hide()
+        $('#tipo').val('').change()
+    }else{
+        $('#com_hosp').show()
+    }
+}
+
 function verpdf(ruta){
     var iframe=$('#iframePdf');
     iframe.attr("src", "visualizardoc/"+ruta);   
@@ -125,6 +136,8 @@ $('#descargar').click(function(){
 function generarPdf(){
     var ini=$('#fecha_ini').val()
     var fin=$('#fecha_fin').val()
+    var servicio=$('#servicio_cmb').val()
+    var tipo=$('#tipo').val()
     if(ini==""){
         alertNotificar("Debe seleccionar la fecha de inicio","error")
         $('#fecha_ini').focus()
@@ -142,9 +155,23 @@ function generarPdf(){
         return
     }
 
+    if(servicio=="" ){
+        alertNotificar("Debe seleccionar el servicio","error")
+        return
+    }
+
+    if(servicio=="Otros"){
+        if(tipo=="" ){
+            alertNotificar("Debe seleccionar un tipo","error")
+            return
+        }
+    }else{
+        tipo="N";
+    }
+
 
     vistacargando("m","Espere por favor");
-    $.get("pdf-paciente-ali-dia/"+ini+"/"+fin, function(data){
+    $.get("pdf-paciente-ali-dia/"+ini+"/"+fin+"/"+servicio+"/"+tipo, function(data){
        
         vistacargando("");
         if(data.error==true){

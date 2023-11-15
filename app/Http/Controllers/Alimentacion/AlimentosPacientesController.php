@@ -115,7 +115,7 @@ class AlimentosPacientesController extends Controller
         }
     }
 
-    //job para aprobar alimentos de pacientes
+    //job para aprobar alimentos de pacientes dialisis 9AM
     public function aprobarAliPaciente(){
         $transaction=DB::transaction(function() { 
             try{
@@ -132,6 +132,7 @@ class AlimentosPacientesController extends Controller
 
                 $listar=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
                 ->where('estado','Solicitado')
+                ->where('servicio','DIALISIS')
                 ->get();
 
                 if(sizeof($listar)==0){
@@ -155,7 +156,9 @@ class AlimentosPacientesController extends Controller
                 if($exists_destino){ 
 
                     $generarAprobacion=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
-                    ->where('estado','Solicitado')->update(['fecha_aprobacion'=>date('Y-m-d H:i:s'), 'estado'=>'Aprobado', 'entregado'=>'S']);
+                    ->where('estado','Solicitado')
+                    ->where('servicio','DIALISIS')
+                    ->update(['fecha_aprobacion'=>date('Y-m-d H:i:s'), 'estado'=>'Aprobado', 'entregado'=>'S']);
                    
                     //se creo lo enviamos
                     $fecha_apr=date('d-m-Y');
@@ -183,6 +186,128 @@ class AlimentosPacientesController extends Controller
                             Mail::send('email_documentos.aprobacion_ali_paciente', ["fecha_apr"=>$fecha_apr, "correo"=>$correo_envio, "area"=>$area], function ($m) use ($correo_envio,$archivo, $nombrearchivo, $fecha_apr,$area) {
                                 $m->to($correo_envio)
                                 ->subject("Aprobación de alimentos de pacientes de " .$area. " del ".$fecha_apr)
+                                
+                                ->attachData($archivo, $nombrearchivo, [
+                                    'mime' => 'application/pdf',
+                                ]);
+                            
+                            });  
+                        }
+
+                        $archivo=Storage::disk('public')->delete($nombrearchivo);
+
+                        Log::info('Información aprobada y enviada exitosamente desde JOB, del alimento de paciente de '.$area. ' del día '.date('d-m-Y'));
+                       
+                        return 'Información aprobada y enviada exitosamente desde JOB alimento paciente '.$area;
+
+                    } catch (\Throwable $th) {
+                        $archivo=Storage::disk('public')->delete($nombrearchivo);
+                        Log::error('AlimentosPacientesController, aprobarAliPaciente '.$th->getMessage()." Linea ".$th->getLine());
+                        return 'Información fué aprobada exitosamente, pero no se pudo enviar al correo ';
+                    }
+
+                 
+                }else{
+                    DB::Rollback();
+                    Log::error('No se pudo crear el documento');   
+                    return 'No se pudo crear el documento';                          
+                }
+               
+            }catch (\Throwable $e) {
+                DB::Rollback();
+                Log::error(__CLASS__." => ".__FUNCTION__." => Mensaje =>".$e->getMessage()." Linea =>".$e->getLine());
+                log::error('Ocurrio un error al aprobar el listado de pacientes con servicio a alimentos');
+                return 'Ocurrio un error al aprobar el listado de pacientes con servicio a alimentos';
+                
+            }
+        });
+        return $transaction;
+    }
+
+
+    //job para aprobar alimentos de pacientes HOSPITALIZADOS (diferente d dialisis)
+    public function aprobarAliPacienteHosp(){
+        $transaction=DB::transaction(function() { 
+            try{
+                
+                $consultaPendiente=$this->listar();
+                if($consultaPendiente['error']==true){
+                    return [
+                        'error'=>true,
+                        'mensaje'=>'Ocurrió un error'
+                    ];
+                    Log::error('Aprobacion Alimento Paciente '.$consultaPendiente["mensaje"]);   
+                    return $consultaPendiente["mensaje"];  
+                }
+
+                $listar=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
+                ->where('estado','Solicitado')
+                ->where('servicio','!=','DIALISIS')
+                ->get();
+
+                if(sizeof($listar)==0){
+                    Log::error('No existen pacientes con solicitud a alimentacion');   
+                    return 'No existen pacientes con solicitud a alimentacion';  
+                }
+              
+                $area=$listar[0]->servicio;
+                
+                $nombrePDF="reporte_listado_comida_pac.pdf";
+
+                $hora=date('H');
+                if($hora=="06" || $hora==6){
+                    $tipo="Desayuno";
+                }else if($hora=="09" || $hora==9){
+                    $tipo="Colacion 1";
+                }else if($hora=="11" || $hora==11){
+                    $tipo="Almuerzo";
+                }else if($hora=="14" || $hora==14){
+                    $tipo="Colacion 2";
+                }else{
+                    $tipo="Merienda";
+                }
+            
+                // enviamos a la vista para crear el documento que los datos repsectivos
+                $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente_hosp',['datos'=>$listar,"f_aprobacion"=>date('Y-m-d H:i:s'),'tipo'=>$tipo]);
+                $crearpdf->setPaper("A4", "landscape");
+                $estadoarch = $crearpdf->stream();
+
+                //lo guardamos en el disco temporal
+                Storage::disk('public')->put(str_replace("", "",$nombrePDF), $estadoarch);
+                $exists_destino = Storage::disk('public')->exists($nombrePDF); 
+                if($exists_destino){ 
+                    
+                    $generarAprobacion=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
+                    ->where('estado','Solicitado')
+                    ->where('servicio','!=','DIALISIS')
+                    ->update(['fecha_aprobacion'=>date('Y-m-d H:i:s'), 'estado'=>'Aprobado', 'entregado'=>'S', 'tipo'=>$tipo]);
+                   
+                    //se creo lo enviamos
+                    $fecha_apr=date('d-m-Y');
+                    $archivo=Storage::disk('public')->get($nombrePDF);
+                    $nombrearchivo=$nombrePDF;
+
+                    //consultamos el correo donde enviaremos el documento
+                    $correo_param=DB::table('al_parametros')
+                    ->where('codigo','ECAA')->first();
+                    if(!is_null($correo_param)){
+                        $correo_db_par=$correo_param->valor;
+                    }else{
+                        $correo_db_par="juanrolandocn@gmail.com";
+                    }
+                
+                    //correos parametrizados
+                    $correos_enviar=explode(",", $correo_db_par);
+                
+                    try{
+                        
+                        foreach($correos_enviar as $email){
+
+                            $correo_envio=$email;
+                           
+                            Mail::send('email_documentos.aprobacion_ali_paciente_hosp', ["fecha_apr"=>$fecha_apr, "correo"=>$correo_envio, "area"=>$area,"tipo"=>$tipo], function ($m) use ($correo_envio,$archivo, $nombrearchivo, $fecha_apr,$area,$tipo) {
+                                $m->to($correo_envio)
+                                ->subject("Aprobación de alimentos de pacientes hospitalizados de ".$tipo."  del ".$fecha_apr)
                                 
                                 ->attachData($archivo, $nombrearchivo, [
                                     'mime' => 'application/pdf',
@@ -291,10 +416,19 @@ class AlimentosPacientesController extends Controller
     }
 
     //por rango fecha
-    public function reportePdfAliPacienteAprobado($inicio, $final){
+    public function reportePdfAliPacienteAprobado($inicio, $final, $serv,$tipo){
         try{
           
             $listar=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
+            ->where(function($query)use($serv,$tipo){
+                if($serv=="Dialisis"){
+                    $query->where('servicio','Dialisis');
+                }else{
+                    $query->where('servicio','!=','Dialisis')
+                    ->where('tipo',$tipo);
+                }
+            })
+            
             ->where('estado','Aprobado')->get();
             
             if(sizeof($listar)==0){
@@ -305,9 +439,14 @@ class AlimentosPacientesController extends Controller
             }
             
             $nombrePDF="reporte_listado_comida_pac_dia.pdf";
-           
-            // enviamos a la vista para crear el documento que los datos repsectivos
-            $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente',['datos'=>$listar,'ini'=>$inicio, 'fin'=>$final,"f_aprobacion"=>0]);
+            if($serv=="Dialisis"){
+                // enviamos a la vista para crear el documento que los datos repsectivos
+                $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente',['datos'=>$listar,'ini'=>$inicio, 'fin'=>$final,"f_aprobacion"=>0]);
+            }else{
+                // enviamos a la vista para crear el documento que los datos repsectivos
+                $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente_hosp',['datos'=>$listar,'ini'=>$inicio, 'fin'=>$final,"f_aprobacion"=>0,'tipo'=>$tipo]);
+            }
+            
             $crearpdf->setPaper("A4", "landscape");
             $estadoarch = $crearpdf->stream();
 

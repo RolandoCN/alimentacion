@@ -73,6 +73,35 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="inputEmail3" id="label_crit" class="col-sm-2 control-label" >Servicios:</label>
+                                    <div class="col-sm-10" style="font-weight: normal;">
+                                        <select data-placeholder="Seleccione Un Servicio" style="width: 100%;" class="form-control select2" name="servicio_cmb" id="servicio_cmb" onchange="servicioCombo()" >
+                                    
+                                            <option value=""></option>
+                                            <option value="Dialisis">Dialisis</option>
+                                            <option value="Otros">Otros</option>
+                                        
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" id="com_hosp" style="display: none">
+                                    <label for="inputEmail3" id="label_crit" class="col-sm-2 control-label" >Tipo:</label>
+                                    <div class="col-sm-10" style="font-weight: normal;">
+                                        <select data-placeholder="Seleccione Un Tipo" style="width: 100%;" class="form-control select2" name="tipo" id="tipo" >
+                                    
+                                            <option value=""></option>
+                                            <option value="Desayuno">Desayuno</option>
+                                            <option value="Colacion 1">Colacion 1</option>
+                                            <option value="Almuerzo">Almuerzo</option>
+                                            <option value="Colacion 2">Colacion 2</option>
+                                            <option value="Merienda">Merienda</option>
+                                        
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
                                     <div class="col-sm-12 col-md-offset-2" >
                                     
                                         <button type="button" onclick="generarPdf()" class="btn btn-success btn-sm">
