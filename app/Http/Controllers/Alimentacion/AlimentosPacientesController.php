@@ -67,18 +67,36 @@ class AlimentosPacientesController extends Controller
                     'mensaje'=>'Ocurrió un error al consultar la informacion de los alimentos'
                 ];
             }
+           
+            $hora=date('H');
+            if($hora=="06" || $hora==6){
+                $tipo_ali="Desayuno";
+            }else if($hora=="09" || $hora==9){
+                $tipo_ali="Colacion 1";
+            }else if($hora=="11" || $hora==11){
+                $tipo_ali="Almuerzo";
+            }else if($hora=="14" || $hora==14){
+                $tipo_ali="Colacion 2";
+            }else{
+                $tipo_ali="Merienda";
+            }
+           
             //eliminamos todos los solicitado en estado solicitado
             $alimentosElim=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
             ->where('estado','Solicitado')
+            ->where('tipo',$tipo_ali)
             ->delete();
             foreach($info->data as $item){
                 
                 //comprobamos si no esta registrado y aprobado
                 $alimentos=AlimentoPaciente::where('id_registro', $item->id_registro)
                 ->where('estado','Aprobado')
+                ->where('tipo',$tipo_ali)
+                ->where('servicio','!=','EMERGENCIA')
                 ->first();
               
                 if(is_null($alimentos)){
+                   
                     $fecha_soli=$item->fecha;
                     $fecha_soli=date('Y-m-d H:i:s', strtotime($fecha_soli));
                     $alimentoPac=new AlimentoPaciente();
@@ -91,14 +109,19 @@ class AlimentosPacientesController extends Controller
                     $alimentoPac->fecha=date('Y-m-d');
                     $alimentoPac->id_registro=$item->id_registro;
                     $alimentoPac->servicio=$item->detalle_serv;
+                    $alimentoPac->tipo=$tipo_ali;
                     $alimentoPac->observacion=$item->observacion;
-                    $alimentoPac->save();
+                    if($alimentoPac->servicio!="EMERGENCIA"){
+                        $alimentoPac->save();
+                    }
+                        
                 }
 
               
             }
             $alimentoPac=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
             ->where('estado','Solicitado')
+            ->where('tipo',$tipo_ali)
             ->get();
             return[
                 'error'=>false,
@@ -133,6 +156,7 @@ class AlimentosPacientesController extends Controller
                 $listar=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
                 ->where('estado','Solicitado')
                 ->where('servicio','DIALISIS')
+                // ->where('tipo',$tipo_ali)
                 ->get();
 
                 if(sizeof($listar)==0){
@@ -150,6 +174,8 @@ class AlimentosPacientesController extends Controller
                 $crearpdf->setPaper("A4", "landscape");
                 $estadoarch = $crearpdf->stream();
 
+                $tipo_ali="Colacion";
+
                 //lo guardamos en el disco temporal
                 Storage::disk('public')->put(str_replace("", "",$nombrePDF), $estadoarch);
                 $exists_destino = Storage::disk('public')->exists($nombrePDF); 
@@ -158,7 +184,7 @@ class AlimentosPacientesController extends Controller
                     $generarAprobacion=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
                     ->where('estado','Solicitado')
                     ->where('servicio','DIALISIS')
-                    ->update(['fecha_aprobacion'=>date('Y-m-d H:i:s'), 'estado'=>'Aprobado', 'entregado'=>'S']);
+                    ->update(['fecha_aprobacion'=>date('Y-m-d H:i:s'), 'estado'=>'Aprobado', 'entregado'=>'S', 'tipo'=>$tipo_ali]);
                    
                     //se creo lo enviamos
                     $fecha_apr=date('d-m-Y');
@@ -239,21 +265,7 @@ class AlimentosPacientesController extends Controller
                     Log::error('Aprobacion Alimento Paciente '.$consultaPendiente["mensaje"]);   
                     return $consultaPendiente["mensaje"];  
                 }
-
-                $listar=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
-                // ->where('estado','Solicitado')
-                ->where('servicio','!=','DIALISIS')
-                ->get();
-
-                if(sizeof($listar)==0){
-                    Log::error('No existen pacientes con solicitud a alimentacion');   
-                    return 'No existen pacientes con solicitud a alimentacion';  
-                }
               
-                $area=$listar[0]->servicio;
-                
-                $nombrePDF="reporte_listado_comida_pac.pdf";
-
                 $hora=date('H');
                 if($hora=="06" || $hora==6){
                     $tipo="Desayuno";
@@ -266,6 +278,22 @@ class AlimentosPacientesController extends Controller
                 }else{
                     $tipo="Merienda";
                 }
+
+                $listar=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
+                ->where('estado','Solicitado')
+                ->where('servicio','!=','DIALISIS')
+                ->where('tipo',$tipo)
+                ->get();
+
+                if(sizeof($listar)==0){
+                    Log::error('No existen pacientes con solicitud a alimentacion');   
+                    return 'No existen pacientes con solicitud a alimentacion';  
+                }
+              
+                $area=$listar[0]->servicio;
+                
+                $nombrePDF="reporte_listado_comida_pac.pdf";
+
             
                 // enviamos a la vista para crear el documento que los datos repsectivos
                 $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente_hosp',['datos'=>$listar,"f_aprobacion"=>date('Y-m-d H:i:s'),'tipo'=>$tipo]);
@@ -278,7 +306,7 @@ class AlimentosPacientesController extends Controller
                 if($exists_destino){ 
                     
                     $generarAprobacion=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
-                    // ->where('estado','Solicitado')
+                    ->where('estado','Solicitado')
                     ->where('servicio','!=','DIALISIS')
                     ->update(['fecha_aprobacion'=>date('Y-m-d H:i:s'), 'estado'=>'Aprobado', 'entregado'=>'S', 'tipo'=>$tipo]);
                    

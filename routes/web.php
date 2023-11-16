@@ -236,6 +236,8 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     Route::get('/listado-paciente-aprobado', [AlimentosPacientesController::class, 'listar']);
     Route::get('/pdf-paciente-ali-dia/{ini}/{fin}/{serv}/{tipo}', [AlimentosPacientesController::class, 'reportePdfAliPacienteAprobado']);
     Route::get('visualizardoc/{documentName}', [AlimentosPacientesController::class, 'visualizarDoc']);
+
+    Route::get('testPaciente', [AlimentosPacientesController::class, 'aprobarAliPacienteHosp']);
     
 
 });
