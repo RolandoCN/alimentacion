@@ -241,7 +241,7 @@ class AlimentosPacientesController extends Controller
                 }
 
                 $listar=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
-                ->where('estado','Solicitado')
+                // ->where('estado','Solicitado')
                 ->where('servicio','!=','DIALISIS')
                 ->get();
 
@@ -278,7 +278,7 @@ class AlimentosPacientesController extends Controller
                 if($exists_destino){ 
                     
                     $generarAprobacion=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
-                    ->where('estado','Solicitado')
+                    // ->where('estado','Solicitado')
                     ->where('servicio','!=','DIALISIS')
                     ->update(['fecha_aprobacion'=>date('Y-m-d H:i:s'), 'estado'=>'Aprobado', 'entregado'=>'S', 'tipo'=>$tipo]);
                    
