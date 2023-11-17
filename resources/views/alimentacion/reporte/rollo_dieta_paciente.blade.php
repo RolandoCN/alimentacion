@@ -179,7 +179,7 @@ $medidaTicket = 1;
 
                         <tr class="centrado_" style="font-size: 3px !important">
                             <th ><b>TIPO DIETA: </b> <br> 
-                                <span style="font-weight: 500  !important">{{$data->observacion}}</span></th>
+                                <span style="font-weight: 500  !important">{{$data->dieta}}</span></th>
                         </tr>
 
                     </thead>           
