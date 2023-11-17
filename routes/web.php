@@ -238,6 +238,8 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     Route::get('visualizardoc/{documentName}', [AlimentosPacientesController::class, 'visualizarDoc']);
 
     Route::get('testPaciente', [AlimentosPacientesController::class, 'aprobarAliPacienteHosp']);
+
+    Route::get('impresion-rollo-ali/{ini}/{fin}/{serv}/{tipo}', [AlimentosPacientesController::class, 'reportePdfAliPacienteRollo']);
     
 
 });

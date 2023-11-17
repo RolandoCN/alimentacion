@@ -188,3 +188,60 @@ function generarPdf(){
         alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
     });
 }
+
+
+function generarPdfRollo(){
+    var ini=$('#fecha_ini').val()
+    var fin=$('#fecha_fin').val()
+    var servicio=$('#servicio_cmb').val()
+    var tipo=$('#tipo').val()
+    if(ini==""){
+        alertNotificar("Debe seleccionar la fecha de inicio","error")
+        $('#fecha_ini').focus()
+        return
+    }
+
+    if(fin==""){
+        alertNotificar("Debe seleccionar la fecha de fin","error")
+        $('#fecha_fin').focus()
+        return
+    }
+
+    if(ini>fin){
+        alertNotificar("La fecha de inicio debe ser menor a la final","error")
+        return
+    }
+
+    if(servicio=="" ){
+        alertNotificar("Debe seleccionar el servicio","error")
+        return
+    }
+
+    if(servicio=="Otros"){
+        if(tipo=="" ){
+            alertNotificar("Debe seleccionar un tipo","error")
+            return
+        }
+    }else{
+        tipo="N";
+    }
+
+
+    vistacargando("m","Espere por favor");
+    $.get("impresion-rollo-ali/"+ini+"/"+fin+"/"+servicio+"/"+tipo, function(data){
+       
+        vistacargando("");
+        if(data.error==true){
+            alertNotificar(data.mensaje,"error");
+            return;   
+        }
+        if(data.error==false){
+            alertNotificar("El documento se descargará en unos segundos...","success");
+            window.location.href="descargar-reporte/"+data.pdf
+            
+        }
+    }).fail(function(){
+        vistacargando("");
+        alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
+    });
+}

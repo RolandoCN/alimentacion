@@ -665,4 +665,11 @@ class ListadoTurnoController extends Controller
         }
     }
 
+    public function testImpresora(){
+         // enviamos a la vista para crear el documento que los datos repsectivos
+        $crearpdf=PDF::loadView('alimentacion.reporte.rollo_dieta_paciente',['datos'=>'']);
+        $crearpdf->setPaper([0, 0, 101.6,  152.4]);
+        return $crearpdf->stream("sss.pdf");
+    }
+
 }

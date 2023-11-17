@@ -105,7 +105,11 @@
                                     <div class="col-sm-12 col-md-offset-2" >
                                     
                                         <button type="button" onclick="generarPdf()" class="btn btn-success btn-sm">
-                                            Descargar
+                                            Descargar Listado
+                                        </button>
+
+                                        <button type="button" onclick="generarPdfRollo()" class="btn btn-primary btn-sm">
+                                            Descargar Rollo
                                         </button>
                                       
                                     </div>

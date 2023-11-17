@@ -524,4 +524,64 @@ class AlimentosPacientesController extends Controller
         }
 
     }
+
+    //por rango fecha rollo
+    public function reportePdfAliPacienteRollo($inicio, $final, $serv,$tipo){
+        try{
+          
+            $listar=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
+            ->where(function($query)use($serv,$tipo){
+                if($serv=="Dialisis"){
+                    $query->where('servicio','Dialisis');
+                }else{
+                    $query->where('servicio','!=','Dialisis')
+                    ->where('tipo',$tipo);
+                }
+            })
+            
+            ->where('estado','Aprobado')->get();
+            
+            if(sizeof($listar)==0){
+                return [
+                    'error'=>true,
+                    'mensaje'=>'No se encontro alimentos aprobados el dia de hoy'
+                ];
+            }
+            // dd($listar);
+            $nombrePDF="reporte_listado_comida_pac_dia.pdf";
+            if($serv=="Dialisis"){
+                // enviamos a la vista para crear el documento que los datos repsectivos
+                $crearpdf=PDF::loadView('limentacion.reporte.rollo_dieta_paciente',['datos'=>$listar,'ini'=>$inicio, 'fin'=>$final,"f_aprobacion"=>0]);
+            }else{
+                // enviamos a la vista para crear el documento que los datos repsectivos
+                $crearpdf=PDF::loadView('alimentacion.reporte.rollo_dieta_paciente',['datos'=>$listar,'ini'=>$inicio, 'fin'=>$final,"f_aprobacion"=>0,'tipo'=>$tipo]);
+            }
+            
+            $crearpdf->setPaper([0, 0, 101.6,  152.4]);
+            $estadoarch = $crearpdf->stream();
+
+            //lo guardamos en el disco temporal
+            Storage::disk('public')->put(str_replace("", "",$nombrePDF), $estadoarch);
+            $exists_destino = Storage::disk('public')->exists($nombrePDF); 
+            if($exists_destino){ 
+                return [
+                    'error'=>false,
+                    'pdf'=>$nombrePDF
+                ];
+            }else{
+                return [
+                    'error'=>true,
+                    'mensaje'=>'No se pudo crear el documento'
+                ];
+            }
+
+        }catch (\Throwable $e) {
+            Log::error(__CLASS__." => ".__FUNCTION__." => Mensaje =>".$e->getMessage()." Linea =>".$e->getLine());
+            return response()->json([
+                'error'=>true,
+                'mensaje'=>'Ocurrió un error'
+            ]);
+             
+        }
+    }
 }
