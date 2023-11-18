@@ -111,7 +111,7 @@ class AlimentosPacientesController extends Controller
                     $alimentoPac->servicio=$item->detalle_serv;
                     $alimentoPac->tipo=$tipo_ali;
                     $alimentoPac->observacion=$item->observacion;
-                    if($alimentoPac->servicio!="EMERGENCIA"){
+                    if($alimentoPac->servicio!="EMERGENCIA" && $item->alta=="N"){
                         $alimentoPac->save();
                     }
                         
