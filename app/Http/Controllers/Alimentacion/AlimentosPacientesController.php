@@ -289,14 +289,27 @@ class AlimentosPacientesController extends Controller
                     Log::error('No existen pacientes con solicitud a alimentacion');   
                     return 'No existen pacientes con solicitud a alimentacion';  
                 }
-              
+
                 $area=$listar[0]->servicio;
+
+                #agrupamos por area
+                $lista_final_agrupada=[];
+                foreach ($listar as $key => $item){                
+                    if(!isset($lista_final_agrupada[$item->servicio])) {
+                        $lista_final_agrupada[$item->servicio]=array($item);
+                
+                    }else{
+                        array_push($lista_final_agrupada[$item->servicio], $item);
+                    }
+                }
+              
+                // dd($lista_final_agrupada);
                 
                 $nombrePDF="reporte_listado_comida_pac.pdf";
 
             
                 // enviamos a la vista para crear el documento que los datos repsectivos
-                $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente_hosp',['datos'=>$listar,"f_aprobacion"=>date('Y-m-d H:i:s'),'tipo'=>$tipo]);
+                $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente_hosp',['datos'=>$lista_final_agrupada,"f_aprobacion"=>date('Y-m-d H:i:s'),'tipo'=>$tipo]);
                 $crearpdf->setPaper("A4", "landscape");
                 $estadoarch = $crearpdf->stream();
 
@@ -447,16 +460,29 @@ class AlimentosPacientesController extends Controller
     public function reportePdfAliPacienteAprobado($inicio, $final, $serv,$tipo){
         try{
           
-            $listar=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
-            ->where(function($query)use($serv,$tipo){
+            // $listar=AlimentoPaciente::whereBetween('fecha_solicita',[$inicio, $final])
+            // ->where(function($query)use($serv,$tipo,$inicio, $final){
+            //     if($serv=="Dialisis"){
+            //         $query->where('servicio','Dialisis');
+            //     }else{
+            //         $query->where('servicio','!=','Dialisis')
+            //         ->where('tipo',$tipo);
+            //     }
+            //     $query->whereDate('fecha_solicita','>=',$inicio)
+            //     ->->whereDate('fecha_solicita','<=',$final);
+            // })
+            // ->where('estado','Aprobado')->get();
+
+            $listar=AlimentoPaciente::where(function($query)use($serv,$tipo,$inicio, $final){
                 if($serv=="Dialisis"){
                     $query->where('servicio','Dialisis');
                 }else{
                     $query->where('servicio','!=','Dialisis')
                     ->where('tipo',$tipo);
                 }
+                $query->whereDate('fecha_solicita','>=',$inicio)
+                ->whereDate('fecha_solicita','<=',$final);
             })
-            
             ->where('estado','Aprobado')->get();
             
             if(sizeof($listar)==0){
@@ -465,14 +491,27 @@ class AlimentosPacientesController extends Controller
                     'mensaje'=>'No se encontro alimentos aprobados el dia de hoy'
                 ];
             }
+          
+
+            #agrupamos por area
+            $lista_final_agrupada=[];
+            foreach ($listar as $key => $item){                
+                if(!isset($lista_final_agrupada[$item->servicio])) {
+                    $lista_final_agrupada[$item->servicio]=array($item);
             
+                }else{
+                    array_push($lista_final_agrupada[$item->servicio], $item);
+                }
+            }
+           
+           
             $nombrePDF="reporte_listado_comida_pac_dia.pdf";
             if($serv=="Dialisis"){
                 // enviamos a la vista para crear el documento que los datos repsectivos
                 $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente',['datos'=>$listar,'ini'=>$inicio, 'fin'=>$final,"f_aprobacion"=>0]);
             }else{
                 // enviamos a la vista para crear el documento que los datos repsectivos
-                $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente_hosp',['datos'=>$listar,'ini'=>$inicio, 'fin'=>$final,"f_aprobacion"=>0,'tipo'=>$tipo]);
+                $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente_hosp',['datos'=>$lista_final_agrupada,'ini'=>$inicio, 'fin'=>$final,"f_aprobacion"=>0,'tipo'=>$tipo]);
             }
             
             $crearpdf->setPaper("A4", "landscape");
