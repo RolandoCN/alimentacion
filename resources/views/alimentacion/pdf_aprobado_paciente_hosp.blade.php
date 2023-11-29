@@ -146,7 +146,7 @@
                                 $cont=$cont+1;;
                             @endphp         
                             <tbody>                                                                        
-                                <tr style="font-size: 9px !important; line-height:12px !important">   
+                                <tr style="font-size: 9px !important; line-height:22px !important">   
                                     
                                     <td align="center" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3; vertical-align:middle">
                                     
