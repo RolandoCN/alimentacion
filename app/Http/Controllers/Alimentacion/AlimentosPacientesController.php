@@ -302,14 +302,23 @@ class AlimentosPacientesController extends Controller
                         array_push($lista_final_agrupada[$item->servicio], $item);
                     }
                 }
-              
-                // dd($lista_final_agrupada);
+
+                #agrupamos por tipo dieta
+                $lista_dieta=[];
+                foreach ($listar as $key => $item){                
+                    if(!isset($lista_dieta[$item->dieta])) {
+                        $lista_dieta[$item->dieta]=array($item);
+                
+                    }else{
+                        array_push($lista_dieta[$item->dieta], $item);
+                    }
+                }
                 
                 $nombrePDF="reporte_listado_comida_pac.pdf";
 
             
                 // enviamos a la vista para crear el documento que los datos repsectivos
-                $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente_hosp',['datos'=>$lista_final_agrupada,"f_aprobacion"=>date('Y-m-d H:i:s'),'tipo'=>$tipo]);
+                $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente_hosp',['datos'=>$lista_final_agrupada,"f_aprobacion"=>date('Y-m-d H:i:s'),'tipo'=>$tipo, 'dieta'=>$lista_dieta]);
                 $crearpdf->setPaper("A4", "landscape");
                 $estadoarch = $crearpdf->stream();
 
@@ -503,6 +512,17 @@ class AlimentosPacientesController extends Controller
                     array_push($lista_final_agrupada[$item->servicio], $item);
                 }
             }
+
+            #agrupamos por tipo dieta
+            $lista_dieta=[];
+            foreach ($listar as $key => $item){                
+                if(!isset($lista_dieta[$item->dieta])) {
+                    $lista_dieta[$item->dieta]=array($item);
+            
+                }else{
+                    array_push($lista_dieta[$item->dieta], $item);
+                }
+            }
            
            
             $nombrePDF="reporte_listado_comida_pac_dia.pdf";
@@ -511,7 +531,7 @@ class AlimentosPacientesController extends Controller
                 $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente',['datos'=>$listar,'ini'=>$inicio, 'fin'=>$final,"f_aprobacion"=>0]);
             }else{
                 // enviamos a la vista para crear el documento que los datos repsectivos
-                $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente_hosp',['datos'=>$lista_final_agrupada,'ini'=>$inicio, 'fin'=>$final,"f_aprobacion"=>0,'tipo'=>$tipo]);
+                $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente_hosp',['datos'=>$lista_final_agrupada,'ini'=>$inicio, 'fin'=>$final,"f_aprobacion"=>0,'tipo'=>$tipo, 'dieta'=>$lista_dieta]);
             }
             
             $crearpdf->setPaper("A4", "landscape");

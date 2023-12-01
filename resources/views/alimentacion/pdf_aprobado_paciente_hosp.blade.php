@@ -197,10 +197,46 @@
                 </table>
         </div>
 
+        @if(isset($dieta))   
+            <div style="margin-top:5px;">
+                <table class="ltable"  border="0" width="100%" style="padding-bottom:2px !important">
+
+                    <tr style="font-size: 10px !important; background-color: #D3D3D3;line-height:20px; "> 
+                            
+                        <th width="50%" style="border: 0px; text-align: center; line-height:15px">TIPO DE DIETAS</th>
+
+                        <th width="50%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">TOTALES</th>
+
+                    </tr>
+                   
+                    @foreach($dieta as $key => $lista)
+                        @php
+                            $cont_=0;
+                        @endphp
+                        @foreach($lista as $e=>$dato)   
+                            @php
+                                $cont_=$cont_+1;;
+                            @endphp
+                        @endforeach
+
+                        <tr style="font-size: 10px !important;line-height:15px;   "> 
+                            
+                            <td style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:15px !important;margin-bottom:1px !important;">{{$key}}</td>
+
+                            <td style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;">{{$cont_}}</td>
+                            
+                        </tr>
+
+
+                    @endforeach
+
+                </table>
+            </div>
+        @endif
+
         <p style="font-size: 10px; text-align:center; font-family:sans-serif;"><b  style="font-size: 10px;">TOTAL: {{$cont}}</b></p>
         
-        {{-- $font = $fontMetrics->get_font("Arial, Helvetica, sans-serif", "normal");
-        $pdf->text(490, 820, "Página $PAGE_NUM de $PAGE_COUNT", $font, 9); --}}
+      
        
     </div>
 
