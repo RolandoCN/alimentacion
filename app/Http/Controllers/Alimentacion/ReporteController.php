@@ -283,7 +283,7 @@ class ReporteController extends Controller
         }
     }
 
-    //reporte entre fechas
+    //reporte entre fechas personal
     public function reportePeriodo(Request $request){
         
         try{
@@ -934,6 +934,75 @@ class ReporteController extends Controller
             }
         }catch (\Throwable $e) {
             Log::error('ReporteController => reporteDetallado => mensaje => '.$e->getMessage(). ' linea => '.$e->getLine());
+            return response()->json([
+                'error'=>true,
+                'mensaje'=>'Ocurrió un error'
+            ]);
+            
+        }
+    }
+
+    //vista para visualizar los datos de comidas entre fechas (consolidado paciente)
+    public function informePeriodoPaciente(){
+        return view('alimentacion.reporte.entre_fecha_paciente');
+    }
+
+    //reporte entre fechas paciente
+    public function reportePeriodoPaciente(Request $request){
+        
+        try{
+            
+            set_time_limit(0);
+            ini_set("memory_limit",-1);
+            ini_set('max_execution_time', 0);
+
+            $fecha_ini=$request->fecha_inicial_rep;
+            $fecha_fin=$request->fecha_final_rep;
+           
+            $turnos=DB::table('al_alimentos_pacientes as ali_pac')
+            ->where(function($c)use($fecha_ini, $fecha_fin) {
+                $c->whereDate('ali_pac.fecha', '>=', $fecha_ini)
+                ->whereDate('ali_pac.fecha', '<=', $fecha_fin);
+            })
+            ->where('ali_pac.estado','=','Aprobado') //aprobado
+            ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta')
+            ->orderBy('ali_pac.fecha','asc')
+            ->orderBy('ali_pac.dieta','asc')
+            ->get();
+        
+            #agrupamos por dias
+            $lista_final_agrupada=[];
+            foreach ($turnos as $key => $item){                
+                if(!isset($lista_final_agrupada[$item->fecha])) {
+                    $lista_final_agrupada[$item->fecha]=array($item);
+            
+                }else{
+                    array_push($lista_final_agrupada[$item->fecha], $item);
+                }
+            }
+
+            $nombrePDF="reporte_entre_fecha_paciente".date('d-m-Y').".pdf";
+
+            $pdf=PDF::loadView('alimentacion.reporte.pdf_entre_fecha_paciente',['datos'=>$turnos,'lista'=>$lista_final_agrupada, 'desde'=>$fecha_ini, 'hasta'=>$fecha_fin]);
+            $pdf->setPaper("A4", "portrait");
+            $estadoarch = $pdf->stream();
+
+            //lo guardamos en el disco temporal
+            Storage::disk('public')->put(str_replace("", "",$nombrePDF), $estadoarch);
+            $exists_destino = Storage::disk('public')->exists($nombrePDF); 
+            if($exists_destino){ 
+                return response()->json([
+                    'error'=>false,
+                    'pdf'=>$nombrePDF
+                ]);
+            }else{
+                return response()->json([
+                    'error'=>true,
+                    'mensaje'=>'No se pudo crear el documento'
+                ]);
+            }
+        }catch (\Throwable $e) {
+            Log::error('ReporteController => reportePeriodoPaciente => mensaje => '.$e->getMessage(). ' linea => '.$e->getLine());
             return response()->json([
                 'error'=>true,
                 'mensaje'=>'Ocurrió un error'

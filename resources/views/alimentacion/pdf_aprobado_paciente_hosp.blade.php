@@ -205,42 +205,97 @@
                             
                         <th width="50%" style="border: 0px; text-align: center; line-height:15px">TIPO DE DIETAS</th>
 
-                        <th width="50%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">TOTALES</th>
+                        <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">SUBTOTAL</th>
+
+                        <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">LIQUIDA</th>
+
+                        <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">NPO</th>
 
                     </tr>
-                   
-                    @foreach($dieta as $key => $lista)
+                    <tbody>
                         @php
-                            $cont_=0;
+                            $cont_sin_liquida=0;
+                            $cont_liquida=0;
+                            $cont_npo=0;
                         @endphp
-                        @foreach($lista as $e=>$dato)   
+                        @foreach($dieta as $key => $lista)
                             @php
-                                $cont_=$cont_+1;;
+                                $cont_=0;
                             @endphp
+                            @foreach($lista as $e=>$dato)   
+                                @php
+                                    $cont_=$cont_+1;
+                                    $color="black";
+                                    if($dato->dieta=="LIQUIDA ACALORICA" || $dato->dieta=="LIQUIDA ESTRICTA" || $dato->dieta=="LIQUIDA AMPLIA"){
+                                        $color="red";
+                                        $cont_liquida=$cont_liquida+1; 
+                                    }else if($dato->dieta=="NADA POR VIA ORAL"){
+                                        $cont_npo=$cont_npo+1; 
+                                        $color="green";
+                                    }else{
+                                        $cont_sin_liquida=$cont_sin_liquida+1; 
+                                    }
+                                @endphp
+                            @endforeach
+
+                            <tr style="font-size: 10px !important;line-height:15px;   "> 
+                               
+                                    <td style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:15px !important;margin-bottom:1px !important;"> <span style="color:{{$color}}">{{$key}}</span></td>
+
+                                    <td style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;">  <span style="color:{{$color}}">{{$cont_}}</span>
+                                    </td>
+
+                                    @if($color=="red"){}
+                                        <td style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"><span style="color:{{$color}}">{{$cont_}}</span></td>
+                                    @else
+                                        <td style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"></td>
+                                    @endif
+
+                                    @if($color=="green"){}
+                                        <td style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"><span style="color:{{$color}}">{{$cont_}}</span></td>
+                                    @else
+                                        <td style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"></td>
+                                    @endif
+                              
+                                
+                            </tr>
+
+
                         @endforeach
+                    </tbody>
 
-                        <tr style="font-size: 10px !important;line-height:15px;   "> 
-                            
-                            <td style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:15px !important;margin-bottom:1px !important;">{{$key}}</td>
+                    <tfoot>
+                        <tr style="font-size:10px !important;line-height:5px" style="">
+                            <td style="font-size:9px;border: 0px; border-color: #D3D3D3;  text-align: right;">
+                                <b>TOTAL</b>
+                            </td>
+                            <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:9px">
+                                {{$cont_sin_liquida}} 
+                               
+                            </td>
+                            <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:9px">
+                               <span style="color:red">{{$cont_liquida}}</span>
+                            </td>
 
-                            <td style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;">{{$cont_}}</td>
-                            
+                            <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:9px">
+                                <span style="color:red">{{$cont_npo}}</span>
+                             </td>
+    
                         </tr>
-
-
-                    @endforeach
+    
+                    </tfoot>  
 
                 </table>
             </div>
         @endif
 
-        <p style="font-size: 10px; text-align:center; font-family:sans-serif;"><b  style="font-size: 10px;">TOTAL: {{$cont}}</b></p>
+       
         
       
        
     </div>
 
-   
+    <p style="font-size: 10px; text-align:center; font-family:sans-serif;"><b  style="font-size: 10px;">TOTAL: {{$cont}}</b></p>
   <script type="text/php">
     if ( isset($pdf) ) {
         $pdf->page_script('

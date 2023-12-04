@@ -283,6 +283,8 @@ class AlimentosPacientesController extends Controller
                 ->where('estado','Solicitado')
                 ->where('servicio','!=','DIALISIS')
                 ->where('tipo',$tipo)
+                ->orderBy('fecha', 'asc')  
+                ->orderBy('dieta', 'asc') 
                 ->get();
 
                 if(sizeof($listar)==0){
@@ -492,7 +494,10 @@ class AlimentosPacientesController extends Controller
                 $query->whereDate('fecha_solicita','>=',$inicio)
                 ->whereDate('fecha_solicita','<=',$final);
             })
-            ->where('estado','Aprobado')->get();
+            ->where('estado','Aprobado')
+            ->orderBy('fecha', 'asc')  
+            ->orderBy('dieta', 'asc') 
+            ->get();
             
             if(sizeof($listar)==0){
                 return [
