@@ -120,6 +120,7 @@
                             $cont_colacion1=0;
                             $cont_colacion2=0;
                             $cont_liquida=0;
+                            $cont_npo=0;
                         @endphp
                         @foreach($lista as $e=>$dato)
                             @php
@@ -159,7 +160,9 @@
                                             $cont_liquida_int=$cont_liquida_int+1;
                                         @endphp
                                     @elseif($comida_ser->dieta=="NADA POR VIA ORAL")
-
+                                        @php
+                                            $cont_npo=$cont_npo+1;;
+                                        @endphp
                                     @else
                                         @if($comida_ser->comida == "Desayuno")
                                             @php
@@ -287,7 +290,11 @@
             </table>
         </div>
 
-        <p style="font-size: 10px; text-align:center; font-family:sans-serif;"><b  style="font-size: 10px;">TOTAL: {{sizeof($datos)}}</b></p>
+        @php
+            $total_plato=sizeof($datos) -$cont_npo;
+        @endphp
+
+        <p style="font-size: 10px; text-align:center; font-family:sans-serif;"><b  style="font-size: 10px;">TOTAL: {{$total_plato}}</b></p>
         
         {{-- $font = $fontMetrics->get_font("Arial, Helvetica, sans-serif", "normal");
         $pdf->text(490, 820, "Página $PAGE_NUM de $PAGE_COUNT", $font, 9); --}}

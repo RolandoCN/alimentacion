@@ -295,7 +295,11 @@
        
     </div>
 
-    <p style="font-size: 10px; text-align:center; font-family:sans-serif;"><b  style="font-size: 10px;">TOTAL: {{$cont}}</b></p>
+    @php
+        $total_plato=$cont -$cont_npo;
+    @endphp
+
+    <p style="font-size: 10px; text-align:center; font-family:sans-serif;"><b  style="font-size: 10px;">TOTAL: {{$total_plato}}</b></p>
   <script type="text/php">
     if ( isset($pdf) ) {
         $pdf->page_script('
