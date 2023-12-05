@@ -29,7 +29,7 @@
             border: 0px solid black;
         }
         .fuenteSubtitulo{
-            font-size: 12px;
+            font-size: 10px;
         }
         .pad{
             padding-left:5px;
@@ -72,7 +72,7 @@
   </header>
 
    
-    <div style="margin-bottom:30px; margin-top:12px;">
+    <div style="margin-bottom:30px; margin-top:1px;">
         @php
             $titulo="";
             if(isset($ini)){
@@ -83,24 +83,24 @@
                 $titulo=" DEL ".date('d-m-Y');
             }
         @endphp
-        <table class="ltable" style="" border="0" width="100%" style="padding-bottom:2px !important">
+        <table class="ltable" style="" border="0" width="100%" style="padding-bottom:2px !important;">
           
-            <tr style="font-size: 11px"  class="fuenteSubtitulo " style=""> 
+            <tr style="font-size: 10px"  class="fuenteSubtitulo " style=""> 
                 <th colspan="11" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  >
                    ALIMENTACIÓN PACIENTES {{$titulo}} <br>  {{mb_strtoupper($tipo)}}            
                 </th>
              
             </tr>
 
-            <tr style="font-size: 11px"  class="fuenteSubtitulo " style=""> 
-                <td colspan="6" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  > <b>APROBADO POR: </b> SISTEMA             
+            <tr style="font-size: 9px !important"  class="fuenteSubtitulo " style="line-height:0px;"> 
+                <td colspan="6" style="border-color:white;height:15px;text-align: center;border:0 px" width="100%"  > <b>APROBADO POR: </b> SISTEMA             
                 </td>
 
                 @if($f_aprobacion<>0)
-                    <td colspan="5" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  ><b>FECHA APROBACION: </b>{{date('d-m-Y H:i:s', strtotime($f_aprobacion))}}              
+                    <td colspan="5" style="border-color:white;height:15px;text-align: center;border:0 px" width="100%"  ><b>FECHA APROBACION: </b>{{date('d-m-Y H:i:s', strtotime($f_aprobacion))}}              
                     </td>
                 @else
-                    <td colspan="5" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  ><b>FECHA IMPRESION: </b>{{date('d-m-Y H:i:s')}}              
+                    <td colspan="5" style="border-color:white;height:15px;text-align: center;border:0 px" width="100%"  ><b>FECHA IMPRESION: </b>{{date('d-m-Y H:i:s')}}              
                     </td>
                 @endif
              
@@ -117,19 +117,19 @@
                     @endphp
                     @foreach($datos as $key => $lista)
 
-                        <tr style="font-size: 10px !important;line-height:10px;  "> 
+                        <tr style="font-size: 9px !important;line-height:8px;  "> 
                             
                             <th colspan="6" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:1px !important;margin-bottom:1px !important;">HOSPITALIZACION - {{$key}}</th>
                             
                         </tr>
 
-                        <tr style="font-size: 10px !important; background-color: #D3D3D3;line-height:10px; "> 
+                        <tr style="font-size: 9px !important; background-color: #D3D3D3;line-height:15px; "> 
                             
-                            <th width="7%" style="border: 0px; text-align: center">FECHA</th>
+                            <th width="10%" style="border: 0px; text-align: center">FECHA</th>
 
-                            <th width="10%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">HORA SOLIC.</th>
+                          
 
-                            <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center">PACIENTE</th>
+                            <th width="30%" style="border: 0px; ;border-color: #D3D3D3; text-align: center">PACIENTE</th>
 
                             
                         
@@ -137,7 +137,7 @@
 
                             <th width="30%" style="border: 0px; text-align: center">SOLICTADO</th>
 
-                            <th width="36%" style="border: 0px; text-align: center">OBSERVACIÓN</th>
+                            <th width="38%" style="border: 0px; text-align: center">OBSERVACIÓN</th>
                     
                         </tr>
 
@@ -146,19 +146,13 @@
                                 $cont=$cont+1;;
                             @endphp         
                             <tbody>                                                                        
-                                <tr style="font-size: 9px !important; line-height:2px !important">   
+                                <tr style="font-size: 7px !important; line-height:12px !important">   
                                     
                                     <td align="center" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3; vertical-align:middle">
                                     
                                         {{date('d-m-Y', strtotime($dato->fecha_solicita))}}
                                    </td>
 
-
-                                    
-                                    <td align="center" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3; vertical-align:middle">
-                                    
-                                         {{date('H:i', strtotime($dato->fecha_solicita))}}
-                                    </td>
 
                                         
                                     <td align="left" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3;vertical-align:middle">
@@ -179,7 +173,8 @@
                                     </td>
 
                                     <td align="left" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3;vertical-align:middle">
-                                        <p style="line-height: 12px !important">{{$dato->observacion}}</p>
+                                        {{-- <p style="line-height: 9px !important">{{$dato->observacion}}</p> --}}
+                                        {{$dato->observacion}}
                                     </td>
 
                                 </tr>                                
@@ -201,7 +196,7 @@
             <div style="margin-top:5px;">
                 <table class="ltable"  border="0" width="100%" style="padding-bottom:2px !important">
 
-                    <tr style="font-size: 10px !important; background-color: #D3D3D3;line-height:20px; "> 
+                    <tr style="font-size: 9px !important; background-color: #D3D3D3;line-height:20px; "> 
                             
                         <th width="50%" style="border: 0px; text-align: center; line-height:15px">TIPO DE DIETAS</th>
 
@@ -238,7 +233,7 @@
                                 @endphp
                             @endforeach
 
-                            <tr style="font-size: 10px !important;line-height:15px;   "> 
+                            <tr style="font-size: 7px !important;line-height:5px;   "> 
                                
                                     <td style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:15px !important;margin-bottom:1px !important;"> <span style="color:{{$color}}">{{$key}}</span></td>
 
@@ -265,7 +260,7 @@
                     </tbody>
 
                     <tfoot>
-                        <tr style="font-size:10px !important;line-height:5px" style="">
+                        <tr style="font-size:7px !important;line-height:5px" style="">
                             <td style="font-size:9px;border: 0px; border-color: #D3D3D3;  text-align: right;">
                                 <b>TOTAL</b>
                             </td>

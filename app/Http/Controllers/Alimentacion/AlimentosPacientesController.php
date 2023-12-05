@@ -321,7 +321,7 @@ class AlimentosPacientesController extends Controller
             
                 // enviamos a la vista para crear el documento que los datos repsectivos
                 $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente_hosp',['datos'=>$lista_final_agrupada,"f_aprobacion"=>date('Y-m-d H:i:s'),'tipo'=>$tipo, 'dieta'=>$lista_dieta]);
-                $crearpdf->setPaper("A4", "landscape");
+                $crearpdf->setPaper("A4", "portrait");
                 $estadoarch = $crearpdf->stream();
 
                 //lo guardamos en el disco temporal
@@ -539,7 +539,8 @@ class AlimentosPacientesController extends Controller
                 $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente_hosp',['datos'=>$lista_final_agrupada,'ini'=>$inicio, 'fin'=>$final,"f_aprobacion"=>0,'tipo'=>$tipo, 'dieta'=>$lista_dieta]);
             }
             
-            $crearpdf->setPaper("A4", "landscape");
+            // $crearpdf->setPaper("A4", "landscape");
+            $crearpdf->setPaper("A4", "portrait");
             $estadoarch = $crearpdf->stream();
 
             //lo guardamos en el disco temporal
