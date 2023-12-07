@@ -1078,4 +1078,87 @@ class ReporteController extends Controller
             
         }
     }
+
+    //reporte entre fechas tipo dietas profesional
+    public function reportePeriodoDietaPacienteProfes(Request $request){
+        
+        try{            
+            set_time_limit(0);
+            ini_set("memory_limit",-1);
+            ini_set('max_execution_time', 0);
+
+            $fecha_ini=$request->fecha_inicial_rep;
+            $fecha_fin=$request->fecha_final_rep;
+           
+            $listar=DB::table('al_alimentos_pacientes as ali_pac')
+            ->where(function($c)use($fecha_ini, $fecha_fin) {
+                $c->whereDate('ali_pac.fecha', '>=', $fecha_ini)
+                ->whereDate('ali_pac.fecha', '<=', $fecha_fin);
+            })
+            ->where('ali_pac.estado','=','Aprobado') //aprobado
+            ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta', 'ali_pac.responsable', 'ali_pac.paciente')
+            ->orderBy('ali_pac.fecha','asc')
+            ->orderBy('ali_pac.dieta','asc')
+            ->get();
+        
+            #agrupamos por tipo dieta
+            $lista_dieta=[];
+            foreach ($listar as $key => $item){                
+                if(!isset($lista_dieta[$item->dieta])) {
+                    $lista_dieta[$item->dieta]=array($item);
+            
+                }else{
+                    array_push($lista_dieta[$item->dieta], $item);
+                }
+            }
+            // dd($lista_dieta);
+            #agrupamos por responsable
+            $lista_responsable=[];
+            foreach ($listar as $key => $item){                
+                $responsable = $item->responsable;
+                $dieta = $item->dieta;
+                $valor = $item->dieta;
+            
+                // Crear una estructura de agrupación si no existe
+                if (!isset($grupos[$responsable])) {
+                    $grupos[$responsable] = array();
+                }
+            
+                if (!isset($grupos[$responsable][$dieta])) {
+                    $grupos[$responsable][$dieta] = array();
+                }
+        
+                $grupos[$responsable][$dieta][] = $valor;
+
+            }
+            // dd($grupos);
+            $nombrePDF="reporte_entre_fecha_dieta".date('d-m-Y').".pdf";
+
+            $pdf=PDF::loadView('alimentacion.reporte.pdf_entre_fecha_dieta_profesional',['dieta'=>$lista_dieta, 'responsable'=>$lista_responsable, 'desde'=>$fecha_ini, 'hasta'=>$fecha_fin, 'grupos'=>$grupos]);
+            $pdf->setPaper("A4", "portrait");
+            $estadoarch = $pdf->stream();
+
+            //lo guardamos en el disco temporal
+            Storage::disk('public')->put(str_replace("", "",$nombrePDF), $estadoarch);
+            $exists_destino = Storage::disk('public')->exists($nombrePDF); 
+            if($exists_destino){ 
+                return response()->json([
+                    'error'=>false,
+                    'pdf'=>$nombrePDF
+                ]);
+            }else{
+                return response()->json([
+                    'error'=>true,
+                    'mensaje'=>'No se pudo crear el documento'
+                ]);
+            }
+        }catch (\Throwable $e) {
+            Log::error('ReporteController => reportePeriodoDietaPacienteProfes => mensaje => '.$e->getMessage(). ' linea => '.$e->getLine());
+            return response()->json([
+                'error'=>true,
+                'mensaje'=>'Ocurrió un error'
+            ]);
+            
+        }
+    }
 }

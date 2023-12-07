@@ -172,6 +172,8 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
 
     Route::get('/consolidado-fecha-dieta', [ReporteController::class, 'informePeriodoDietaPaciente'])->middleware('auth');
     Route::post('/reporte-periodo-dieta', [ReporteController::class, 'reportePeriodoDietaPaciente']);
+    Route::post('/reporte-periodo-dieta-profesional', [ReporteController::class, 'reportePeriodoDietaPacienteProfes']);
+   
 
     Route::get('/detallado-por-fecha', [ReporteController::class, 'informeDetallado'])->middleware('validarRuta');
     Route::get('/alimento-periodo-detallado/{f_ini}/{f_fin}', [ReporteController::class, 'alimentoServidoDetallado']);

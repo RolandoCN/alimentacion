@@ -50,7 +50,11 @@
                                         <div class="col-sm-12 col-md-offset-2" >
                                         
                                             <button type="button" onclick="buscarTurnos()" class="btn btn-success btn-sm">
-                                                Generar
+                                                General
+                                            </button>
+
+                                            <button type="button" onclick="buscarPorProfesional()" class="btn btn-info btn-sm">
+                                                Profesional
                                             </button>
                                           
                                         </div>
