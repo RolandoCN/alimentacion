@@ -45,7 +45,7 @@
                     <div class="form-group">
                         <div class="col-sm-12 col-md-offset-2" >
                         
-                            <button type="button" onclick="buscarTurnos()" class="btn btn-success btn-sm">
+                            <button type="button" onclick="buscarGlobal()" class="btn btn-success btn-sm">
                                 Descargar
                             </button>
 

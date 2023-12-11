@@ -87,7 +87,7 @@
         <table class="ltable" style="" border="0" width="100%" style="padding-bottom:2px !important">
             
             <tr style="font-size: 10px"  class="fuenteSubtitulo " style=""> 
-                <th colspan="11" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  >REPORTE DETALLADO DE DIETAS POR ÁREA <br>
+                <th colspan="11" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  >REPORTE DETALLADO DE DIETAS POR NUTRICIONISTA <br>
                 DESDE {{date('d-m-Y',strtotime($desde))}} HASTA  {{date('d-m-Y',strtotime($hasta))}}<br><br>
             
                 </th>
@@ -103,17 +103,18 @@
             $cont_final_almuerzo=0;
             $cont_final_colacion2=0;
             $cont_final_merienda=0;
+            $cont_final_todo=0;
         @endphp
         <div style="margin-top:5px;">
             <table class="ltable"  border="0" width="100%" style="padding-bottom:2px !important">
                 @foreach($grupos as $key=> $data_resp)
                     <tr style="font-size: 9px !important; background-color: white;line-height:20px; ">                                     
-                        <th width="100%" colspan="6" style="border: 0px; text-align: center; line-height:15px">{{$key}}</th>
+                        <th width="100%" colspan="7" style="border: 0px; text-align: center; line-height:15px">{{$key}}</th>
                     </tr>
 
                     <tr style="font-size: 9px !important; background-color: #D3D3D3;line-height:20px; "> 
                         
-                        <th width="50%" style="border: 0px; text-align: center; line-height:15px">FECHA</th>
+                        <th width="50%" style="border: 0px; text-align: center; line-height:15px">SERVICIO</th>
     
                         <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">DESAYUNO</th>
     
@@ -124,6 +125,8 @@
                         <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">COLACION T</th>
 
                         <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">MERIENDA</th>
+
+                        <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">TOTAL</th>
     
                     </tr>
 
@@ -133,6 +136,7 @@
                         $cont_almuerzo=0;
                         $cont_colacion2=0;
                         $cont_merienda=0;
+                        $cont_total_prof=0;
                     @endphp
 
                     @foreach($data_resp as $e=>$dato)
@@ -142,6 +146,7 @@
                             $cont_int_almuerzo=0;
                             $cont_int_colacion2=0;
                             $cont_int_merienda=0;
+                            $cont_int_total=0;
 
                         @endphp  
                         @foreach($dato as $e1=>$info)  
@@ -151,7 +156,7 @@
                                     $cont_desayuno=$cont_desayuno+1; 
                                     $cont_int_desayuno=$cont_int_desayuno+1; 
                                     $cont_final_desayuno=$cont_final_desayuno+1; 
-                                }else if($info=="Colacion 1" || $info=="Colacion"){
+                                }else if($info=="Colacion 1"){
                                     $cont_colacion1=$cont_colacion1+1; 
                                     $cont_int_colacion1=$cont_int_colacion1+1; 
                                     $cont_final_colacion1=$cont_final_colacion1+1; 
@@ -168,12 +173,17 @@
                                     $cont_int_merienda=$cont_int_merienda+1; 
                                     $cont_final_merienda=$cont_final_merienda+1; 
                                 }
+                                $cont_int_total=$cont_int_desayuno + $cont_int_colacion1 + $cont_int_almuerzo +$cont_int_colacion2 + $cont_int_merienda;
+
+                                $cont_total_prof=$cont_desayuno + $cont_colacion1 + $cont_almuerzo +$cont_colacion2 + $cont_merienda;
+
+                                $cont_final_todo=$cont_final_desayuno + $cont_final_colacion1 + $cont_final_almuerzo +$cont_final_colacion2 + $cont_final_merienda;
                             @endphp
                         @endforeach
 
                         <tr style="font-size: 7px !important;line-height:5px;   "> 
                             
-                            <td style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:15px !important;margin-bottom:1px !important;"> {{date('d-m-Y', strtotime($e))}}</td>
+                            <td style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:15px !important;margin-bottom:1px !important;"> {{$e}}</td>
 
                             <td style="border: 0px; ;border-color: #D3D3D3; text-align: right; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;">{{$cont_int_desayuno}}
                             </td>
@@ -185,6 +195,8 @@
                             <td style="border: 0px; ;border-color: #D3D3D3; text-align: right; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;">{{$cont_int_colacion2}}</td>
                         
                             <td style="border: 0px; ;border-color: #D3D3D3; text-align: right; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;">{{$cont_int_merienda}}</td>
+
+                            <td style="border: 0px; ;border-color: #D3D3D3; text-align: right; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;">{{$cont_int_total}}</td>
                         
                         
                             
@@ -216,6 +228,10 @@
                                 <b> {{$cont_merienda}}</b> 
                             </td>
 
+                            <td style="border: 0px;border-color: #D3D3D3;  text-align: right; font-size:9px">
+                                <b> {{$cont_total_prof}}</b> 
+                            </td>
+
                         </tr>
 
                         <tr style="font-size:7px !important;line-height:25px" style="">
@@ -229,8 +245,6 @@
                         
                 @endforeach
 
-               
-
             </table>
         </div>
 
@@ -238,7 +252,7 @@
             <table class="ltable"  border="0" width="100%" style="padding-bottom:2px !important">
               
                         <tr style="font-size: 9px !important; background-color: white;line-height:20px; ">                                     
-                            <th width="100%" colspan="6" style="border: 0px; text-align: center; line-height:15px">RESUMEN</th>
+                            <th width="100%" colspan="7" style="border: 0px; text-align: center; line-height:15px">RESUMEN</th>
                         </tr>
 
                         <tr style="font-size: 9px !important; background-color: #D3D3D3;line-height:20px; "> 
@@ -254,6 +268,8 @@
                             <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">COLACION T</th>
 
                             <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">MERIENDA</th>
+
+                            <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">TOTAL</th>
         
                         </tr>
 
@@ -271,6 +287,8 @@
                             <td style="border: 0px; ;border-color: #D3D3D3; text-align: right; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"><b>{{$cont_final_colacion2}}</b> </td>
                         
                             <td style="border: 0px; ;border-color: #D3D3D3; text-align: right; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"><b>{{$cont_final_merienda}}</b> </td>
+
+                            <td style="border: 0px; ;border-color: #D3D3D3; text-align: right; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"><b>{{$cont_final_todo}}</b> </td>
                                                 
                             
                         </tr>
@@ -280,7 +298,6 @@
 
             </table>
         </div>
-    
       
        
     </div>

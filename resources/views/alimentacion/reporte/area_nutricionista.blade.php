@@ -42,27 +42,37 @@
                                 
                     </div>
 
-                   
-
                     <div class="form-group">
-                        <label for="inputEmail3" id="label_crit" class="col-sm-2 control-label" >Area:</label>
+                        <label for="inputEmail3" id="label_crit" class="col-sm-2 control-label" >Filtra Nutricionista:</label>
                         
                         <div class="col-sm-10" style="font-weight: normal;">                     
-                            <select data-placeholder="Seleccione Una Area" style="width: 100%;" class="form-control select2" name="area_" id="area_" >
+                            <select data-placeholder="Seleccione Una Opcion" style="width: 100%;" class="form-control select2" name="nutri_filtra" id="nutri_filtra" onchange="seleccionaFiltroNutri()">
+                            
+                                <option value="T" selected>Todos</option>
+                                <option value="F" >Filtrar</option>
+                              
+                            </select>
+                        </div>
                                 
-                                @foreach ($area as $dato)
+                    </div>
+                    <div class="form-group seccion_filtra_nutri_filtra" style="display: none">
+                        <label for="inputEmail3" id="label_crit" class="col-sm-2 control-label" >Nutricionista:</label>
+                        
+                        <div class="col-sm-10" style="font-weight: normal;">                     
+                            <select data-placeholder="Seleccione Una Profesional" style="width: 100%;" class="form-control select2" name="nutri_filtra" id="nutri_filtra_selecc" >
+                                
+                                @foreach ($nutricionista as $dato)
                                     <option value=""></option>
-                                    <option value="{{ $dato->servicio}}" >{{ $dato->servicio }} </option>
+                                    <option value="{{ $dato->nombres}}" >{{ $dato->nombres }} </option>
                                 @endforeach
                             </select>
                         </div>
                                 
                     </div>
-
                     <div class="form-group">
                         <div class="col-sm-12 col-md-offset-2" >
                         
-                            <button type="button" onclick="buscarAreaz()" class="btn btn-success btn-sm">
+                            <button type="button" onclick="buscarNutricionista()" class="btn btn-success btn-sm">
                                 Descargar
                             </button>
 
