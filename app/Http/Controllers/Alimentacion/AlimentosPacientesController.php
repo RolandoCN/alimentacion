@@ -224,21 +224,29 @@ class AlimentosPacientesController extends Controller
                 $listar=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
                 ->where('estado','Solicitado')
                 ->where('servicio','DIALISIS')
-                // ->where('tipo',$tipo_ali)
                 ->get();
 
                 if(sizeof($listar)==0){
                     Log::error('No existen pacientes con solicitud a alimentacion');   
                     return 'No existen pacientes con solicitud a alimentacion';  
                 }
-
+                #agrupamos por tipo dieta
+                $lista_dieta=[];
+                foreach ($listar as $key => $item){                
+                    if(!isset($lista_dieta[$item->dieta])) {
+                        $lista_dieta[$item->dieta]=array($item);
+                
+                    }else{
+                        array_push($lista_dieta[$item->dieta], $item);
+                    }
+                }
               
                 $area=$listar[0]->servicio;
                 
                 $nombrePDF="reporte_listado_comida_pac.pdf";
             
                 // enviamos a la vista para crear el documento que los datos repsectivos
-                $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente',['datos'=>$listar,"f_aprobacion"=>date('Y-m-d H:i:s')]);
+                $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente',['datos'=>$lista_final_agrupada,"f_aprobacion"=>date('Y-m-d H:i:s'), 'dieta'=>$lista_dieta]);
                 $crearpdf->setPaper("A4", "landscape");
                 $estadoarch = $crearpdf->stream();
 
@@ -541,19 +549,6 @@ class AlimentosPacientesController extends Controller
     public function reportePdfAliPacienteAprobado($inicio, $final, $serv,$tipo){
         try{
           
-            // $listar=AlimentoPaciente::whereBetween('fecha_solicita',[$inicio, $final])
-            // ->where(function($query)use($serv,$tipo,$inicio, $final){
-            //     if($serv=="Dialisis"){
-            //         $query->where('servicio','Dialisis');
-            //     }else{
-            //         $query->where('servicio','!=','Dialisis')
-            //         ->where('tipo',$tipo);
-            //     }
-            //     $query->whereDate('fecha_solicita','>=',$inicio)
-            //     ->->whereDate('fecha_solicita','<=',$final);
-            // })
-            // ->where('estado','Aprobado')->get();
-
             $listar=AlimentoPaciente::where(function($query)use($serv,$tipo,$inicio, $final){
                 if($serv=="Dialisis"){
                     $query->where('servicio','Dialisis');
@@ -567,8 +562,6 @@ class AlimentosPacientesController extends Controller
             ->where('estado','Aprobado')
             ->orderBy('fecha', 'asc')  
             ->orderBy('dieta', 'asc') 
-            // ->select('fecha','paciente','dieta','observacion','fecha_solicita','responsable')
-            // ->distinct('paciente')
             ->get();
           
             if(sizeof($listar)==0){
@@ -605,7 +598,7 @@ class AlimentosPacientesController extends Controller
             $nombrePDF="reporte_listado_comida_pac_dia.pdf";
             if($serv=="Dialisis"){
                 // enviamos a la vista para crear el documento que los datos repsectivos
-                $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente',['datos'=>$listar,'ini'=>$inicio, 'fin'=>$final,"f_aprobacion"=>0]);
+                $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente',['datos'=>$lista_final_agrupada,'ini'=>$inicio, 'fin'=>$final,"f_aprobacion"=>0, 'dieta'=>$lista_dieta]);
             }else{
                 // enviamos a la vista para crear el documento que los datos repsectivos
                 $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente_hosp',['datos'=>$lista_final_agrupada,'ini'=>$inicio, 'fin'=>$final,"f_aprobacion"=>0,'tipo'=>$tipo, 'dieta'=>$lista_dieta]);
@@ -675,8 +668,7 @@ class AlimentosPacientesController extends Controller
                     ->where('tipo',$tipo);
                 }
             })
-            // ->select('fecha','paciente','dieta','observacion','fecha_solicita','servicio','json_dieta')
-            // ->distinct('paciente')
+           
             ->where('estado','Aprobado')->get();
           
             if(sizeof($listar)==0){

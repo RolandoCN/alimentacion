@@ -125,7 +125,7 @@
 
                         <tr style="font-size: 9px !important; background-color: #D3D3D3;line-height:15px; "> 
                             
-                            <th width="10%" style="border: 0px; text-align: center">FECHA</th>
+                            <th width="10%" style="border: 0px; text-align: center">HORA</th>
 
                           
 
