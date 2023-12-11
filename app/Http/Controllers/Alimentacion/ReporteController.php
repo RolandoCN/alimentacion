@@ -1161,4 +1161,8 @@ class ReporteController extends Controller
             
         }
     }
+
+    public function vistaNutricion(){
+        return view('alimentacion.reporte.nutricion');
+    }
 }

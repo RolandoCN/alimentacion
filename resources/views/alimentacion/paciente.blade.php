@@ -47,7 +47,7 @@
             <div class="box-body">
                 <div class="col-md-12 text-center" >
                     <button type="button" class="btn btn-xs btn-success" onclick="llenar_tabla_paciente()">Actualizar</button>
-                    <button type="button" class="btn btn-xs btn-primary" onclick="pdf_alimento_pac()">Generar</button>
+                    {{-- <button type="button" class="btn btn-xs btn-primary" onclick="pdf_alimento_pac()">Generar</button> --}}
                 </div>
 
                 <div class="table-responsive">
