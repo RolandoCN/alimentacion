@@ -42,10 +42,27 @@
                                 
                     </div>
 
+                   
+
+                    <div class="form-group">
+                        <label for="inputEmail3" id="label_crit" class="col-sm-2 control-label" >Area:</label>
+                        
+                        <div class="col-sm-10" style="font-weight: normal;">                     
+                            <select data-placeholder="Seleccione Una Area" style="width: 100%;" class="form-control select2" name="area_" id="area_" >
+                                
+                                @foreach ($area as $dato)
+                                    <option value=""></option>
+                                    <option value="{{ $dato->servicio}}" >{{ $dato->servicio }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                                
+                    </div>
+
                     <div class="form-group">
                         <div class="col-sm-12 col-md-offset-2" >
                         
-                            <button type="button" onclick="buscarTurnos()" class="btn btn-success btn-sm">
+                            <button type="button" onclick="buscarAreaz()" class="btn btn-success btn-sm">
                                 Descargar
                             </button>
 

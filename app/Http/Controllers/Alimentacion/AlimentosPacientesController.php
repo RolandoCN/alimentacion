@@ -60,7 +60,6 @@ class AlimentosPacientesController extends Controller
            
          
             $info= json_decode((string) $listaAliPaciente->getBody());
-            // dd($info);
             if($info->error==true){
                 return [
                     'error'=>true,
@@ -82,54 +81,7 @@ class AlimentosPacientesController extends Controller
                 $tipo_ali="Merienda";
             }
            
-            //eliminamos todos los solicitado en estado solicitado
-            $alimentosElim=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
-            ->where('estado','Solicitado')
-            ->where('tipo',$tipo_ali)
-            ->delete();
-            foreach($info->data as $item){
-                
-                //comprobamos si no esta registrado y aprobado
-                $alimentos=AlimentoPaciente::where('id_registro', $item->id_registro)
-                ->where('estado','Aprobado')
-                ->where('tipo',$tipo_ali)
-                ->where('servicio','!=','EMERGENCIA')
-                ->first();
-              
-                if(is_null($alimentos)){
-                   
-                    $fecha_soli=$item->fecha;
-                    $fecha_soli=date('Y-m-d H:i:s', strtotime($fecha_soli));
-                    $alimentoPac=new AlimentoPaciente();
-                    $alimentoPac->json_dieta=json_encode($item);
-                    $alimentoPac->paciente=$item->paciente_nombres;
-                    $alimentoPac->responsable=$item->responsable;
-                    $alimentoPac->fecha_solicita=$fecha_soli;
-                    $alimentoPac->dieta=$item->tipodieta;
-                    $alimentoPac->estado="Solicitado";
-                    $alimentoPac->fecha=date('Y-m-d');
-                    $alimentoPac->id_registro=$item->id_registro;
-                    $alimentoPac->servicio=$item->detalle_serv;
-                    $alimentoPac->tipo=$tipo_ali;
-                    $alimentoPac->observacion=$item->observacion;
-                    if($alimentoPac->servicio!="EMERGENCIA" && $item->alta=="N"){
-                        if($alimentoPac->servicio!="DIALISIS" && $tipo_ali!="Colacion 1"){
-                            $alimentoPac->save();
-                        }                           
-                    }
-                        
-                }
-
-              
-            }
-            $alimentoPac=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
-            ->where('estado','Solicitado')
-            ->where('tipo',$tipo_ali)
-            ->get();
-            return[
-                'error'=>false,
-                'resultado'=>$alimentoPac
-            ];
+           
             
         }catch (\Throwable $e) {
             Log::error(__CLASS__." => ".__FUNCTION__." => Mensaje =>".$e->getMessage()." Linea =>".$e->getLine());
@@ -377,7 +329,9 @@ class AlimentosPacientesController extends Controller
                 ->where('servicio','!=','DIALISIS')
                 ->where('tipo',$tipo)
                 ->orderBy('fecha', 'asc')  
-                ->orderBy('dieta', 'asc') 
+                ->orderBy('dieta', 'asc')
+                ->select('fecha','paciente','dieta','observacion','fecha_solicita','responsable')
+                ->distinct('paciente') 
                 ->get();
 
                 if(sizeof($listar)==0){
@@ -590,8 +544,10 @@ class AlimentosPacientesController extends Controller
             ->where('estado','Aprobado')
             ->orderBy('fecha', 'asc')  
             ->orderBy('dieta', 'asc') 
+            ->select('fecha','paciente','dieta','observacion','fecha_solicita','responsable')
+            ->distinct('paciente')
             ->get();
-            
+          
             if(sizeof($listar)==0){
                 return [
                     'error'=>true,
@@ -696,16 +652,17 @@ class AlimentosPacientesController extends Controller
                     ->where('tipo',$tipo);
                 }
             })
-            
+            ->select('fecha','paciente','dieta','observacion','fecha_solicita','servicio','json_dieta')
+            ->distinct('paciente')
             ->where('estado','Aprobado')->get();
-            
+          
             if(sizeof($listar)==0){
                 return [
                     'error'=>true,
                     'mensaje'=>'No se encontro alimentos aprobados el dia de hoy'
                 ];
             }
-            // dd($listar);
+           
             $nombrePDF="reporte_listado_comida_pac_dia.pdf";
             if($serv=="Dialisis"){
                 // enviamos a la vista para crear el documento que los datos repsectivos

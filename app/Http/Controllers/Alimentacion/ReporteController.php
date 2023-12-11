@@ -1111,7 +1111,7 @@ class ReporteController extends Controller
                     array_push($lista_dieta[$item->dieta], $item);
                 }
             }
-            // dd($lista_dieta);
+           
             #agrupamos por responsable
             $lista_responsable=[];
             foreach ($listar as $key => $item){                
@@ -1163,6 +1163,92 @@ class ReporteController extends Controller
     }
 
     public function vistaNutricion(){
-        return view('alimentacion.reporte.nutricion');
+        $area=[];
+        $area=DB::table('al_alimentos_pacientes')
+        ->select('servicio')
+        ->distinct()
+        ->get();
+        return view('alimentacion.reporte.nutricion',[
+            "area"=>$area
+        ]);
+    }
+
+    //reporte entre fechas tipo dietas
+    public function reportePeriodoDietaArea(Request $request){
+        
+        try{            
+            set_time_limit(0);
+            ini_set("memory_limit",-1);
+            ini_set('max_execution_time', 0);
+
+            $fecha_ini=$request->fecha_inicial_rep;
+            $fecha_fin=$request->fecha_final_rep;
+            $filtro=$request->cmb_filtra_area;
+            $area=$request->area;
+           
+            $listar=DB::table('al_alimentos_pacientes as ali_pac')
+            ->where(function($c)use($fecha_ini, $fecha_fin) {
+                $c->whereDate('ali_pac.fecha', '>=', $fecha_ini)
+                ->whereDate('ali_pac.fecha', '<=', $fecha_fin);
+            })
+            ->where(function($cQ)use($filtro, $area) {
+                if($filtro=="F"){
+                    $cQ->where('ali_pac.servicio', $area);
+                }
+            })
+            ->where('ali_pac.estado','=','Aprobado') //aprobado
+            ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta','ali_pac.servicio','ali_pac.tipo')
+            ->orderBy('ali_pac.fecha','asc')
+            ->orderBy('ali_pac.tipo','asc')
+            ->get();
+            
+            #agrupamos por area y fecha
+            foreach ($listar as $key => $item){                
+                $servicio = $item->servicio;
+                $fecha = $item->fecha;
+                $valor = $item->tipo;
+            
+                // Crear una estructura de agrupación si no existe
+                if (!isset($grupos[$servicio])) {
+                    $grupos[$servicio] = array();
+                }
+            
+                if (!isset($grupos[$servicio][$fecha])) {
+                    $grupos[$servicio][$fecha] = array();
+                }
+        
+                $grupos[$servicio][$fecha][] = $valor;
+
+            }
+
+           
+            $nombrePDF="reporte_entre_fecha_dieta".date('d-m-Y').".pdf";
+
+            $pdf=PDF::loadView('alimentacion.reporte.pdf_entre_fecha_area',['grupos'=>$grupos, 'desde'=>$fecha_ini, 'hasta'=>$fecha_fin]);
+            $pdf->setPaper("A4", "portrait");
+            $estadoarch = $pdf->stream();
+
+            //lo guardamos en el disco temporal
+            Storage::disk('public')->put(str_replace("", "",$nombrePDF), $estadoarch);
+            $exists_destino = Storage::disk('public')->exists($nombrePDF); 
+            if($exists_destino){ 
+                return response()->json([
+                    'error'=>false,
+                    'pdf'=>$nombrePDF
+                ]);
+            }else{
+                return response()->json([
+                    'error'=>true,
+                    'mensaje'=>'No se pudo crear el documento'
+                ]);
+            }
+        }catch (\Throwable $e) {
+            Log::error('ReporteController => reportePeriodoDietaPaciente => mensaje => '.$e->getMessage(). ' linea => '.$e->getLine());
+            return response()->json([
+                'error'=>true,
+                'mensaje'=>'Ocurrió un error'
+            ]);
+            
+        }
     }
 }

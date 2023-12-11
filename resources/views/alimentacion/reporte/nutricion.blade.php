@@ -99,14 +99,8 @@
 @endsection
 
 @section('scripts')
+<script src="{{ asset('js/alimentacion/reporte/nutricionista.js?v='.rand())}}"></script>
 
-<script>
-  
-  $('.collapse-link').click();
-  $('.datatable_wrapper').children('.row').css('overflow','inherit !important');
-
-  $('.table-responsive').css({'padding-top':'12px','padding-bottom':'12px', 'border':'0', 'overflow-x':'inherit'});
-</script>
 
   
 @endsection
