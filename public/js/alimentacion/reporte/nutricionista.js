@@ -32,7 +32,7 @@ function buscarArea(){
         return
     }
     
-    if(cmb_filtra_area=="T"){
+    if(cmb_filtra_area=="F"){
        if(area==""){
             alertNotificar("Seleccione una area","error")
             return

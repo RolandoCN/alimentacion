@@ -54,7 +54,7 @@
                     <table id="tabla_paciente" width="100%"class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>Fecha</th>
+                                <th>Hora</th>
                                 <th>Paciente</th>
                                 <th>Servicio</th>
                                 <th>Responsable</th>

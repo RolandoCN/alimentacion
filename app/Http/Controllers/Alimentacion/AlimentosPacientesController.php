@@ -66,6 +66,7 @@ class AlimentosPacientesController extends Controller
                     'mensaje'=>'Ocurrió un error al consultar la informacion de los alimentos'
                 ];
             }
+            // dd($info);
            
             $hora=date('H');
             $hora=intval($hora);
@@ -80,8 +81,30 @@ class AlimentosPacientesController extends Controller
             }else{
                 $tipo_ali="Merienda";
             }
+            $lista=[];
+            foreach($info->data as $item){                
+               
+                $fecha_soli=$item->fecha;
+                $fecha_soli=date('H:i:s', strtotime($fecha_soli));
+                $paciente=$item->paciente_nombres;
+                $responsable=$item->responsable;
+                $dieta=$item->tipodieta;
+                $estado="Solicitado";
+                $servicio=$item->detalle_serv;
+                $tipo=$tipo_ali;
+                $observacion=$item->observacion;   
+                
+                if($tipo!="Colacion 1" && $servicio!="Dialisis"){
+                    array_push($lista,["fecha_solicita"=>$fecha_soli, "paciente"=>$paciente, "responsable"=>$responsable, "dieta"=>$dieta, "estado"=>$estado, "servicio"=>$servicio, "tipo"=>$tipo, "observacion"=>$tipo]);
+                }
+                    
+              
+            }
            
-           
+            return[
+                'error'=>false,
+                'resultado'=>$lista
+            ];
             
         }catch (\Throwable $e) {
             Log::error(__CLASS__." => ".__FUNCTION__." => Mensaje =>".$e->getMessage()." Linea =>".$e->getLine());
@@ -330,8 +353,8 @@ class AlimentosPacientesController extends Controller
                 ->where('tipo',$tipo)
                 ->orderBy('fecha', 'asc')  
                 ->orderBy('dieta', 'asc')
-                ->select('fecha','paciente','dieta','observacion','fecha_solicita','responsable')
-                ->distinct('paciente') 
+                // ->select('fecha','paciente','dieta','observacion','fecha_solicita','responsable')
+                // ->distinct('paciente') 
                 ->get();
 
                 if(sizeof($listar)==0){
@@ -544,8 +567,8 @@ class AlimentosPacientesController extends Controller
             ->where('estado','Aprobado')
             ->orderBy('fecha', 'asc')  
             ->orderBy('dieta', 'asc') 
-            ->select('fecha','paciente','dieta','observacion','fecha_solicita','responsable')
-            ->distinct('paciente')
+            // ->select('fecha','paciente','dieta','observacion','fecha_solicita','responsable')
+            // ->distinct('paciente')
             ->get();
           
             if(sizeof($listar)==0){
@@ -652,8 +675,8 @@ class AlimentosPacientesController extends Controller
                     ->where('tipo',$tipo);
                 }
             })
-            ->select('fecha','paciente','dieta','observacion','fecha_solicita','servicio','json_dieta')
-            ->distinct('paciente')
+            // ->select('fecha','paciente','dieta','observacion','fecha_solicita','servicio','json_dieta')
+            // ->distinct('paciente')
             ->where('estado','Aprobado')->get();
           
             if(sizeof($listar)==0){

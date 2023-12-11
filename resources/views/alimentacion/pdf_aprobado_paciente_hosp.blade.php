@@ -150,7 +150,7 @@
                                     
                                     <td align="center" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3; vertical-align:middle">
                                     
-                                        {{date('d-m-Y', strtotime($dato->fecha_solicita))}}
+                                        {{date('H:i', strtotime($dato->fecha_solicita))}}
                                    </td>
 
 
