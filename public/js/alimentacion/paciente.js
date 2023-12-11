@@ -5,7 +5,7 @@ function llenar_tabla_paciente(){
 	$("#tabla_paciente tbody").html(`<tr><td colspan="${num_col}" style="padding:40px; 0px; font-size:20px;"><center><span class="spinner-border" role="status" aria-hidden="true"></span><b> Obteniendo información</b></center></td></tr>`);
    
     
-    $.get("listado-paciente-ali/", function(data){
+    $.get("listado-paciente-ali-visor/", function(data){
         console.log(data)
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
@@ -24,7 +24,7 @@ function llenar_tabla_paciente(){
                 "destroy":true,
                 pageLength: 10,
                 autoWidth : true,
-                order: [[ 4, "asc" ]],
+                order: [[ 2, "asc" ]],
                 sInfoFiltered:false,
                 language: {
                     url: 'json/datatables/spanish.json',

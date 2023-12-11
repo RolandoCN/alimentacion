@@ -175,7 +175,7 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     Route::post('/reporte-periodo-dieta-profesional', [ReporteController::class, 'reportePeriodoDietaPacienteProfes']);
 
     Route::get('/reporteria-nutricion', [ReporteController::class, 'vistaNutricion'])->middleware('auth');
-    
+
    
 
     Route::get('/detallado-por-fecha', [ReporteController::class, 'informeDetallado'])->middleware('validarRuta');
@@ -238,6 +238,7 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     //COMIDA SOLICITADA DE MEDICO A PACIENTE
     Route::get('/dieta-solicitada', [AlimentosPacientesController::class, 'index'])->middleware('validarRuta');
     Route::get('/listado-paciente-ali', [AlimentosPacientesController::class, 'listar']);
+    Route::get('/listado-paciente-ali-visor', [AlimentosPacientesController::class, 'listarVisor']);
     Route::get('/pdf-paciente-ali', [AlimentosPacientesController::class, 'reportePdfAliPaciente']);
 
     Route::get('/job-ali-pacientes', [AlimentosPacientesController::class, 'aprobarAliPaciente']);

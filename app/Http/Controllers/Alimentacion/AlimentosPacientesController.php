@@ -48,6 +48,97 @@ class AlimentosPacientesController extends Controller
 
     }
 
+    public function listarVisor(){
+        try{
+            $listaAliPaciente = $this->clientHosp->request('GET', "sisInv/api/comidas-pacientes",[
+                'headers' => [
+                    'Authorization' => ''
+                ] ,
+                'connect_timeout' => 10,
+                'timeout' => 10
+            ]);
+           
+         
+            $info= json_decode((string) $listaAliPaciente->getBody());
+            // dd($info);
+            if($info->error==true){
+                return [
+                    'error'=>true,
+                    'mensaje'=>'Ocurrió un error al consultar la informacion de los alimentos'
+                ];
+            }
+           
+            $hora=date('H');
+            $hora=intval($hora);
+            if($hora<6){
+                $tipo_ali="Desayuno";
+            }else if($hora>=6 && $hora<9){
+                $tipo_ali="Colacion 1";
+            }else if($hora>=9 && $hora<11){
+                $tipo_ali="Almuerzo";
+            }else if($hora>=11 && $hora<16){
+                $tipo_ali="Colacion 2";
+            }else{
+                $tipo_ali="Merienda";
+            }
+           
+            //eliminamos todos los solicitado en estado solicitado
+            $alimentosElim=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
+            ->where('estado','Solicitado')
+            ->where('tipo',$tipo_ali)
+            ->delete();
+            foreach($info->data as $item){
+                
+                //comprobamos si no esta registrado y aprobado
+                $alimentos=AlimentoPaciente::where('id_registro', $item->id_registro)
+                ->where('estado','Aprobado')
+                ->where('tipo',$tipo_ali)
+                ->where('servicio','!=','EMERGENCIA')
+                ->first();
+              
+                if(is_null($alimentos)){
+                   
+                    $fecha_soli=$item->fecha;
+                    $fecha_soli=date('Y-m-d H:i:s', strtotime($fecha_soli));
+                    $alimentoPac=new AlimentoPaciente();
+                    $alimentoPac->json_dieta=json_encode($item);
+                    $alimentoPac->paciente=$item->paciente_nombres;
+                    $alimentoPac->responsable=$item->responsable;
+                    $alimentoPac->fecha_solicita=$fecha_soli;
+                    $alimentoPac->dieta=$item->tipodieta;
+                    $alimentoPac->estado="Solicitado";
+                    $alimentoPac->fecha=date('Y-m-d');
+                    $alimentoPac->id_registro=$item->id_registro;
+                    $alimentoPac->servicio=$item->detalle_serv;
+                    $alimentoPac->tipo=$tipo_ali;
+                    $alimentoPac->observacion=$item->observacion;
+                    if($alimentoPac->servicio!="EMERGENCIA" && $item->alta=="N"){
+                        $alimentoPac->save();
+                    }
+                        
+                }
+
+              
+            }
+            $alimentoPac=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
+            ->where('estado','Solicitado')
+            ->where('tipo',$tipo_ali)
+            ->get();
+            return[
+                'error'=>false,
+                'resultado'=>$alimentoPac
+            ];
+            
+        }catch (\Throwable $e) {
+            Log::error(__CLASS__." => ".__FUNCTION__." => Mensaje =>".$e->getMessage()." Linea =>".$e->getLine());
+            return [
+                'error'=>true,
+                'mensaje'=>'Ocurrió un error'
+            ];
+             
+        }
+    }
+
     public function listar(){
         try{
             $listaAliPaciente = $this->clientHosp->request('GET', "sisInv/api/comidas-pacientes",[
@@ -58,7 +149,7 @@ class AlimentosPacientesController extends Controller
                 'timeout' => 10
             ]);
            
-    
+         
             $info= json_decode((string) $listaAliPaciente->getBody());
           
             if($info->error==true){
