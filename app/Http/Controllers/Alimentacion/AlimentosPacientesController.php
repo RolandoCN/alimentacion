@@ -279,7 +279,7 @@ class AlimentosPacientesController extends Controller
                     $archivo=Storage::disk('public')->get($nombrePDF);
                     $nombrearchivo=$nombrePDF;
 
-                    //consultamos el correo donde enviaremos el documento
+                    //consultamos el correo donde enviaremos el documento...
                     $correo_param=DB::table('al_parametros')
                     ->where('codigo','ECAA')->first();
                     if(!is_null($correo_param)){
