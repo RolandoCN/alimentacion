@@ -230,6 +230,18 @@ class AlimentosPacientesController extends Controller
                     Log::error('No existen pacientes con solicitud a alimentacion');   
                     return 'No existen pacientes con solicitud a alimentacion';  
                 }
+
+                #agrupamos por area
+                $lista_final_agrupada=[];
+                foreach ($listar as $key => $item){                
+                    if(!isset($lista_final_agrupada[$item->servicio])) {
+                        $lista_final_agrupada[$item->servicio]=array($item);
+                
+                    }else{
+                        array_push($lista_final_agrupada[$item->servicio], $item);
+                    }
+                }
+
                 #agrupamos por tipo dieta
                 $lista_dieta=[];
                 foreach ($listar as $key => $item){                
