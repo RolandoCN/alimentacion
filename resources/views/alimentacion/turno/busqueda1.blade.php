@@ -7,9 +7,18 @@
 <style>
     .content_calendario{
         overflow-x: auto;
+        width: 100% !important;
     }
     #calendar{
         min-width: 600px;
+    }
+    .select2-container {
+        width: 100% !important;
+    }
+    @media (max-width: 767px) {
+        .select2-container {
+            width: 100% !important;
+        }
     }
 </style>
 

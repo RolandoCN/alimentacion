@@ -24,7 +24,7 @@ function detalleTurno(id_empleado){
                
             });
         })
-
+ 
         console.log(eventosArray)
         // eventosArray=data.data
 
@@ -341,7 +341,14 @@ function guardarTurno(){
         }
     });
 }
+$(window).on('resize', function () {
+    $('#idturno').select2('destroy').select2();
+});
 
+$('#modal_Tipo').on('shown.bs.modal', function () {
+    
+    $('#idturno').select2();
+});
 //Busqueda de persona por cedula o nombre
 $('#cmb_persona').select2({
     placeholder: 'Seleccione una opción',

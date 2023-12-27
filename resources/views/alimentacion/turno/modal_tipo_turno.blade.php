@@ -1,5 +1,19 @@
 
-<div class="modal fade_ detalle_class"  id="modal_Tipo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+{{--<div class="modal fade_ detalle_class"  id="modal_Tipo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">--}}
+    <style>
+      
+        .select2-container {
+            width: 100% !important;
+        }
+        @media (max-width: 767px) {
+            .select2-container {
+                width: 100% !important;
+            }
+        }
+      
+
+    </style>
+<div class="modal fade_ detalle_class"  id="modal_Tipo" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -19,7 +33,7 @@
 
                                 <div class="form-group">
                                     <label>Turno:</label>
-                                    <select data-placeholder="Seleccione Un Turno" style="width: 100%;" class="form-control select2" name="idturno" id="idturno" >
+                                    <select data-placeholder="Seleccione Un Turno" style="width: 100% !important;" class="form-control select2" name="idturno" id="idturno" >
                                         
                                         {{-- <option value=""></option>
                                         <option value="Desayuno" >Desayuno</option>

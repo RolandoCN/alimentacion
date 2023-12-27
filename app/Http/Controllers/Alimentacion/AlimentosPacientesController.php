@@ -66,8 +66,7 @@ class AlimentosPacientesController extends Controller
                     'mensaje'=>'Ocurrió un error al consultar la informacion de los alimentos'
                 ];
             }
-            // dd($info);
-           
+                      
             $hora=date('H');
             $hora=intval($hora);
             if($hora<6){
@@ -94,9 +93,9 @@ class AlimentosPacientesController extends Controller
                 $tipo=$tipo_ali;
                 $observacion=$item->observacion;   
                 
-                if($tipo!="Colacion 1" && $servicio!="Dialisis"){
+                // if($tipo!="Colacion 1" && $servicio!="Dialisis"){
                     array_push($lista,["fecha_solicita"=>$fecha_soli, "paciente"=>$paciente, "responsable"=>$responsable, "dieta"=>$dieta, "estado"=>$estado, "servicio"=>$servicio, "tipo"=>$tipo, "observacion"=>$tipo]);
-                }
+                // }
                     
               
             }
