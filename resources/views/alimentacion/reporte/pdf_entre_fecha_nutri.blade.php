@@ -156,7 +156,7 @@
                                     $cont_desayuno=$cont_desayuno+1; 
                                     $cont_int_desayuno=$cont_int_desayuno+1; 
                                     $cont_final_desayuno=$cont_final_desayuno+1; 
-                                }else if($info=="Colacion 1"){
+                                }else if($info=="Colacion 1" || $info=="Colacion"){
                                     $cont_colacion1=$cont_colacion1+1; 
                                     $cont_int_colacion1=$cont_int_colacion1+1; 
                                     $cont_final_colacion1=$cont_final_colacion1+1; 
@@ -251,50 +251,136 @@
         <div style="margin-top:25px;">
             <table class="ltable"  border="0" width="100%" style="padding-bottom:2px !important">
               
-                        <tr style="font-size: 9px !important; background-color: white;line-height:20px; ">                                     
-                            <th width="100%" colspan="7" style="border: 0px; text-align: center; line-height:15px">RESUMEN</th>
-                        </tr>
+                <tr style="font-size: 9px !important; background-color: white;line-height:20px; ">                                     
+                    <th width="100%" colspan="7" style="border: 0px; text-align: center; line-height:15px">RESUMEN</th>
+                </tr>
 
-                        <tr style="font-size: 9px !important; background-color: #D3D3D3;line-height:20px; "> 
-                            
-                            <th width="50%" style="border: 0px; text-align: center; line-height:15px"></th>
-        
-                            <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">DESAYUNO</th>
-        
-                            <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">COLACION M</th>
-        
-                            <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">ALMUERZO</th>
+                <tr style="font-size: 9px !important; background-color: #D3D3D3;line-height:20px; "> 
+                    
+                    <th width="50%" style="border: 0px; text-align: center; line-height:15px"></th>
 
-                            <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">COLACION T</th>
+                    <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">DESAYUNO</th>
 
-                            <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">MERIENDA</th>
+                    <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">COLACION M</th>
 
-                            <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">TOTAL</th>
-        
-                        </tr>
+                    <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">ALMUERZO</th>
+
+                    <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">COLACION T</th>
+
+                    <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">MERIENDA</th>
+
+                    <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">TOTAL</th>
+
+                </tr>
+
+                <tr style="font-size: 7px !important;line-height:5px;   "> 
+                    
+                    <td style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:15px !important;margin-bottom:1px !important;"><b> TOTALES</b> </td>
+
+                    <td style="border: 0px; ;border-color: #D3D3D3; text-align: right; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"><b>{{$cont_final_desayuno}}</b> 
+                    </td>
+                    
+                    <td style="border: 0px; ;border-color: #D3D3D3; text-align: right; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"><b>{{$cont_final_colacion1}}</b> </td>
+
+                    <td style="border: 0px; ;border-color: #D3D3D3; text-align: right; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"><b>{{$cont_final_almuerzo}}</b> </td>
+
+                    <td style="border: 0px; ;border-color: #D3D3D3; text-align: right; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"><b>{{$cont_final_colacion2}}</b> </td>
+                
+                    <td style="border: 0px; ;border-color: #D3D3D3; text-align: right; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"><b>{{$cont_final_merienda}}</b> </td>
+
+                    <td style="border: 0px; ;border-color: #D3D3D3; text-align: right; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"><b>{{$cont_final_todo}}</b> </td>
+                                        
+                    
+                </tr>
+            </table>
+        </div>
+
+        <div style="margin-top:5px;">
+            <table class="ltable"  border="0" width="100%" style="padding-bottom:2px !important">
+
+                <tr style="font-size: 9px !important; background-color: #D3D3D3;line-height:20px; "> 
+                        
+                    <th width="50%" style="border: 0px; text-align: center; line-height:15px">TIPO DE DIETAS</th>
+
+                    <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">SUBTOTAL</th>
+
+                    <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">LIQUIDA</th>
+
+                    <th width="25%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">NPO</th>
+
+                </tr>
+                <tbody>
+                    @php
+                        $cont_sin_liquida=0;
+                        $cont_liquida=0;
+                        $cont_npo=0;
+                    @endphp
+                    @foreach($lista_dieta as $key => $lista)
+                        @php
+                            $cont_=0;
+                        @endphp
+                        @foreach($lista as $e=>$dato)   
+                            @php
+                                $cont_=$cont_+1;
+                                $color="black";
+                                if($dato->dieta=="LIQUIDA ACALORICA" || $dato->dieta=="LIQUIDA ESTRICTA" || $dato->dieta=="LIQUIDA AMPLIA"){
+                                    $color="red";
+                                    $cont_liquida=$cont_liquida+1; 
+                                }else if($dato->dieta=="NADA POR VIA ORAL"){
+                                    $cont_npo=$cont_npo+1; 
+                                    $color="green";
+                                }else{
+                                    $cont_sin_liquida=$cont_sin_liquida+1; 
+                                }
+                            @endphp
+                        @endforeach
 
                         <tr style="font-size: 7px !important;line-height:5px;   "> 
                             
-                            <td style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:15px !important;margin-bottom:1px !important;"><b> TOTALES</b> </td>
+                                <td style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:15px !important;margin-bottom:1px !important;"> <span style="color:{{$color}}">{{$key}}</span></td>
 
-                            <td style="border: 0px; ;border-color: #D3D3D3; text-align: right; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"><b>{{$cont_final_desayuno}}</b> 
-                            </td>
-                           
-                            <td style="border: 0px; ;border-color: #D3D3D3; text-align: right; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"><b>{{$cont_final_colacion1}}</b> </td>
+                                <td style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;">  <span style="color:{{$color}}">{{$cont_}}</span>
+                                </td>
 
-                            <td style="border: 0px; ;border-color: #D3D3D3; text-align: right; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"><b>{{$cont_final_almuerzo}}</b> </td>
+                                @if($color=="red"){}
+                                    <td style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"><span style="color:{{$color}}">{{$cont_}}</span></td>
+                                @else
+                                    <td style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"></td>
+                                @endif
 
-                            <td style="border: 0px; ;border-color: #D3D3D3; text-align: right; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"><b>{{$cont_final_colacion2}}</b> </td>
-                        
-                            <td style="border: 0px; ;border-color: #D3D3D3; text-align: right; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"><b>{{$cont_final_merienda}}</b> </td>
-
-                            <td style="border: 0px; ;border-color: #D3D3D3; text-align: right; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"><b>{{$cont_final_todo}}</b> </td>
-                                                
+                                @if($color=="green"){}
+                                    <td style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"><span style="color:{{$color}}">{{$cont_}}</span></td>
+                                @else
+                                    <td style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px; margin-top:5px !important;margin-bottom:1px !important;"></td>
+                                @endif
+                            
                             
                         </tr>
 
-                  
-               
+
+                    @endforeach
+                </tbody>
+
+                <tfoot>
+                    <tr style="font-size:7px !important;line-height:5px" style="">
+                        <td style="font-size:9px;border: 0px; border-color: #D3D3D3;  text-align: right;">
+                            <b>TOTAL</b>
+                        </td>
+                        <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:9px">
+                            {{$cont_sin_liquida}} 
+                            
+                        </td>
+                        <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:9px">
+                            <span style="color:red">{{$cont_liquida}}</span>
+                        </td>
+
+                        <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:9px">
+                            <span style="color:red">{{$cont_npo}}</span>
+                            </td>
+
+                    </tr>
+
+                </tfoot>  
 
             </table>
         </div>

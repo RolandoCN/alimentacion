@@ -1038,16 +1038,19 @@ class ReporteController extends Controller
             ->orderBy('ali_pac.dieta','asc')
             ->get();
         
-             #agrupamos por tipo dieta
+            // dd($listar);
+            #agrupamos por tipo dieta
             $lista_dieta=[];
             foreach ($listar as $key => $item){                
-                 if(!isset($lista_dieta[$item->dieta])) {
-                     $lista_dieta[$item->dieta]=array($item);
-             
-                 }else{
-                     array_push($lista_dieta[$item->dieta], $item);
-                 }
-             }
+                if(!isset($lista_dieta[$item->dieta])) {
+                    $lista_dieta[$item->dieta]=array($item);
+            
+                }else{
+                    array_push($lista_dieta[$item->dieta], $item);
+                }
+            }
+
+            // dd($lista_dieta);
 
             $nombrePDF="reporte_entre_fecha_dieta".date('d-m-Y').".pdf";
 
@@ -1313,7 +1316,7 @@ class ReporteController extends Controller
                 }
             })
             ->where('ali_pac.estado','=','Aprobado') //aprobado
-            ->select('ali_pac.fecha as fecha','ali_pac.servicio','ali_pac.responsable','ali_pac.tipo')
+            ->select('ali_pac.fecha as fecha','ali_pac.servicio','ali_pac.responsable','ali_pac.tipo','ali_pac.dieta')
             ->orderBy('ali_pac.fecha','asc')
             ->orderBy('ali_pac.responsable','asc')
             ->get();
@@ -1336,10 +1339,21 @@ class ReporteController extends Controller
                 $grupos[$responsable][$servicio][] = $valor;
 
             }
-            // dd($grupos);
+            
+            #agrupamos por tipo dieta
+            $lista_dieta=[];
+            foreach ($listar as $key => $item){                
+                if(!isset($lista_dieta[$item->dieta])) {
+                    $lista_dieta[$item->dieta]=array($item);
+            
+                }else{
+                    array_push($lista_dieta[$item->dieta], $item);
+                }
+            }
+
             $nombrePDF="reporte_entre_fecha_nutri".date('d-m-Y').".pdf";
 
-            $pdf=PDF::loadView('alimentacion.reporte.pdf_entre_fecha_nutri',['grupos'=>$grupos, 'desde'=>$fecha_ini, 'hasta'=>$fecha_fin]);
+            $pdf=PDF::loadView('alimentacion.reporte.pdf_entre_fecha_nutri',['grupos'=>$grupos, 'desde'=>$fecha_ini, 'hasta'=>$fecha_fin, 'lista_dieta'=>$lista_dieta]);
             $pdf->setPaper("A4", "portrait");
             $estadoarch = $pdf->stream();
 
