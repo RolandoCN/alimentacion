@@ -679,7 +679,7 @@ class AlimentosPacientesController extends Controller
                     ->where('tipo',$tipo);
                 }
             })
-           
+            ->where('dieta','!=','NADA POR VIA ORAL')
             ->where('estado','Aprobado')->get();
           
             if(sizeof($listar)==0){
