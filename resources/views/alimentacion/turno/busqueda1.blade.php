@@ -61,6 +61,7 @@
                     </div>
 
                     <div>
+                       
                         <table class="table table-bordered table-hover text-center" id="table_persona">
                             <thead class="th">
                             <tr>
@@ -132,6 +133,7 @@
 
        
         @include('alimentacion.turno.modal_tipo_turno')
+      
     </section>
 @endsection
 @section('scripts')
@@ -146,7 +148,6 @@
     
 <script>
 
- 
-    
+
 </script>
 @endsection

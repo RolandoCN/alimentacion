@@ -22,18 +22,20 @@
                 <h4 class="modal-title">AGREGAR TURNO</h4>
             </div>
             <div class="modal-body">
+
+               
                 <div class="row">
                     
                     <div class="col-md-12"> 
                         <form id="form_turno" class="form-horizontal" autocomplete="off"  enctype="multipart/form-data"> 
                             {{csrf_field()}}
+                               
 
-                            <div class="col-md-2  col-sm-12 col-xs-12"></div>
-                            <div class="col-md-8  col-sm-12 col-xs-12">
-
-                                <div class="form-group">
+                           
+                                <div class="col-md-1"></div>
+                                <div class="form-group col-md-11">
                                     <label>Turno:</label>
-                                    <select data-placeholder="Seleccione Un Turno" style="width: 100% !important;" class="form-control select2" name="idturno" id="idturno" >
+                                    <select data-placeholder="Seleccione Un Turno" style="width: 100% !important;" class="" name="idturno" id="idturno" >
                                         
                                         {{-- <option value=""></option>
                                         <option value="Desayuno" >Desayuno</option>
@@ -48,26 +50,34 @@
 
                                     </select>
                                 </div>
-                                
-                                <div class="form-group">
+                              
+
+                               
+                                <div class="col-md-1"></div>
+                                <div class="form-group col-md-11">
                                     <label>Persona:</label>
                                     <input type="text" autocomplete="off" name="empleado_seleccionado" id="empleado_seleccionado" class="form-control" required  readonly value="" >
                                 </div>
+                               
 
-                                <div class="form-group">
+                                <div class="col-md-1"></div>
+                                <div class="form-group col-md-11">
                                     <label>Puesto:</label>
                                     <input type="text" autocomplete="off" name="puesto_seleccionado" id="puesto_seleccionado" class="form-control" required  readonly  >
                                 </div>
+                          
 
-                                <div class="form-group">
+                                <div class="col-md-1"></div>
+                                <div class="form-group col-md-11">
                                     <label>Fecha:</label>
                                     <input type="date" autocomplete="off" name="fecha_ini" id="fecha_ini" class="form-control" required  readonly  >
                                 </div>
+                               
 
                                
                                 
                             </div>
-                            <div class="col-md-2 col-sm-12 col-xs-12"></div>
+                           
                             <div class="col-md-12" style="margin-top: 15px !important">
                                 <center>
 

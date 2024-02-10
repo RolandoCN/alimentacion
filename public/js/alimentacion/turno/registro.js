@@ -341,9 +341,9 @@ function guardarTurno(){
         }
     });
 }
-$(window).on('resize', function () {
-    $('#idturno').select2('destroy').select2();
-});
+//$(window).on('resize', function () {
+  //  $('#idturno').select2('destroy').select2();
+//});
 
 $('#modal_Tipo').on('shown.bs.modal', function () {
     
