@@ -24,10 +24,7 @@ class ApiController extends Controller
     }
 
     public function consultaComidaApi (Request $request){
-       // header('Access-Control-Allow-Origin: *');
-        //header('Access-Control-Allow-Methods: *');
-       // header('Access-Control-Allow-Headers: *');
-
+       
         $transaction=DB::transaction(function() use($request){
 
             try{
@@ -168,6 +165,12 @@ class ApiController extends Controller
                                 $menuDelDia[$key]->estado_comida=$lista_t->estado_turno;
                                 $menuDelDia[$key]->confirma_empleado=$lista_t->confirma_empleado;
                                 $menuDelDia[$key]->motivo_eliminacion=$lista_t->motivo_eliminacion;
+
+                                if($lista_t->confirma_empleado=="Si" && $lista_t->estado_comida!="Eliminado"){
+                                    $menuDelDia[$key]->chequear=true;
+                                }else{
+                                    $menuDelDia[$key]->chequear=false;
+                                }
                             }
                         }
                     }
