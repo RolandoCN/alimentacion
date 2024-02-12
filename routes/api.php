@@ -20,3 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/test-api',[ApiController::class, 'index']);
+Route::post('/consulta-comida-empleado-api', [ApiController::class, 'consultaComidaApi']);
