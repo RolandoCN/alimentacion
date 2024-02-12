@@ -166,7 +166,7 @@ class ApiController extends Controller
                                 $menuDelDia[$key]->confirma_empleado=$lista_t->confirma_empleado;
                                 $menuDelDia[$key]->motivo_eliminacion=$lista_t->motivo_eliminacion;
 
-                                if($lista_t->confirma_empleado=="Si" && $lista_t->estado_comida!="Eliminado"){
+                                if($lista_t->confirma_empleado=="Si" && $lista_t->estado_turno!="Eliminado"){
                                     $menuDelDia[$key]->chequear=true;
                                 }else{
                                     $menuDelDia[$key]->chequear=false;
