@@ -24,9 +24,9 @@ class ApiController extends Controller
     }
 
     public function consultaComidaApi (Request $request){
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Methods: *');
-        header('Access-Control-Allow-Headers: *');
+       // header('Access-Control-Allow-Origin: *');
+        //header('Access-Control-Allow-Methods: *');
+       // header('Access-Control-Allow-Headers: *');
 
         $transaction=DB::transaction(function() use($request){
 
