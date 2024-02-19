@@ -19,60 +19,59 @@ class EmpleadoController extends Controller
       
     public function index(){
 
-        $empleado=DB::table('empleado as e')
-        ->leftJoin('puesto as pu', 'pu.id_puesto','e.id_puesto')
-        ->whereIn('e.id_puesto',[3,4,10])   
-        ->select('e.id_empleado','e.cedula', 'e.nombres', 'pu.nombre as puesto')
-        ->get();
+        // $empleado=DB::table('empleado as e')
+        // ->leftJoin('puesto as pu', 'pu.id_puesto','e.id_puesto')
+        // ->whereIn('e.id_puesto',[3,4,10])   
+        // ->select('e.id_empleado','e.cedula', 'e.nombres', 'pu.nombre as puesto')
+        // ->get();
         
-        foreach($empleado as $data){
-            log::info("emplea ".$data->id_empleado);
-            $turno=Turno::where('id_persona', $data->id_empleado)
-            ->whereDate('start','>','2024-01-12')
-            // ->where('id_horario','!=',4)
-            ->where('estado','P')->get();
-            if(sizeof($turno)>0){
+        // foreach($empleado as $data){
+        //     log::info("emplea ".$data->id_empleado);
+        //     $turno=Turno::where('id_persona', $data->id_empleado)
+        //     ->whereDate('start','>','2024-01-12')
+        //     // ->where('id_horario','!=',4)
+        //     ->where('estado','P')->get();
+        //     if(sizeof($turno)>0){
 
-                foreach($turno as $cab){
+        //         foreach($turno as $cab){
                    
-                    // $actualizacabecera=Turno::where('id',$cab->id)->first();
+        //             // $actualizacabecera=Turno::where('id',$cab->id)->first();
                     
-                    $actualizacabecera=Turno::where('id',$cab->id)->first();
-                    // $actualizacabecera->id_horario=4;
-                    // 
+        //             $actualizacabecera=Turno::where('id',$cab->id)->first();
+        //             // $actualizacabecera->id_horario=4;
+        //             // 
                     
                   
-                    $eliminaDetalleTurno=TurnoComida::where('id_turno',$actualizacabecera->id)->delete();
+        //             $eliminaDetalleTurno=TurnoComida::where('id_turno',$actualizacabecera->id)->delete();
 
-                    $actualizacabecera->delete();
+        //             $actualizacabecera->delete();
 
-                    // $id_iali=2;
-                    // for($i=0; $i<=2; $i++){
+        //             // $id_iali=2;
+        //             // for($i=0; $i<=2; $i++){
                         
-                    //     log::info($id_iali);
+        //             //     log::info($id_iali);
 
-                    //     log::info(" id_iali ".$actualizacabecera->id);
+        //             //     log::info(" id_iali ".$actualizacabecera->id);
 
-                    //     $guarda_turno_comida=new TurnoComida();
-                    //     $guarda_turno_comida->id_alimento=$id_iali;
-                    //     $guarda_turno_comida->id_turno=$actualizacabecera->id;
-                    //     $guarda_turno_comida->estado="Generado"; //cuando se registra
-                    //     $guarda_turno_comida->fecha_registro=date('Y-m-d H:i:s');
-                    //     $guarda_turno_comida->id_usuario_reg=10;
-                    //     $guarda_turno_comida->save();
-                    //     $id_iali=$id_iali+1;
+        //             //     $guarda_turno_comida=new TurnoComida();
+        //             //     $guarda_turno_comida->id_alimento=$id_iali;
+        //             //     $guarda_turno_comida->id_turno=$actualizacabecera->id;
+        //             //     $guarda_turno_comida->estado="Generado"; //cuando se registra
+        //             //     $guarda_turno_comida->fecha_registro=date('Y-m-d H:i:s');
+        //             //     $guarda_turno_comida->id_usuario_reg=10;
+        //             //     $guarda_turno_comida->save();
+        //             //     $id_iali=$id_iali+1;
 
                         
-                    // }
-                }
+        //             // }
+        //         }
 
               
               
-            }
+        //     }
            
-        }
+        // }
 
-        // dd("act");
         $area=Area::where('estado','A')->get();
         $puesto=Puesto::where('estado','A')->get();
         return view('alimentacion.empleado',[
