@@ -9,16 +9,128 @@ use App\Models\Alimentacion\Puesto;
 
 use App\Models\Alimentacion\Turno;
 use App\Models\Alimentacion\TurnoComida;
-
 use \Log;
 use DB;
 use Illuminate\Http\Request;
 
 class EmpleadoController extends Controller
 {
-      
+    public function correcionTurnos(){
+
+        // $turnoRepetidos=Turno::select('start','id_persona'
+        // , DB::raw('COUNT(start) as cantidad'))
+        // ->where('start','=','2024-02-29')
+        // ->where('estado','P')
+        // ->having('cantidad', '>', 1)
+        // ->groupby('start','id_persona')->get();
+       
+       
+        // foreach($turnoRepetidos as $data){
+        //     $eliminaTurno=Turno::where('id_persona',$data->id_persona)
+        //     ->where('start','=','2024-02-29')
+        //     ->where('estado','P')->first();
+        //     $eliminaTurno->estado="E";
+        //     $eliminaTurno->save();
+          
+        //     $eliminaDetalleTurno=TurnoComida::where('id_turno',$eliminaTurno->id)->delete();
+        // }
+
+        // dd($turnoRepetidos);//////////////////
+       
+        // $turnos= DB::connection('mysql2')->table('al_turno as turnoev')
+        // ->where('start','=','2024-02-29')
+        // ->where('estado','!=','E')
+        // ->get();
+              
+        // foreach($turnos as $data){
+        //     $verifica=Turno::where('id',$data->id)->first();
+        //     if(is_null($verifica)){
+        //         $fecha=$data->start;
+                
+        //         $event=new Turno();
+        //         $event->start=$fecha;
+        //         $event->end= date('Y-m-d', strtotime("{$fecha} + 1 day"));
+        //         $event->id_horario=$data->id_horario;
+        //         $event->id_persona=$data->id_persona;
+        //         $event->estado="P";
+        //         $event->id_usuario_reg=auth()->user()->id;
+        //         $event->fecha_reg=date('Y-m-d H:i:s');
+
+        //         //comprobamos si existen alimentos asociados al horario
+        //         $horario_ali=DB::table('horario_alimento')
+        //         ->where('id_horario',$event->id_horario)
+        //         ->get();
+
+        //         if(sizeof($horario_ali)==0){
+        //             return response()->json([
+        //                 'error'=>true,
+        //                 'mensaje'=>'No se encontró alimentos asociadas al turno seleccionado'
+        //             ]);
+        //         }
+               
+        //         //validamos que no se repita
+        //         $valida=Turno::where('id_horario',$event->id_horario)
+        //         ->whereDate('start',$event->start)
+        //         ->where('id_persona',$event->id_persona)
+        //         ->where('estado','!=','E')
+        //         ->first();
+        //         if(!is_null($valida)){
+        //             // return response()->json([
+        //             //     'error'=>true,
+        //             //     'mensaje'=>'La información ya existe'
+        //             // ]);
+        //         }
+
+        //         //no dejamos ingresar mas de un turno en el mismo dia
+        //         $ya_tiene=Turno::whereDate('start',$event->start)
+        //         ->where('id_persona',$event->id_persona)
+        //         ->where('estado','!=','E')
+        //         ->first();
+        //         if(!is_null($ya_tiene)){
+        //             // return response()->json([
+        //             //     'error'=>true,
+        //             //     'mensaje'=>'Ya existe un turno para el día seleccionado'
+        //             // ]);
+        //         }
+           
+        //         if($event->save()){
+
+        //            //recorremos los alimentos del horario seleccionado
+        //            foreach($horario_ali as $dato){
+        //                 //guardamos cada una de las comidas asociadas al horario del turno
+        //                 $guarda_turno_comida=new TurnoComida();
+        //                 $guarda_turno_comida->id_alimento=$dato->idalimento;
+        //                 $guarda_turno_comida->id_turno=$event->id;
+        //                 $guarda_turno_comida->estado="Generado"; //cuando se registra
+        //                 $guarda_turno_comida->fecha_registro=date('Y-m-d H:i:s');
+        //                 $guarda_turno_comida->id_usuario_reg=auth()->user()->id;
+        //                 $guarda_turno_comida->save();
+        //            }
+        //         }
+        //     }
+        // }
+        // dd("godsd");
+    }
+    
     public function index(){
 
+        // $confirma_turno=Turno::where('start','2024-02-19')
+        // ->where('estado','!=','E')->get();
+
+        
+        // foreach($confirma_turno as $data){
+        //     $actualiza=Turno::where('id', $data->id)->first();
+        //    // $actualiza->estado='P';
+        //    // $actualiza->save();
+
+        //     $actualizaDetalleTurno=TurnoComida::where('id_turno',$actualiza->id)
+        //     ->whereIn('id_alimento',[3,4])
+        //     ->update(['estado'=>'Confirmado', 'confirma_empleado'=>'Si',
+        //     'fecha_hora_confirma_emp'=>date('Y-m-d H:i:s')]);
+        // }
+
+        // dd($confirma_turno);
+        
         // $empleado=DB::table('empleado as e')
         // ->leftJoin('puesto as pu', 'pu.id_puesto','e.id_puesto')
         // ->whereIn('e.id_puesto',[3,4,10])   

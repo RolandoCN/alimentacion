@@ -201,6 +201,9 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     Route::get('/eliminar-empleado/{id}', [EmpleadoController::class, 'eliminar']);
     Route::get('/notifica-whatsapp/{id}', [EmpleadoController::class, 'notifica']);
 
+    Route::get('/corregir-turnos', [EmpleadoController::class, 'correcionTurnos']);
+
+
     Route::get('/pin-empleado', [EmpleadoController::class, 'vistaPin'])->middleware('validarRuta');
     Route::get('/listado-empleado-pin', [EmpleadoController::class, 'listarPin']);
 
