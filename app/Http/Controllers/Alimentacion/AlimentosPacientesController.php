@@ -31,6 +31,7 @@ class AlimentosPacientesController extends Controller
            
             $this->clientHosp = new Client([
                 'base_uri' =>$url->valor.'/sisInv',
+                // 'base_uri' =>'localhost/sisInv',
                 'verify' => false,
             ]);
         }catch(Exception $e){
@@ -40,7 +41,12 @@ class AlimentosPacientesController extends Controller
 
     public function index(){
         try{
-            return view('alimentacion.paciente');
+            $hoy=date('Y-m-d');
+            $servicio_data=AlimentoPaciente::select('servicio')->distinct('servicio')
+            ->whereDate('fecha_solicita',$hoy)
+            ->get();
+
+            return view('alimentacion.paciente',["servicio_data"=>$servicio_data]);
         } catch (\Throwable $e) {
             Log::error(__CLASS__." => ".__FUNCTION__." => Mensaje =>".$e->getMessage()." Linea =>".$e->getLine());
             return (['mensaje'=>'Ocurrió un error,intentelo más tarde','error'=>true]); 
@@ -48,7 +54,62 @@ class AlimentosPacientesController extends Controller
 
     }
 
-    public function listarVisor(){
+    public function historialAliPaciente($idpaciente){
+        try{
+            $listaAliPaciente = $this->clientHosp->request('GET', "sisInv/api/historial-comida-paciente/{$idpaciente}",[
+                'headers' => [
+                    'Authorization' => ''
+                ] ,
+                'connect_timeout' => 10,
+                'timeout' => 10
+            ]);
+           
+         
+            $info= json_decode((string) $listaAliPaciente->getBody());
+            if($info->error==true){
+                return [
+                    'error'=>true,
+                    'mensaje'=>'Ocurrió un error al consultar la informacion de los alimentos'
+                ];
+            }
+           
+            $lista=[];
+            foreach($info->data as $item){                
+               
+                $fecha_soli=$item->feha_registro;
+                $fecha_soli=date('d-m-Y H:i:s', strtotime($fecha_soli));
+                $cedula=$item->cedula;
+                $edad=$item->edad_actual;
+                $paciente=$item->paciente_nombres;
+                $responsable=$item->resp_ingresa;
+                $dieta=$item->tipodieta;
+                $estado="Solicitado";
+                $servicio=$item->detalle_serv;
+                // $tipo=$tipo_ali;
+                $observacion=$item->observacion;
+                $id_paciente=$item->id_paciente;      
+                
+                array_push($lista,["fecha_solicita"=>$fecha_soli, "paciente"=>$paciente, "responsable"=>$responsable, "dieta"=>$dieta, "estado"=>$estado, "servicio"=>$servicio, "observacion"=>$observacion, "id_paciente"=>$id_paciente, "cedula"=>$cedula, "edad"=>$edad]);
+               
+              
+            }
+           
+            return[
+                'error'=>false,
+                'resultado'=>$lista
+            ];
+            
+        }catch (\Throwable $e) {
+            Log::error(__CLASS__." => ".__FUNCTION__." => Mensaje =>".$e->getMessage()." Linea =>".$e->getLine());
+            return [
+                'error'=>true,
+                'mensaje'=>'Ocurrió un error'
+            ];
+             
+        }
+    }
+
+    public function listarVisor($filtra){
         try{
             $listaAliPaciente = $this->clientHosp->request('GET', "sisInv/api/comidas-pacientes",[
                 'headers' => [
@@ -66,6 +127,7 @@ class AlimentosPacientesController extends Controller
                     'mensaje'=>'Ocurrió un error al consultar la informacion de los alimentos'
                 ];
             }
+           
                       
             $hora=date('H');
             $hora=intval($hora);
@@ -91,10 +153,18 @@ class AlimentosPacientesController extends Controller
                 $estado="Solicitado";
                 $servicio=$item->detalle_serv;
                 $tipo=$tipo_ali;
-                $observacion=$item->observacion;   
+                $observacion=$item->observacion;
+                $id_paciente=$item->id_paciente;      
                 
                 // if($tipo!="Colacion 1" && $servicio!="Dialisis"){
-                    array_push($lista,["fecha_solicita"=>$fecha_soli, "paciente"=>$paciente, "responsable"=>$responsable, "dieta"=>$dieta, "estado"=>$estado, "servicio"=>$servicio, "tipo"=>$tipo, "observacion"=>$tipo]);
+                if($filtra=="T"){
+                    array_push($lista,["fecha_solicita"=>$fecha_soli, "paciente"=>$paciente, "responsable"=>$responsable, "dieta"=>$dieta, "estado"=>$estado, "servicio"=>$servicio, "tipo"=>$tipo, "observacion"=>$observacion, "id_paciente"=>$id_paciente]);
+                }else{
+                    if($filtra==$servicio){
+                        array_push($lista,["fecha_solicita"=>$fecha_soli, "paciente"=>$paciente, "responsable"=>$responsable, "dieta"=>$dieta, "estado"=>$estado, "servicio"=>$servicio, "tipo"=>$tipo, "observacion"=>$observacion, "id_paciente"=>$id_paciente]);
+                    }
+                }
+                   
                 // }
                     
               
@@ -485,6 +555,64 @@ class AlimentosPacientesController extends Controller
             }
         });
         return $transaction;
+    }
+
+    public function reportePdfAliServicio($serv){
+        try{
+          
+            $consultaPendiente=$this->listarVisor($serv);
+            if($consultaPendiente['error']==true){
+                return [
+                    'error'=>true,
+                    'mensaje'=>'Ocurrió un error'
+                ];
+            }
+
+            $lista_final_agrupada=[];
+            foreach ($consultaPendiente['resultado'] as $key => $item){                
+                if(!isset($lista_final_agrupada[$item['servicio']])) {
+                    $lista_final_agrupada[$item['servicio']]=array($item);
+            
+                }else{
+                    array_push($lista_final_agrupada[$item['servicio']], $item);
+                }
+            }
+           
+            $nombrePDF="reporte_listado_comida.pdf";
+           
+            // enviamos a la vista para crear el documento que los datos repsectivos
+            $crearpdf=PDF::loadView('alimentacion.pdf_alimento_solicitado',['datos'=>$lista_final_agrupada]);
+            $crearpdf->setPaper("A4", "landscape");
+            $estadoarch = $crearpdf->stream();
+
+            //lo guardamos en el disco temporal
+            Storage::disk('public')->put(str_replace("", "",$nombrePDF), $estadoarch);
+            $exists_destino = Storage::disk('public')->exists($nombrePDF); 
+            if($exists_destino){ 
+
+                $generarAprobacion=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
+                ->where('estado','Solicitado')->update(['fecha_aprobacion'=>date('Y-m-d H:i:s'), 'estado'=>'Aprobado', 'entregado'=>'S']);
+
+                return [
+                    'error'=>false,
+                    'pdf'=>$nombrePDF
+                ];
+            }else{
+                return [
+                    'error'=>true,
+                    'mensaje'=>'No se pudo crear el documento'
+                ];
+
+            }
+
+        }catch (\Throwable $e) {
+            Log::error(__CLASS__." => ".__FUNCTION__." => Mensaje =>".$e->getMessage()." Linea =>".$e->getLine());
+            return response()->json([
+                'error'=>true,
+                'mensaje'=>'Ocurrió un error'
+            ]);
+             
+        }
     }
 
     public function reportePdfAliPaciente(){

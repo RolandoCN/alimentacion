@@ -1,11 +1,16 @@
 
+function buscaServicio(){
+    var servicio=$('#cmb_servicio').val()
+    llenar_tabla_paciente(servicio)
+}
 
-function llenar_tabla_paciente(){
+function llenar_tabla_paciente(servicio){
+   
     var num_col = $("#tabla_paciente thead tr th").length; //obtenemos el numero de columnas de la tabla
 	$("#tabla_paciente tbody").html(`<tr><td colspan="${num_col}" style="padding:40px; 0px; font-size:20px;"><center><span class="spinner-border" role="status" aria-hidden="true"></span><b> Obteniendo información</b></center></td></tr>`);
    
     
-    $.get("listado-paciente-ali-visor/", function(data){
+    $.get("listado-paciente-ali-visor/"+servicio, function(data){
         console.log(data)
         if(data.error==true){
             alertNotificar(data.mensaje,"error");
@@ -30,12 +35,13 @@ function llenar_tabla_paciente(){
                     url: 'json/datatables/spanish.json',
                 },
                 columnDefs: [
-                    { "width": "10%", "targets": 0 },
+                    { "width": "8%", "targets": 0 },
                     { "width": "25%", "targets": 1 },
                     { "width": "10%", "targets": 2 },
                     { "width": "25%", "targets": 3 },
                     { "width": "15%", "targets": 4 },
-                    { "width": "15%", "targets": 5 },
+                    { "width": "10%", "targets": 5 },
+                    { "width": "8%", "targets": 6 },
                    
                 ],
                 data: data.resultado,
@@ -45,6 +51,7 @@ function llenar_tabla_paciente(){
                         {data: "servicio"},
                         {data: "responsable"},
                         {data: "dieta"},
+                        {data: "estado"},
                         {data: "estado"},
                      
                 ],    
@@ -57,6 +64,7 @@ function llenar_tabla_paciente(){
                         $('td', row).eq(3).addClass('color_pendiente')
                         $('td', row).eq(4).addClass('color_pendiente')
                         $('td', row).eq(5).addClass('color_pendiente')
+                        $('td', row).eq(6).addClass('color_pendiente')
                     }else{
                         $('td', row).eq(0).addClass('color_aprobacion')
                         $('td', row).eq(1).addClass('color_aprobacion')
@@ -64,7 +72,13 @@ function llenar_tabla_paciente(){
                         $('td', row).eq(3).addClass('color_aprobacion')
                         $('td', row).eq(4).addClass('color_aprobacion')
                         $('td', row).eq(5).addClass('color_aprobacion')
+                        $('td', row).eq(6).addClass('color_aprobacion')
                     }
+                    $('td', row).eq(6).html(`
+                                  
+                        <button type="button" class="btn btn-primary btn-xs" onclick="historial(${data.id_paciente })">Historial</button>
+                       
+                    `); 
                    
                 }             
             });
@@ -82,6 +96,97 @@ $('.datatable_wrapper').children('.row').css('overflow','inherit !important');
 
 $('.table-responsive').css({'padding-top':'12px','padding-bottom':'12px', 'border':'0', 'overflow-x':'inherit'});
 
+
+function historial(idpaciente){
+
+    var num_col = $("#tabla_historial thead tr th").length; //obtenemos el numero de columnas de la tabla
+	$("#tabla_historial tbody").html(`<tr><td colspan="${num_col}" style="padding:40px; 0px; font-size:20px;"><center><span class="spinner-border" role="status" aria-hidden="true"></span><b> Obteniendo información</b></center></td></tr>`);
+
+    vistacargando("m","Espere por favor");
+    $.get("historial-paciente-ali/"+idpaciente, function(data){
+        console.log(data)
+        vistacargando("");
+        if(data.error==true){
+            alertNotificar(data.mensaje,"error");
+            $("#tabla_historial tbody").html(`<tr><td colspan="${num_col}" style="padding:40px; 0px; font-size:20px;"><center>No se encontraron datos</center></td></tr>`);
+            return;   
+        }
+        if(data.error==false){
+            
+            if(data.resultado.length <= 0){
+                $("#tabla_historial tbody").html(`<tr><td colspan="${num_col}" style="padding:40px; 0px; font-size:20px;"><center>No se encontraron datos</center></td></tr>`);
+                alertNotificar("No se encontró datos","error");
+                return;  
+            }
+            $('#modal_Historial').modal('show')
+            $('.ci_paciente').html(data.resultado[0].cedula)
+            $('.paciente_alim').html(data.resultado[0].paciente)
+            $('.edad_paciente').html(data.resultado[0].edad)
+            $('#tabla_historial').DataTable({
+                "destroy":true,
+                pageLength: 10,
+                autoWidth : true,
+                order: [[ 1, "desc" ]],
+                sInfoFiltered:false,
+                language: {
+                    url: 'json/datatables/spanish.json',
+                },
+                columnDefs: [
+                    { "width": "5%", "targets": 0 },
+                    { "width": "10%", "targets": 1 },
+                    { "width": "15%", "targets": 2 },
+                    { "width": "25%", "targets": 3 },
+                    { "width": "20%", "targets": 4 },
+                    { "width": "25%", "targets": 5 },
+                   
+                   
+                ],
+                data: data.resultado,
+                columns:[
+                        {data: "fecha_solicita"},
+                        {data: "fecha_solicita"},
+                        {data: "servicio" },
+                        {data: "responsable"},
+                        {data: "dieta"},
+                        {data: "observacion"},
+                        
+                     
+                ],    
+                "rowCallback": function( row, data ,i) {
+                    $('td', row).eq(0).html(i+1)
+                   
+                }             
+            });
+        }
+    }).fail(function(){
+        vistacargando("");
+        $("#tabla_historial tbody").html(`<tr><td colspan="${num_col}" style="padding:40px; 0px; font-size:20px;"><center>No se encontraron datos</center></td></tr>`);
+        alertNotificar("Se produjo un error, por favor intentelo más tarde","error");    
+    });
+
+    
+}
+
+function reporteAliPacSolicitado(){
+    var servicio=$('#cmb_servicio').val()
+    vistacargando("m","Espere por favor");
+    $.get("pdf-paciente-ali-solicitado/"+servicio, function(data){
+       
+        vistacargando("");
+        if(data.error==true){
+            alertNotificar(data.mensaje,"error");
+            return;   
+        }
+        if(data.error==false){
+            alertNotificar("El documento se descargará en unos segundos...","success");
+            verpdf(data.pdf)
+            
+        }
+    }).fail(function(){
+        vistacargando("");
+        alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
+    });
+}
 function pdf_alimento_pac(){
     vistacargando("m","Espere por favor");
     $.get("pdf-paciente-ali", function(data){

@@ -242,8 +242,10 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     //COMIDA SOLICITADA DE MEDICO A PACIENTE
     Route::get('/dieta-solicitada', [AlimentosPacientesController::class, 'index'])->middleware('validarRuta');
     Route::get('/listado-paciente-ali', [AlimentosPacientesController::class, 'listar']);
-    Route::get('/listado-paciente-ali-visor', [AlimentosPacientesController::class, 'listarVisor']);
+    Route::get('/listado-paciente-ali-visor/{tipo}', [AlimentosPacientesController::class, 'listarVisor']);
     Route::get('/pdf-paciente-ali', [AlimentosPacientesController::class, 'reportePdfAliPaciente']);
+    Route::get('/historial-paciente-ali/{idpac}', [AlimentosPacientesController::class, 'historialAliPaciente']);
+    Route::get('/pdf-paciente-ali-solicitado/{serv}', [AlimentosPacientesController::class, 'reportePdfAliServicio']);
 
     Route::get('/job-ali-pacientes', [AlimentosPacientesController::class, 'aprobarAliPaciente']);
 
