@@ -308,3 +308,45 @@ function eliminarMenuAli(id_perfil){
     }
    
 }
+
+function irFormReporte(){
+    var desde=$('#desde').val('')
+    var hasta=$('#hasta').val('')
+    $('#modal_Reporte').modal('show')
+}
+
+function reporteMenu(){
+    var desde=$('#desde').val()
+    var hasta=$('#hasta').val()
+
+    if(desde==""){
+        alertNotificar("Ingrese fecha inicio", "error")
+        $('#desde').focus()
+        return
+    }
+    if(hasta==""){
+        alertNotificar("Ingrese fecha fin", "error")
+        $('#hasta').focus()
+        return
+    }
+
+    if(desde>hasta){
+        alertNotificar("La fecha inicio debe ser menor o igual a la final", "error")
+        return
+    }
+
+    vistacargando("")
+    $.get("reporte-menu-ali/"+desde+"/"+hasta, function(data){
+        vistacargando("")
+        if(data.error==true){
+            alertNotificar(data.mensaje,"error");
+            return;   
+        }
+
+        alertNotificar("El documento se descargara en unos segundos...","success");
+        
+    }).fail(function(){
+        vistacargando("")
+        alertNotificar("Se produjo un error, por favor intentelo más tarde","error");  
+    });
+}

@@ -237,6 +237,7 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
     Route::get('/editar-menu-ali/{id}', [MenuAlimentoController::class, 'editarMenuAli']);
     Route::put('/actualizar-menu-ali/{id}', [MenuAlimentoController::class, 'actualizar']);
     Route::get('/eliminar-menu-ali/{id}', [MenuAlimentoController::class, 'eliminarMenuAli']);
+    Route::get('reporte-menu-ali/{desde}/{hasta}', [MenuAlimentoController::class, 'reporteMenuAli']);
 
 
     //COMIDA SOLICITADA DE MEDICO A PACIENTE

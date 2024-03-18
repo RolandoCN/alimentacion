@@ -7,6 +7,9 @@ use App\Models\Alimentacion\MenuDetalle;
 use \Log;
 use Illuminate\Http\Request;
 use DB;
+use PDF;
+use Storage;
+use SplFileInfo;
 
 class MenuAlimentoController extends Controller
 {
@@ -254,6 +257,62 @@ class MenuAlimentoController extends Controller
             return response()->json([
                 'error'=>true,
                 'mensaje'=>'Ocurrió un error, intentelo más tarde'
+            ]);
+            
+        }
+    }
+
+    public function reporteMenuAli($desde, $hasta){
+        try{            
+            set_time_limit(0);
+            ini_set("memory_limit",-1);
+            ini_set('max_execution_time', 0);
+
+            $fecha_ini=$desde;
+            $fecha_fin=$hasta;
+
+            $menuComida=MenuCabecera::with('detalle','alimento')->where('estado','!=','I')
+            ->whereBetween('fecha',[$fecha_ini, $fecha_fin])
+            ->get();
+
+            #agrupamos por fecha
+            $lista_final_agrupada=[];
+            foreach ($menuComida as $key => $item){                
+                if(!isset($lista_final_agrupada[$item->fecha])) {
+                    $lista_final_agrupada[$item->fecha]=array($item);
+            
+                }else{
+                    array_push($lista_final_agrupada[$item->fecha], $item);
+                }
+            }
+           
+            $nombrePDF="reporte_.pdf";
+
+            $pdf=PDF::loadView('alimentacion.reporte.pdf_menu_comida',['fecha_ini'=>$fecha_ini, 'fecha_fin'=>$fecha_fin, 'data'=>$menuComida, 'lista_final_agrupada'=>$lista_final_agrupada]);
+            $pdf->setPaper("A4", "portrait");
+            $estadoarch = $pdf->stream();
+
+            return $pdf->stream($nombrePDF);
+
+
+            Storage::disk('public')->put(str_replace("", "",$nombrePDF), $estadoarch);
+            $exists_destino = Storage::disk('public')->exists($nombrePDF); 
+            if($exists_destino){ 
+                return response()->json([
+                    'error'=>false,
+                    'pdf'=>$nombrePDF
+                ]);
+            }else{
+                return response()->json([
+                    'error'=>true,
+                    'mensaje'=>'No se pudo crear el documento'
+                ]);
+            }
+        }catch (\Throwable $e) {
+            Log::error('ReporteController => reportePeriodoDietaPacienteProfes => mensaje => '.$e->getMessage(). ' linea => '.$e->getLine());
+            return response()->json([
+                'error'=>true,
+                'mensaje'=>'Ocurrió un error'
             ]);
             
         }

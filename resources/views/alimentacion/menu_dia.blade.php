@@ -35,9 +35,9 @@
             </div>
             <div class="box-body">
 
-                {{-- <div class="col-md-12" style="text-align:right; margin-bottom:20px; margin-top:10px">
-                    <button type="button" onclick="visualizarForm('N')" class="btn btn-primary btn-sm">Nuevo</button>
-                </div> --}}
+                <div class="col-md-12" style="text-align:center; margin-bottom:20px; margin-top:10px">
+                    <button type="button" onclick="irFormReporte()" class="btn btn-primary btn-sm">Reportes</button>
+                </div>
 
                 <div class="table-responsive">
                     <table id="tabla_rol" width="100%"class="table table-bordered table-striped">
@@ -65,6 +65,63 @@
         </div>
 
         @include('alimentacion.modal_menu_hoy')
+        
+        <div class="modal fade_ detalle_class"  id="modal_Reporte" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title">REPORTE MENU<span  id="ali_selecc" class="text-transform: uppercase !important"> </span> DEL DÍA {{date('d-m-Y')}} </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                        
+                            <div class="col-md-12">
+                                <form class="form-horizontal" id="form_registro_alimentos" autocomplete="off" method="post"
+                                    action="">
+                                    {{ csrf_field() }}
+                                    <div class="form-group">
+
+                                        <label for="inputPassword3" class="col-sm-2 control-label">Desde</label>
+                                        <div class="col-sm-8">
+                                            <input type="date" class="form-control" id="desde" name="desde" >
+                                        
+                                        </div>
+                                    
+                                    </div>
+                                    <div class="form-group">
+
+                                        <label for="inputPassword3" class="col-sm-2 control-label">Hasta</label>
+                                        <div class="col-sm-8">
+                                            <input type="date" class="form-control" id="hasta" name="hasta" >
+                                        
+                                        </div>
+                                    
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12 col-md-offset-2 " >
+                                        
+                                            <button type="button" onclick="reporteMenu()" class="btn btn-success btn-sm">
+                                                Descargar
+                                            </button>
+                                        
+                                        </div>
+                                    </div>
+                                    
+                                </form>
+                            </div>
+                        
+                        </div>
+
+                    
+                    </div>
+                
+                </div>
+
+            </div>
+
+        </div>
 
     </section>
 
