@@ -292,9 +292,6 @@ class MenuAlimentoController extends Controller
             $pdf->setPaper("A4", "portrait");
             $estadoarch = $pdf->stream();
 
-            return $pdf->stream($nombrePDF);
-
-
             Storage::disk('public')->put(str_replace("", "",$nombrePDF), $estadoarch);
             $exists_destino = Storage::disk('public')->exists($nombrePDF); 
             if($exists_destino){ 

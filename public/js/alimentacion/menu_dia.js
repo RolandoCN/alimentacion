@@ -335,7 +335,7 @@ function reporteMenu(){
         return
     }
 
-    vistacargando("")
+    vistacargando("m", "Espere por favor")
     $.get("reporte-menu-ali/"+desde+"/"+hasta, function(data){
         vistacargando("")
         if(data.error==true){
@@ -343,7 +343,8 @@ function reporteMenu(){
             return;   
         }
 
-        alertNotificar("El documento se descargara en unos segundos...","success");
+        alertNotificar("El documento se descargara en unos segundos...","success")
+        window.location.href="descargar-reporte/"+data.pdf
         
     }).fail(function(){
         vistacargando("")
