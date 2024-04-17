@@ -1226,6 +1226,8 @@ class ReporteController extends Controller
             ->orderBy('ali_pac.fecha','asc')
             ->orderBy('ali_pac.tipo','asc')
             ->get();
+
+           
             
             #agrupamos por area y fecha
             foreach ($listar as $key => $item){                
@@ -1245,12 +1247,14 @@ class ReporteController extends Controller
                 $grupos[$servicio][$fecha][] = $valor;
 
             }
-
+           
            
             $nombrePDF="reporte_entre_fecha_dieta".date('d-m-Y').".pdf";
 
             $pdf=PDF::loadView('alimentacion.reporte.pdf_entre_fecha_area',['grupos'=>$grupos, 'desde'=>$fecha_ini, 'hasta'=>$fecha_fin]);
             $pdf->setPaper("A4", "portrait");
+
+            // return $pdf->stream($nombrePDF);
             $estadoarch = $pdf->stream();
 
             //lo guardamos en el disco temporal
