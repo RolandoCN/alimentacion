@@ -820,7 +820,7 @@ class AlimentosPacientesController extends Controller
             $nombrePDF="reporte_listado_comida_pac_dia.pdf";
             if($serv=="Dialisis"){
                 // enviamos a la vista para crear el documento que los datos repsectivos
-                $crearpdf=PDF::loadView('limentacion.reporte.rollo_dieta_paciente',['datos'=>$listar,'ini'=>$inicio, 'fin'=>$final,"f_aprobacion"=>0]);
+                $crearpdf=PDF::loadView('alimentacion.reporte.rollo_dieta_paciente',['datos'=>$listar,'ini'=>$inicio, 'fin'=>$final,"f_aprobacion"=>0]);
             }else{
                 // enviamos a la vista para crear el documento que los datos repsectivos
                 $crearpdf=PDF::loadView('alimentacion.reporte.rollo_dieta_paciente',['datos'=>$listar,'ini'=>$inicio, 'fin'=>$final,"f_aprobacion"=>0,'tipo'=>$tipo]);
