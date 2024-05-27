@@ -965,7 +965,8 @@ class ReporteController extends Controller
                 ->whereDate('ali_pac.fecha', '<=', $fecha_fin);
             })
             ->where('ali_pac.estado','=','Aprobado') //aprobado
-            ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta')
+            ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta','ali_pac.id_registro')
+            ->distinct('id_registro')
             ->orderBy('ali_pac.fecha','asc')
             ->orderBy('ali_pac.dieta','asc')
             ->get();
@@ -1033,7 +1034,8 @@ class ReporteController extends Controller
                 ->whereDate('ali_pac.fecha', '<=', $fecha_fin);
             })
             ->where('ali_pac.estado','=','Aprobado') //aprobado
-            ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta')
+            ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta','ali_pac.id_registro')
+            ->distinct('id_registro')
             ->orderBy('ali_pac.fecha','asc')
             ->orderBy('ali_pac.dieta','asc')
             ->get();
@@ -1099,7 +1101,8 @@ class ReporteController extends Controller
                 ->whereDate('ali_pac.fecha', '<=', $fecha_fin);
             })
             ->where('ali_pac.estado','=','Aprobado') //aprobado
-            ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta', 'ali_pac.responsable', 'ali_pac.paciente')
+            ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta', 'ali_pac.responsable', 'ali_pac.paciente','ali_pac.id_registro')
+            ->distinct('id_registro')
             ->orderBy('ali_pac.fecha','asc')
             ->orderBy('ali_pac.dieta','asc')
             ->get();
@@ -1222,7 +1225,8 @@ class ReporteController extends Controller
                 }
             })
             ->where('ali_pac.estado','=','Aprobado') //aprobado
-            ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta','ali_pac.servicio','ali_pac.tipo')
+            ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta','ali_pac.servicio','ali_pac.tipo','ali_pac.id_registro')
+            ->distinct('id_registro')
             ->orderBy('ali_pac.fecha','asc')
             ->orderBy('ali_pac.tipo','asc')
             ->get();
@@ -1320,7 +1324,8 @@ class ReporteController extends Controller
                 }
             })
             ->where('ali_pac.estado','=','Aprobado') //aprobado
-            ->select('ali_pac.fecha as fecha','ali_pac.servicio','ali_pac.responsable','ali_pac.tipo','ali_pac.dieta')
+            ->select('ali_pac.fecha as fecha','ali_pac.servicio','ali_pac.responsable','ali_pac.tipo','ali_pac.dieta','ali_pac.id_registro')
+            ->distinct('id_registro')
             ->orderBy('ali_pac.fecha','asc')
             ->orderBy('ali_pac.responsable','asc')
             ->get();

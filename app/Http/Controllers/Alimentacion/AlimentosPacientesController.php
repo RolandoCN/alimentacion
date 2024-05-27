@@ -277,6 +277,7 @@ class AlimentosPacientesController extends Controller
 
     //job para aprobar alimentos de pacientes dialisis 9AM
     public function aprobarAliPaciente(){
+       
         $transaction=DB::transaction(function() { 
             try{
                 
@@ -293,6 +294,7 @@ class AlimentosPacientesController extends Controller
                 $listar=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
                 ->where('estado','Solicitado')
                 ->where('servicio','DIALISIS')
+                // ->distinct('paciente','fecha_solicita')
                 ->get();
 
                 if(sizeof($listar)==0){
@@ -444,6 +446,7 @@ class AlimentosPacientesController extends Controller
                 ->orderBy('dieta', 'asc')
                 // ->select('fecha','paciente','dieta','observacion','fecha_solicita','responsable')
                 // ->distinct('paciente') 
+                // ->distinct('paciente','fecha_solicita')
                 ->get();
 
                 if(sizeof($listar)==0){
@@ -701,7 +704,11 @@ class AlimentosPacientesController extends Controller
             ->where('estado','Aprobado')
             ->orderBy('fecha', 'asc')  
             ->orderBy('dieta', 'asc') 
+            ->select('id_registro','fecha_solicita','paciente','dieta','servicio','responsable','observacion')
+            ->distinct('id_registro')
             ->get();
+
+           
           
             if(sizeof($listar)==0){
                 return [
@@ -807,6 +814,8 @@ class AlimentosPacientesController extends Controller
                     ->where('tipo',$tipo);
                 }
             })
+            ->select('id_registro','fecha_solicita','paciente','dieta','servicio','responsable','observacion')
+            ->distinct('id_registro')
             ->where('dieta','!=','NADA POR VIA ORAL')
             ->where('estado','Aprobado')->get();
           
