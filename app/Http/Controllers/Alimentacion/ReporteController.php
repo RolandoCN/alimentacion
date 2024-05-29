@@ -965,8 +965,17 @@ class ReporteController extends Controller
                 ->whereDate('ali_pac.fecha', '<=', $fecha_fin);
             })
             ->where('ali_pac.estado','=','Aprobado') //aprobado
-            ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta','ali_pac.id_registro','paciente')
-            ->distinct('id_registro')
+            // ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta','ali_pac.id_registro','paciente')
+            // ->distinct('id_registro')
+
+            ->selectRaw('
+                MAX(id_registro) AS id_registro,
+                MAX(fecha) AS fecha,
+                paciente,
+                MAX(dieta) AS dieta,
+                MAX(tipo) AS comida
+            ')
+            ->groupBy('paciente','tipo')
 
             // ->selectRaw('
             //     MAX(id_registro) AS id_registro,
@@ -1049,10 +1058,23 @@ class ReporteController extends Controller
                 ->whereDate('ali_pac.fecha', '<=', $fecha_fin);
             })
             ->where('ali_pac.estado','=','Aprobado') //aprobado
-            ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta','ali_pac.id_registro')
-            ->distinct('id_registro')
-            ->orderBy('ali_pac.fecha','asc')
-            ->orderBy('ali_pac.dieta','asc')
+            // ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta','ali_pac.id_registro')
+            // ->distinct('id_registro')
+
+            ->selectRaw('
+                MAX(id_registro) AS id_registro,
+                MAX(fecha) AS fecha,
+                paciente,
+                MAX(dieta) AS dieta,
+                MAX(tipo) AS comida
+            ')
+            ->groupBy('paciente','tipo')
+
+            ->orderBy(DB::raw('MAX(fecha)'), 'asc')
+            ->orderBy(DB::raw('MAX(dieta)'), 'asc')
+
+            // ->orderBy('ali_pac.fecha','asc')
+            // ->orderBy('ali_pac.dieta','asc')
             ->get();
         
             // dd($listar);
@@ -1116,10 +1138,24 @@ class ReporteController extends Controller
                 ->whereDate('ali_pac.fecha', '<=', $fecha_fin);
             })
             ->where('ali_pac.estado','=','Aprobado') //aprobado
-            ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta', 'ali_pac.responsable', 'ali_pac.paciente','ali_pac.id_registro')
-            ->distinct('id_registro')
-            ->orderBy('ali_pac.fecha','asc')
-            ->orderBy('ali_pac.dieta','asc')
+            // ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta', 'ali_pac.responsable', 'ali_pac.paciente','ali_pac.id_registro')
+            // ->distinct('id_registro')
+            // ->orderBy('ali_pac.fecha','asc')
+            // ->orderBy('ali_pac.dieta','asc')
+
+            ->selectRaw('
+                MAX(id_registro) AS id_registro,
+                MAX(fecha) AS fecha,
+                paciente,
+                MAX(dieta) AS dieta,
+                MAX(responsable) AS responsable,
+                MAX(tipo) AS comida
+            ')
+            ->groupBy('paciente','tipo')
+
+            ->orderBy(DB::raw('MAX(fecha)'), 'asc')
+            ->orderBy(DB::raw('MAX(dieta)'), 'asc')
+
             ->get();
         
             #agrupamos por tipo dieta
@@ -1240,10 +1276,23 @@ class ReporteController extends Controller
                 }
             })
             ->where('ali_pac.estado','=','Aprobado') //aprobado
-            ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta','ali_pac.servicio','ali_pac.tipo','ali_pac.id_registro')
-            ->distinct('id_registro')
-            ->orderBy('ali_pac.fecha','asc')
-            ->orderBy('ali_pac.tipo','asc')
+            // ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta','ali_pac.servicio','ali_pac.tipo','ali_pac.id_registro')
+            // -
+            ->selectRaw('
+                MAX(id_registro) AS id_registro,
+                MAX(fecha) AS fecha,
+                paciente,
+                MAX(dieta) AS dieta,
+                MAX(servicio) AS servicio,
+                MAX(tipo) AS tipo
+            ')
+            ->groupBy('paciente','tipo')
+
+            ->orderBy(DB::raw('MAX(fecha)'), 'asc')
+            ->orderBy(DB::raw('MAX(dieta)'), 'asc')
+
+            // ->orderBy('ali_pac.fecha','asc')
+            // ->orderBy('ali_pac.tipo','asc')
             ->get();
 
            
@@ -1339,10 +1388,25 @@ class ReporteController extends Controller
                 }
             })
             ->where('ali_pac.estado','=','Aprobado') //aprobado
-            ->select('ali_pac.fecha as fecha','ali_pac.servicio','ali_pac.responsable','ali_pac.tipo','ali_pac.dieta','ali_pac.id_registro')
-            ->distinct('id_registro')
-            ->orderBy('ali_pac.fecha','asc')
-            ->orderBy('ali_pac.responsable','asc')
+            // ->select('ali_pac.fecha as fecha','ali_pac.servicio','ali_pac.responsable','ali_pac.tipo','ali_pac.dieta','ali_pac.id_registro')
+            // ->distinct('id_registro')
+
+            ->selectRaw('
+                MAX(id_registro) AS id_registro,
+                MAX(fecha) AS fecha,
+                paciente,
+                MAX(dieta) AS dieta,
+                MAX(servicio) AS servicio,
+                MAX(responsable) AS responsable,
+                MAX(tipo) AS tipo
+            ')
+            ->groupBy('paciente','tipo')
+
+            ->orderBy(DB::raw('MAX(fecha)'), 'asc')
+            ->orderBy(DB::raw('MAX(responsable)'), 'asc')
+
+            // ->orderBy('ali_pac.fecha','asc')
+            // ->orderBy('ali_pac.responsable','asc')
             ->get();
          
             #agrupamos por prof y fecha
