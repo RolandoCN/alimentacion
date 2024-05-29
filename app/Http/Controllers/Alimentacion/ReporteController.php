@@ -965,11 +965,26 @@ class ReporteController extends Controller
                 ->whereDate('ali_pac.fecha', '<=', $fecha_fin);
             })
             ->where('ali_pac.estado','=','Aprobado') //aprobado
-            ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta','ali_pac.id_registro')
+            ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta','ali_pac.id_registro','paciente')
             ->distinct('id_registro')
-            ->orderBy('ali_pac.fecha','asc')
-            ->orderBy('ali_pac.dieta','asc')
+
+            // ->selectRaw('
+            //     MAX(id_registro) AS id_registro,
+            //     MAX(tipo) AS comida,
+            //     MAX(fecha) AS fecha,
+            //     MAX(dieta) AS dieta,
+            //     paciente
+              
+            // ')
+            // ->groupBy('paciente')
+            // ->orderBy('ali_pac.fecha','asc')
+            // ->orderBy('ali_pac.dieta','asc')
+
+            // ->orderBy(DB::raw('MAX(fecha)'), 'asc')
+            // ->orderBy(DB::raw('MAX(dieta)'), 'asc')
+
             ->get();
+            // dd($turnos);
         
             #agrupamos por dias
             $lista_final_agrupada=[];

@@ -139,7 +139,7 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
 
     //GESTION DE TURNOS AGREGADOS SIN OPCION A APROBAR
     Route::get('/turnos-generados', [ListadoTurnoController::class, 'turnosGenerados'])->middleware('validarRuta');
-    Route::get('/turno-fecha/{fecha}/{alim}', [ListadoTurnoController::class, 'turnosFecha']);
+    // Route::get('/turno-fecha/{fecha}/{alim}', [ListadoTurnoController::class, 'turnosFecha']);
    
     //TURNOS APROBADOS
 

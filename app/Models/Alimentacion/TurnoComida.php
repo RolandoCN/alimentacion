@@ -13,6 +13,10 @@ class TurnoComida extends Model
     public function usuario_aprueba(){
         return $this->belongsTo('App\Models\User', 'id_usuario_aprueba', 'id')->with('persona');
     }
+
+    public function turno(){
+        return $this->belongsTo('App\Models\Alimentacion\Turno', 'id_turno', 'id');
+    }
     
 }
 ?>

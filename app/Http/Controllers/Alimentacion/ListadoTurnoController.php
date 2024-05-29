@@ -51,10 +51,56 @@ class ListadoTurnoController extends Controller
         ]);
     }
 
+    public function confirmaTurnoSistema($fecha, $idalimento){
+        try{
+            //mandar a confirmar todos
+            $verificaParametro=DB::table('al_parametros')->where('codigo','CONFIRMAR')
+            ->where('valor',1)->first();
+           
+            if(!is_null($verificaParametro)){
+                if($idalimento==2){
+                    $hora=date('Y-m-d 08:00:00');
+                }
+                else{
+                    $hora=date('Y-m-d 10:00:00');
+                }
+
+                $confirmarTodos=TurnoComida::with('turno')
+                ->whereHas('turno',function ($query) use ($fecha){
+                    $query->whereDate('start',$fecha)
+                    ->where('estado','!=','E');
+                })
+                ->where('id_alimento',$idalimento)
+                ->where('estado','=','Generado')
+                ->update(["estado"=>"Confirmado", "fecha_hora_confirma_emp"=> $hora, "confirma_empleado"=>"Si",
+                "ip_confirma"=>"0.0.0.0"]);
+                Log::info("confirmaTurnoSistema exitoso ".date('Y-m-d H:i:s'));
+                
+            }
+
+            return [
+                'error'=>false,
+                'mensaje'=>'Actualizacion exitosa'
+            ];
+
+        }catch (\Throwable $e) {
+            Log::error('ListadoTurnoController => confirmaTurnoSistema => mensaje => '.$e->getMessage());
+            return [
+                'error'=>true,
+                'mensaje'=>'Ocurrió un error'
+            ];
+            
+        }
+        
+    }
+
     //listado de los turnos comidas diferente de eliminado
     public function turnosFecha($fecha, $idalimento){
        
         try{
+            $desde=date('2024-05-30');
+            $ejecutaAprobacion=$this->confirmaTurnoSistema($fecha, $idalimento);
+           
 
             $turnos=DB::table('al_turno_comida as tc')
             ->leftJoin('alimento as al', 'al.idalimento','tc.id_alimento')
@@ -430,7 +476,9 @@ class ListadoTurnoController extends Controller
             try{
 
                 $fecha=date('Y-m-d');  
-               
+
+                $ejecutaAprobacion=$this->confirmaTurnoSistema($fecha, $idalimento);
+           
                 //informacion de la comida
                 $comida_con=DB::table('alimento')
                 ->where('idalimento',$idalimento)

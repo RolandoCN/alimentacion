@@ -702,13 +702,25 @@ class AlimentosPacientesController extends Controller
                 ->whereDate('fecha_solicita','<=',$final);
             })
             ->where('estado','Aprobado')
-            ->orderBy('fecha', 'asc')  
-            ->orderBy('dieta', 'asc') 
-            ->select('id_registro','fecha_solicita','paciente','dieta','servicio','responsable','observacion')
-            ->distinct('id_registro')
+            // ->orderBy('fecha', 'asc')  
+            // ->orderBy('dieta', 'asc') 
+            // ->select('id_registro','fecha_solicita','paciente','dieta','servicio','responsable','observacion')
+            // ->distinct('paciente')
+            ->selectRaw('
+                MAX(id_registro) AS id_registro,
+                MAX(fecha_solicita) AS fecha_solicita,
+                paciente,
+                MAX(dieta) AS dieta,
+                MAX(servicio) AS servicio,
+                MAX(responsable) AS responsable,
+                MAX(observacion) AS observacion
+            ')
+            ->groupBy('paciente')
+            ->orderBy(DB::raw('MAX(fecha)'), 'asc')
+            ->orderBy(DB::raw('MAX(dieta)'), 'asc')
             ->get();
 
-           
+        //    dd($listar);
           
             if(sizeof($listar)==0){
                 return [
@@ -814,8 +826,19 @@ class AlimentosPacientesController extends Controller
                     ->where('tipo',$tipo);
                 }
             })
-            ->select('id_registro','fecha_solicita','paciente','dieta','servicio','responsable','observacion')
-            ->distinct('id_registro')
+            // ->select('id_registro','fecha_solicita','paciente','dieta','servicio','responsable','observacion')
+            // ->distinct('id_registro')
+
+            ->selectRaw('
+                MAX(id_registro) AS id_registro,
+                MAX(fecha_solicita) AS fecha_solicita,
+                paciente,
+                MAX(dieta) AS dieta,
+                MAX(servicio) AS servicio,
+                MAX(responsable) AS responsable,
+                MAX(observacion) AS observacion
+            ')
+            ->groupBy('paciente')
             ->where('dieta','!=','NADA POR VIA ORAL')
             ->where('estado','Aprobado')->get();
           
