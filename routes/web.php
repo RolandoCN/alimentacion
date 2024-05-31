@@ -264,7 +264,7 @@ Route::middleware(['auth'])->group(function() { //middleware autenticacion
 });
 
 //COMPROBACION DE ALIMENTOS POR EMPLEADOS
-Route::get('/comprobar-alimento', [VerificaTurnoController::class, 'vistaComprobar']);
+// Route::get('/comprobar-alimento', [VerificaTurnoController::class, 'vistaComprobar']);
 Route::post('/consulta-comida-empleado', [VerificaTurnoController::class, 'consultaComida']);
 Route::post('/confirmados-empleado', [VerificaTurnoController::class, 'confirmaComidas']);
 
