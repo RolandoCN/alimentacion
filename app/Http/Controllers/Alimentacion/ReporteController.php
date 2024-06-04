@@ -1226,22 +1226,23 @@ class ReporteController extends Controller
         ->distinct('servicio')
         ->get();
 
-        $respo=DB::table('al_alimentos_pacientes')
-        ->select('json_dieta')
-        ->distinct('json_dieta')
-        ->get();
+        // $respo=DB::table('al_alimentos_pacientes')
+        // ->select('json_dieta')
+        // ->distinct('json_dieta')
+        // ->get();
 
-        $array_id_resp=[];
-        foreach($respo as $data){
-            $json= $data->json_dieta;
-            $json=json_decode($json, true);
+        // $array_id_resp=[];
+        // foreach($respo as $data){
+        //     $json= $data->json_dieta;
+        //     $json=json_decode($json, true);
            
-            array_push($array_id_resp, $json['idresponsable']);
+        //     array_push($array_id_resp, $json['idresponsable']);
            
-        }
+        // }
+        // dd($array_id_resp);
         //consultamos si es nutricionista
         $nutricionista=DB::table('al_nutricionista')
-        ->whereIn('id_sys_persona',$array_id_resp)
+        // ->whereIn('id_sys_persona',[18,78,])
         ->select('id_sys_persona','nombres','cedula')
         ->distinct('id_sys_persona')
         ->get();

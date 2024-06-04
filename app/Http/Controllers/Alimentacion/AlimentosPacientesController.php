@@ -275,7 +275,7 @@ class AlimentosPacientesController extends Controller
         }
     }
 
-    //job para aprobar alimentos de pacientes dialisis 9AM
+    //job para aprobar alimentos de pacientes dialisis 10 AM Y 14:30
     public function aprobarAliPaciente(){
        
         $transaction=DB::transaction(function() { 
@@ -290,10 +290,19 @@ class AlimentosPacientesController extends Controller
                     Log::error('Aprobacion Alimento Paciente '.$consultaPendiente["mensaje"]);   
                     return $consultaPendiente["mensaje"];  
                 }
+                
+                $hora=date('H');
+                if($hora=="10" || $hora==10){
+                    $tipo="Colacion 1";
+                }else{
+                    $tipo="Colacion 2";
+                }
+                $tipo_ali=$tipo;
 
                 $listar=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
                 ->where('estado','Solicitado')
                 ->where('servicio','DIALISIS')
+                 ->where('tipo',$tipo)
                 // ->distinct('paciente','fecha_solicita')
                 ->get();
 
@@ -332,8 +341,6 @@ class AlimentosPacientesController extends Controller
                 $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente',['datos'=>$lista_final_agrupada,"f_aprobacion"=>date('Y-m-d H:i:s'), 'dieta'=>$lista_dieta]);
                 $crearpdf->setPaper("A4", "landscape");
                 $estadoarch = $crearpdf->stream();
-
-                $tipo_ali="Colacion";
 
                 //lo guardamos en el disco temporal
                 Storage::disk('public')->put(str_replace("", "",$nombrePDF), $estadoarch);
@@ -690,10 +697,22 @@ class AlimentosPacientesController extends Controller
     //por rango fecha
     public function reportePdfAliPacienteAprobado($inicio, $final, $serv,$tipo){
         try{
-          
+            
             $listar=AlimentoPaciente::where(function($query)use($serv,$tipo,$inicio, $final){
                 if($serv=="Dialisis"){
-                    $query->where('servicio','Dialisis');
+                    if(strtotime($inicio) >= strtotime(date('2024-06-05'))){
+                        $query->where('servicio','=','Dialisis')
+                        ->where('tipo',$tipo);
+                    }else{
+                        if($tipo=="Colacion 1"){
+                            $query->where('servicio','=','Dialisis')
+                            ->where('tipo','Colacion');
+                        }else{
+                            $query->where('servicio','=','Dialisis')
+                            ->where('tipo',$tipo);
+                        }
+                    }
+                   
                 }else{
                     $query->where('servicio','!=','Dialisis')
                     ->where('tipo',$tipo);
@@ -720,7 +739,6 @@ class AlimentosPacientesController extends Controller
             ->orderBy(DB::raw('MAX(dieta)'), 'asc')
             ->get();
 
-        //    dd($listar);
           
             if(sizeof($listar)==0){
                 return [
@@ -756,7 +774,7 @@ class AlimentosPacientesController extends Controller
             $nombrePDF="reporte_listado_comida_pac_dia.pdf";
             if($serv=="Dialisis"){
                 // enviamos a la vista para crear el documento que los datos repsectivos
-                $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente',['datos'=>$lista_final_agrupada,'ini'=>$inicio, 'fin'=>$final,"f_aprobacion"=>0, 'dieta'=>$lista_dieta]);
+                $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente',['datos'=>$lista_final_agrupada,'ini'=>$inicio, 'fin'=>$final,"f_aprobacion"=>0, 'tipo'=>$tipo,'dieta'=>$lista_dieta]);
             }else{
                 // enviamos a la vista para crear el documento que los datos repsectivos
                 $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente_hosp',['datos'=>$lista_final_agrupada,'ini'=>$inicio, 'fin'=>$final,"f_aprobacion"=>0,'tipo'=>$tipo, 'dieta'=>$lista_dieta]);
@@ -816,16 +834,39 @@ class AlimentosPacientesController extends Controller
     //por rango fecha rollo
     public function reportePdfAliPacienteRollo($inicio, $final, $serv,$tipo){
         try{
-          
-            $listar=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
-            ->where(function($query)use($serv,$tipo){
+            // dd($tipo);
+            $listar=AlimentoPaciente::where(function($query)use($serv,$tipo,$inicio,$final){
+
                 if($serv=="Dialisis"){
-                    $query->where('servicio','Dialisis');
+                    if(strtotime($inicio) >= strtotime(date('2024-06-05'))){
+                        $query->where('servicio','=','Dialisis')
+                        ->where('tipo',$tipo);
+                    }else{
+                        if($tipo=="Colacion 1"){
+                            $query->where('servicio','Dialisis');
+                        }else{
+                            $query->where('servicio','=','Dialisis')
+                            ->where('tipo',$tipo);
+                        }
+                    }
+                   
                 }else{
                     $query->where('servicio','!=','Dialisis')
                     ->where('tipo',$tipo);
                 }
+
+
+                // if($serv=="Dialisis"){
+                //     $query->where('servicio','Dialisis');
+                // }else{
+                //     $query->where('servicio','!=','Dialisis')
+                //     ->where('tipo',$tipo);
+                // }
+
+                $query->whereDate('fecha_solicita','>=',$inicio)
+                ->whereDate('fecha_solicita','<=',$final);
             })
+            
             // ->select('id_registro','fecha_solicita','paciente','dieta','servicio','responsable','observacion')
             // ->distinct('id_registro')
 

@@ -87,7 +87,7 @@
           
             <tr style="font-size: 10px"  class="fuenteSubtitulo " style=""> 
                 <th colspan="11" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  >
-                   ALIMENTACIÓN PACIENTES {{$titulo}} <br>  COLACION            
+                   ALIMENTACIÓN PACIENTES {{$titulo}} <br>  {{$tipo}}            
                 </th>
              
             </tr>

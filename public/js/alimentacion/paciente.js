@@ -212,12 +212,32 @@ function pdf_alimento_pac(){
 function servicioCombo(){
     var serv=$('#servicio_cmb').val()
     if(serv==""){return}
+    $('#tipo').val('').change()
     if(serv=="Dialisis"){
-        $('#com_hosp').hide()
-        $('#tipo').val('').change()
+        // $('#com_hosp').hide()
+        // $('#tipo').val('').change()
+        $('#com_hosp').show()
     }else{
         $('#com_hosp').show()
     }
+}
+
+function tipoComida(){
+    var tipo=$('#tipo').val()
+    var serv=$('#servicio_cmb').val()
+    if(serv==""){
+        alertNotificar("Debe seleccionar primero el servicio")
+        return
+    }
+
+    if(serv=="Dialisis"){
+        if(tipo=="Desayuno" || tipo=="Almuerzo" || tipo=="Merienda" ){
+            alertNotificar("El servicio de Dialisis, solo tiene el tipo Colacion 1 y Colacion 2", "error")
+            $('#tipo').val('').change()
+            return
+        }
+    }
+
 }
 
 function verpdf(ruta){
@@ -271,7 +291,7 @@ function generarPdf(){
             return
         }
     }else{
-        tipo="N";
+        // tipo="N";
     }
 
 
@@ -328,7 +348,7 @@ function generarPdfRollo(){
             return
         }
     }else{
-        tipo="N";
+        // tipo="N";
     }
 
 

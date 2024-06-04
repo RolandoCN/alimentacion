@@ -88,7 +88,7 @@
                                 <div class="form-group" id="com_hosp" style="display: none">
                                     <label for="inputEmail3" id="label_crit" class="col-sm-2 control-label" >Tipo:</label>
                                     <div class="col-sm-10" style="font-weight: normal;">
-                                        <select data-placeholder="Seleccione Un Tipo" style="width: 100%;" class="form-control select2" name="tipo" id="tipo" >
+                                        <select data-placeholder="Seleccione Un Tipo" style="width: 100%;" class="form-control select2" name="tipo" id="tipo" onchange="tipoComida()">
                                     
                                             <option value=""></option>
                                             <option value="Desayuno">Desayuno</option>
