@@ -336,6 +336,14 @@ class AlimentosPacientesController extends Controller
                 $area=$listar[0]->servicio;
                 
                 $nombrePDF="reporte_listado_comida_pac.pdf";
+
+               
+
+                if($tipo_ali=="Colacion 1"){
+                    $tipo="Corte 1";
+                }else{
+                    $tipo="Corte 2";
+                }
             
                 // enviamos a la vista para crear el documento que los datos repsectivos
                 $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente',['datos'=>$lista_final_agrupada,"f_aprobacion"=>date('Y-m-d H:i:s'), 'dieta'=>$lista_dieta, 'tipo'=>$tipo_ali]);
