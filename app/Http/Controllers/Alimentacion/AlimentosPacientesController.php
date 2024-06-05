@@ -338,7 +338,7 @@ class AlimentosPacientesController extends Controller
                 $nombrePDF="reporte_listado_comida_pac.pdf";
             
                 // enviamos a la vista para crear el documento que los datos repsectivos
-                $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente',['datos'=>$lista_final_agrupada,"f_aprobacion"=>date('Y-m-d H:i:s'), 'dieta'=>$lista_dieta]);
+                $crearpdf=PDF::loadView('alimentacion.pdf_aprobado_paciente',['datos'=>$lista_final_agrupada,"f_aprobacion"=>date('Y-m-d H:i:s'), 'dieta'=>$lista_dieta, 'tipo'=>$tipo_ali]);
                 $crearpdf->setPaper("A4", "landscape");
                 $estadoarch = $crearpdf->stream();
 
