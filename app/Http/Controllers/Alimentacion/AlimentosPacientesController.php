@@ -705,12 +705,28 @@ class AlimentosPacientesController extends Controller
     //por rango fecha
     public function reportePdfAliPacienteAprobado($inicio, $final, $serv,$tipo){
         try{
-            
+            if($serv=="Dialisis"){
+                if($tipo=="Colacion 1"){
+
+                }else{
+
+                }
+            }
+
             $listar=AlimentoPaciente::where(function($query)use($serv,$tipo,$inicio, $final){
                 if($serv=="Dialisis"){
                     if(strtotime($inicio) >= strtotime(date('2024-06-05'))){
-                        $query->where('servicio','=','Dialisis')
-                        ->where('tipo',$tipo);
+                        // $query->where('servicio','=','Dialisis')
+                        // ->where('tipo',$tipo);
+
+                        if($tipo=="Colacion 1"){
+                            $query->where('servicio','=','Dialisis')
+                            ->where('tipo','Colacion 1');
+                        }else{
+                            $query->where('servicio','=','Dialisis')
+                            ->where('tipo','Corte 2');
+                        }
+
                     }else{
                         if($tipo=="Colacion 1"){
                             $query->where('servicio','=','Dialisis')
@@ -854,8 +870,15 @@ class AlimentosPacientesController extends Controller
 
                 if($serv=="Dialisis"){
                     if(strtotime($inicio) >= strtotime(date('2024-06-05'))){
-                        $query->where('servicio','=','Dialisis')
-                        ->where('tipo',$tipo);
+                        // $query->where('servicio','=','Dialisis')
+                        // ->where('tipo',$tipo);
+                        if($tipo=="Colacion 1"){
+                            $query->where('servicio','=','Dialisis')
+                            ->where('tipo','Colacion 1');
+                        }else{
+                            $query->where('servicio','=','Dialisis')
+                            ->where('tipo','Corte 2');
+                        }
                     }else{
                         if($tipo=="Colacion 1"){
                             $query->where('servicio','Dialisis');
