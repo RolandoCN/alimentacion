@@ -340,9 +340,9 @@ class AlimentosPacientesController extends Controller
                
 
                 if($tipo_ali=="Colacion 1"){
-                    $tipo="Corte 1";
+                    $tipo_ali="Corte 1";
                 }else{
-                    $tipo="Corte 2";
+                    $tipo_ali="Corte 2";
                 }
             
                 // enviamos a la vista para crear el documento que los datos repsectivos
@@ -777,7 +777,14 @@ class AlimentosPacientesController extends Controller
                     array_push($lista_dieta[$item->dieta], $item);
                 }
             }
-           
+
+            if($serv=="Dialisis"){
+                if($tipo=="Colacion 1"){
+                    $tipo="Corte 1";
+                }else{
+                    $tipo="Corte 2";
+                }
+            }
            
             $nombrePDF="reporte_listado_comida_pac_dia.pdf";
             if($serv=="Dialisis"){
