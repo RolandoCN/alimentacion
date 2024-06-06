@@ -231,7 +231,7 @@ function tipoComida(){
     }
 
     if(serv=="Dialisis"){
-        if(tipo=="Desayuno" || tipo=="Almuerzo" || tipo=="Merienda" ){
+        if(tipo=="Desayuno" || tipo=="Almuerzo" || tipo=="Merienda" || tipo=="Colacion 2" || tipo=="Colacion 1" ){
             alertNotificar("El servicio de Dialisis, solo tiene el tipo Colacion 1 y Colacion 2", "error")
             $('#tipo').val('').change()
             return

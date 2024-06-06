@@ -151,40 +151,43 @@ $medidaTicket = 1;
 
         @if(isset($datos))
             @foreach($datos as $key=> $data)
-                <table width="{{$tabla_dos}}" style="padding-bottom:2px !important; margin-left:{{$mar_dos}};margin-right:{{$mar_dos_derecha}};margin-top:2px">
-                    <thead>
+                    @if($data->dieta!="NADA POR VIA ORAL")
+                        <table width="{{$tabla_dos}}" style="padding-bottom:2px !important; margin-left:{{$mar_dos}};margin-right:{{$mar_dos_derecha}};margin-top:2px">
+                            <thead>
 
-                        <tr class="centrado_" style="font-size: 3px !important">
-                            <th >HOSPITAL GENERAL DE CHONE</th>
-                        </tr>
+                                <tr class="centrado_" style="font-size: 3px !important">
+                                    <th >HOSPITAL GENERAL DE CHONE</th>
+                                </tr>
 
-                        
-                        <tr class="centrado_" style="font-size: 3px !important">
-                            <th>
-                                @php
-                                    $arrayData = json_decode($data->json_dieta, true);
+                                
+                                <tr class="centrado_" style="font-size: 3px !important">
+                                    <th>
+                                        @php
+                                            $arrayData = json_decode($data->json_dieta, true);
 
-                                @endphp
-                                @if($arrayData !== null)
-                                    {{$arrayData['cedula']}}
-                                @endif
-                            </th>
-                        </tr>
-                        <tr class="centrado_" style="font-size: 3px !important">
-                            <th> {{$data->paciente}}</th>
-                        </tr>
-                        <tr class="centrado_" style="font-size: 3px !important">
-                            <th ><b>AREA: </b> <span style="font-weight: 500  !important">{{$data->servicio}}</span></th>
-                        </tr>
+                                        @endphp
+                                        @if($arrayData !== null)
+                                            {{$arrayData['cedula']}}
+                                        @endif
+                                    </th>
+                                </tr>
+                                <tr class="centrado_" style="font-size: 3px !important">
+                                    <th> {{$data->paciente}}</th>
+                                </tr>
+                                <tr class="centrado_" style="font-size: 3px !important">
+                                    <th ><b>AREA: </b> <span style="font-weight: 500  !important">{{$data->servicio}}</span></th>
+                                </tr>
 
-                        <tr class="centrado_" style="font-size: 3px !important">
-                            <th ><b>TIPO DIETA: </b> <br> 
-                                <span style="font-weight: 500  !important">{{$data->dieta}}</span></th>
-                        </tr>
+                                <tr class="centrado_" style="font-size: 3px !important">
+                                    <th ><b>TIPO DIETA: </b> <br> 
+                                        <span style="font-weight: 500  !important">{{$data->dieta}}</span></th>
+                                </tr>
 
-                    </thead>           
-                </table>
-                <div class="page-break"> </div>
+                            </thead>           
+                        </table>
+                        <div class="page-break"> </div>
+                    @endif
+                
             @endforeach
         @endif
 

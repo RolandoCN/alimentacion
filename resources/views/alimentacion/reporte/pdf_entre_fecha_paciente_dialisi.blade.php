@@ -77,7 +77,7 @@
         <table class="ltable" style="" border="0" width="100%" style="padding-bottom:2px !important">
           
             <tr style="font-size: 11px"  class="fuenteSubtitulo " style=""> 
-                <th colspan="11" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  >CONSOLIDADO DE ALIMENTACIÓN PACIENTES HOSPITALIZADOS <br>
+                <th colspan="11" style="border-color:white;height:35px;text-align: center;border:0 px" width="100%"  >CONSOLIDADO DE ALIMENTACIÓN PACIENTES DIALISIS <br>
                 DESDE {{date('d-m-Y',strtotime($desde))}} HASTA  {{date('d-m-Y',strtotime($hasta))}}<br><br>
               
                 </th>
@@ -94,17 +94,13 @@
                     
                     <th width="10%" style="border: 0px; ;border-color: #D3D3D3; text-align: center; line-height:15px">FECHA</th>
 
-                    <th width="15%" style="border: 0px; ;border-color: #D3D3D3; text-align: center">DESAYUNO</th>
 
-                    <th width="15%" style="border: 0px; ;border-color: #D3D3D3; text-align: center">COLACION1</th>
+                    <th width="15%" style="border: 0px; ;border-color: #D3D3D3; text-align: center">CORTE 1</th>
 
-                    <th width="15%" style="border: 0px; ;border-color: #D3D3D3; text-align: center">ALMUERZO</th>
-
-                    <th width="15%" style="border: 0px; ;border-color: #D3D3D3; text-align: center">COLACION2</th>
-
-                    <th width="15%" style="border-right: 0px;border-top: 0px; border-bottom:0px;border-color: #D3D3D3; text-align: center">MERIENDA</th>
+                    <th width="15%" style="border: 0px; ;border-color: #D3D3D3; text-align: center">CORTE 2</th>
 
                     <th width="15%" style="border-right: 0px;border-top: 0px; border-bottom:0px;border-color: #D3D3D3; text-align: center">LIQUIDA</th>
+
 
                     <th width="15%" style="border: 0px; text-align: center">POR DÍA</th>
              
@@ -164,31 +160,8 @@
                                             $cont_npo=$cont_npo+1;;
                                         @endphp
                                     @else
-                                        @if($comida_ser->comida == "Desayuno")
-                                            @php
-                                                $desayu='X';
-                                                $cont_desayu=$cont_desayu+1;
-                                                $cont_desayu_int=$cont_desayu_int+1;
-                                            @endphp
-                                        @endif
-
-                                        @if($comida_ser->comida == "Almuerzo")
-                                            @php
-                                                $almuerzo='X';
-                                                $cont_almuerzo=$cont_almuerzo+1;
-                                                $cont_almuerzo_int=$cont_almuerzo_int+1;
-                                            @endphp
-                                        @endif
-
-                                        @if($comida_ser->comida == "Merienda")
-                                            @php
-                                                $merienda='X';
-                                                $cont_merienda=$cont_merienda+1;
-                                                $cont_merienda_int=$cont_merienda_int+1;
-                                            @endphp
-                                        @endif
-
-                                        @if($comida_ser->comida == "Colacion 1" || $comida_ser->comida == "Colacion")
+                                    
+                                        @if($comida_ser->comida == "Colacion" || $comida_ser->comida == "Colacion 1")
                                             @php
                                                 $colacion1='X';
                                                 $cont_colacion1=$cont_colacion1+1;
@@ -196,7 +169,7 @@
                                             @endphp
                                         @endif
 
-                                        @if($comida_ser->comida == "Colacion 2")
+                                        @if($comida_ser->comida == "Corte 2")
                                             @php
                                                 $colacion2='X';
                                                 $cont_colacion2=$cont_colacion2+1;
@@ -215,25 +188,15 @@
 
                                
                                     <td align="center" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3">
-                                        {{$cont_desayu_int}} 
-                                    </td>
-
-                                    <td align="center" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3">
                                         {{$cont_colacion1_int}} 
                                     </td>
 
 
                                     <td align="center" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3">
-                                        {{$cont_almuerzo_int}} 
-                                    </td>
-
-                                    <td align="center" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3">
                                         {{$cont_colacion2_int}} 
                                     </td>
 
-                                    <td align="center" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3">
-                                        {{$cont_merienda_int}} 
-                                    </td>
+                                   
 
                                     <td align="center" style="border-top: 0px;border-left: 0px; border-bottom: 0px;border-center:0px;border-right:0px;border-color: #D3D3D3">
                                         {{$cont_liquida_int}} 
@@ -253,27 +216,17 @@
                         <td  colspan="1"style="font-size:9px;border: 0px; border-color: #D3D3D3;  text-align: right;">
                             <b>TOTAL</b>
                         </td>
-                        <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:10px">
-                           {{$cont_desayu}} 
-                           
-                        </td>
+                       
 
                         <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:10px">
                             {{$cont_colacion1}} 
                         </td>
 
                         <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:10px">
-                            {{$cont_almuerzo}} 
-                        </td>
-
-                        <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:10px">
                             {{$cont_colacion2}} 
                         </td>
 
-                        <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:10px">
-                            {{$cont_merienda}} 
-                        </td>
-
+                       
                         <td style="border: 0px;border-color: #D3D3D3;  text-align: center; font-size:10px">
                             {{$cont_liquida}} 
                         </td>

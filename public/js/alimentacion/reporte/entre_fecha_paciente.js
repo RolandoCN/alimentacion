@@ -20,6 +20,12 @@ function buscarTurnos(){
         $('#fecha_ini').focus()
         return
     }
+
+    var serv=$('#servicio_cmb').val()
+    if(serv==""){
+        alertNotificar("Debe seleccionar primero el servicio","error")
+        return
+    }
    
    
     vistacargando("m","Espere por favor");           
@@ -34,7 +40,7 @@ function buscarTurnos(){
         type: "POST",
         url: 'reporte-periodo-paciente',
         data: { _token: $('meta[name="csrf-token"]').attr('content'),
-        fecha_inicial_rep:fecha_inicial_rep, fecha_final_rep:fecha_final_rep },
+        fecha_inicial_rep:fecha_inicial_rep, fecha_final_rep:fecha_final_rep, serv:serv },
         success: function(data){
            
             vistacargando("");                

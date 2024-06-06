@@ -156,7 +156,7 @@
                                     $cont_desayuno=$cont_desayuno+1; 
                                     $cont_int_desayuno=$cont_int_desayuno+1; 
                                     $cont_final_desayuno=$cont_final_desayuno+1; 
-                                }else if($info=="Colacion 1" || $info=="Colacion"){
+                                }else if($info=="Colacion 1" || $info=="Colacion" || $info=="Corte 1"){
                                     $cont_colacion1=$cont_colacion1+1; 
                                     $cont_int_colacion1=$cont_int_colacion1+1; 
                                     $cont_final_colacion1=$cont_final_colacion1+1; 
@@ -164,7 +164,7 @@
                                     $cont_almuerzo=$cont_almuerzo+1; 
                                     $cont_int_almuerzo=$cont_int_almuerzo+1;
                                     $cont_final_almuerzo=$cont_final_almuerzo+1;  
-                                }else if($info=="Colacion 2"){
+                                }else if($info=="Colacion 2" || $info=="Corte 2"){
                                     $cont_colacion2=$cont_colacion2+1; 
                                     $cont_int_colacion2=$cont_int_colacion2+1; 
                                     $cont_final_colacion2=$cont_final_colacion2+1; 

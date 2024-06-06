@@ -958,11 +958,20 @@ class ReporteController extends Controller
 
             $fecha_ini=$request->fecha_inicial_rep;
             $fecha_fin=$request->fecha_final_rep;
+            $serv=$request->serv;
            
             $turnos=DB::table('al_alimentos_pacientes as ali_pac')
-            ->where(function($c)use($fecha_ini, $fecha_fin) {
-                $c->whereDate('ali_pac.fecha', '>=', $fecha_ini)
-                ->whereDate('ali_pac.fecha', '<=', $fecha_fin);
+            ->where(function($c)use($fecha_ini, $fecha_fin, $serv) {
+                if($serv=="Otros"){
+                    $c->whereDate('ali_pac.fecha', '>=', $fecha_ini)
+                    ->whereDate('ali_pac.fecha', '<=', $fecha_fin)
+                    ->where('servicio','<>','DIALISIS');
+                }else{
+                    $c->whereDate('ali_pac.fecha', '>=', $fecha_ini)
+                    ->whereDate('ali_pac.fecha', '<=', $fecha_fin)
+                    ->where('servicio','DIALISIS');
+                }
+                  
             })
             ->where('ali_pac.estado','=','Aprobado') //aprobado
             // ->select('ali_pac.tipo as comida', 'ali_pac.fecha as fecha', 'ali_pac.dieta','ali_pac.id_registro','paciente')
@@ -1006,9 +1015,15 @@ class ReporteController extends Controller
                 }
             }
 
-            $nombrePDF="reporte_entre_fecha_paciente".date('d-m-Y').".pdf";
+            if($serv=="Otros"){
+                $nombrePDF="reporte_entre_fecha_paciente".date('d-m-Y').".pdf";
+                $pdf=PDF::loadView('alimentacion.reporte.pdf_entre_fecha_paciente',['datos'=>$turnos,'lista'=>$lista_final_agrupada, 'desde'=>$fecha_ini, 'hasta'=>$fecha_fin]);
+            }else{
+                $nombrePDF="reporte_entre_fecha_paciente_dialisi".date('d-m-Y').".pdf";
+                $pdf=PDF::loadView('alimentacion.reporte.pdf_entre_fecha_paciente_dialisi',['datos'=>$turnos,'lista'=>$lista_final_agrupada, 'desde'=>$fecha_ini, 'hasta'=>$fecha_fin]);
+            }
 
-            $pdf=PDF::loadView('alimentacion.reporte.pdf_entre_fecha_paciente',['datos'=>$turnos,'lista'=>$lista_final_agrupada, 'desde'=>$fecha_ini, 'hasta'=>$fecha_fin]);
+           
             $pdf->setPaper("A4", "portrait");
             $estadoarch = $pdf->stream();
 

@@ -96,6 +96,8 @@
                                             <option value="Almuerzo">Almuerzo</option>
                                             <option value="Colacion 2">Colacion 2</option>
                                             <option value="Merienda">Merienda</option>
+                                            <option value="Corte 1">Corte 1</option>
+                                            <option value="Corte 2">Corte 2</option>
                                         
                                         </select>
                                     </div>

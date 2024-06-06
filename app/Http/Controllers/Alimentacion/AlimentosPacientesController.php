@@ -227,7 +227,7 @@ class AlimentosPacientesController extends Controller
                 
                 //comprobamos si no esta registrado y aprobado
                 $alimentos=AlimentoPaciente::where('id_registro', $item->id_registro)
-                ->where('estado','Aprobado')
+                ->whereIn('estado',['Aprobado','Solicitado'])
                 ->where('tipo',$tipo_ali)
                 ->where('servicio','!=','EMERGENCIA')
                 ->first();
@@ -608,8 +608,8 @@ class AlimentosPacientesController extends Controller
             $exists_destino = Storage::disk('public')->exists($nombrePDF); 
             if($exists_destino){ 
 
-                $generarAprobacion=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
-                ->where('estado','Solicitado')->update(['fecha_aprobacion'=>date('Y-m-d H:i:s'), 'estado'=>'Aprobado', 'entregado'=>'S']);
+                // $generarAprobacion=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
+                // ->where('estado','Solicitado')->update(['fecha_aprobacion'=>date('Y-m-d H:i:s'), 'estado'=>'Aprobado', 'entregado'=>'S']);
 
                 return [
                     'error'=>false,
@@ -673,8 +673,8 @@ class AlimentosPacientesController extends Controller
             $exists_destino = Storage::disk('public')->exists($nombrePDF); 
             if($exists_destino){ 
 
-                $generarAprobacion=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
-                ->where('estado','Solicitado')->update(['fecha_aprobacion'=>date('Y-m-d H:i:s'), 'estado'=>'Aprobado', 'entregado'=>'S']);
+                // $generarAprobacion=AlimentoPaciente::whereDate('fecha_solicita',date('Y-m-d'))
+                // ->where('estado','Solicitado')->update(['fecha_aprobacion'=>date('Y-m-d H:i:s'), 'estado'=>'Aprobado', 'entregado'=>'S']);
 
                 return [
                     'error'=>false,
@@ -705,21 +705,14 @@ class AlimentosPacientesController extends Controller
     //por rango fecha
     public function reportePdfAliPacienteAprobado($inicio, $final, $serv,$tipo){
         try{
-            if($serv=="Dialisis"){
-                if($tipo=="Colacion 1"){
-
-                }else{
-
-                }
-            }
-
+           
             $listar=AlimentoPaciente::where(function($query)use($serv,$tipo,$inicio, $final){
                 if($serv=="Dialisis"){
                     if(strtotime($inicio) >= strtotime(date('2024-06-05'))){
                         // $query->where('servicio','=','Dialisis')
                         // ->where('tipo',$tipo);
 
-                        if($tipo=="Colacion 1"){
+                        if($tipo=="Corte 1"){
                             $query->where('servicio','=','Dialisis')
                             ->where('tipo','Colacion 1');
                         }else{
@@ -904,7 +897,7 @@ class AlimentosPacientesController extends Controller
                 $query->whereDate('fecha_solicita','>=',$inicio)
                 ->whereDate('fecha_solicita','<=',$final);
             })
-            
+            // ->where('dieta','!=','NADA POR VIA ORAL')
             // ->select('id_registro','fecha_solicita','paciente','dieta','servicio','responsable','observacion')
             // ->distinct('id_registro')
 
@@ -918,8 +911,9 @@ class AlimentosPacientesController extends Controller
                 MAX(observacion) AS observacion
             ')
             ->groupBy('paciente')
-            ->where('dieta','!=','NADA POR VIA ORAL')
-            ->where('estado','Aprobado')->get();
+            ->distinct('paciente')
+            ->where('estado','Aprobado')
+            ->get();
           
             if(sizeof($listar)==0){
                 return [

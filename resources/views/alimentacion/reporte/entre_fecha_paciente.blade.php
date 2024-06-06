@@ -47,6 +47,19 @@
                                     </div>
 
                                     <div class="form-group">
+                                        <label for="inputEmail3" id="label_crit" class="col-sm-2 control-label" >Servicios:</label>
+                                        <div class="col-sm-10" style="font-weight: normal;">
+                                            <select data-placeholder="Seleccione Un Servicio" style="width: 100%;" class="form-control select2" name="servicio_cmb" id="servicio_cmb"  >
+                                        
+                                                <option value=""></option>
+                                                <option value="Dialisis">Dialisis</option>
+                                                <option value="Otros">Hospitalizacion</option>
+                                            
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
                                         <div class="col-sm-12 col-md-offset-2" >
                                         
                                             <button type="button" onclick="buscarTurnos()" class="btn btn-success btn-sm">
