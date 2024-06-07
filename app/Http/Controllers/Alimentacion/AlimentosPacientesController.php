@@ -714,7 +714,7 @@ class AlimentosPacientesController extends Controller
 
                         if($tipo=="Corte 1"){
                             $query->where('servicio','=','Dialisis')
-                            ->where('tipo','Colacion 1');
+                            ->whereIn('tipo',['Colacion 1','Corte 1']);
                         }else{
                             $query->where('servicio','=','Dialisis')
                             ->where('tipo','Corte 2');
@@ -865,9 +865,9 @@ class AlimentosPacientesController extends Controller
                     if(strtotime($inicio) >= strtotime(date('2024-06-05'))){
                         // $query->where('servicio','=','Dialisis')
                         // ->where('tipo',$tipo);
-                        if($tipo=="Colacion 1"){
+                        if($tipo=="Colacion 1" || $tipo=="Corte 1"){
                             $query->where('servicio','=','Dialisis')
-                            ->where('tipo','Colacion 1');
+                            ->whereIn('tipo',['Colacion 1','Corte 1']);
                         }else{
                             $query->where('servicio','=','Dialisis')
                             ->where('tipo','Corte 2');
