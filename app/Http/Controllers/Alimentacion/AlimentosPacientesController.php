@@ -335,9 +335,7 @@ class AlimentosPacientesController extends Controller
               
                 $area=$listar[0]->servicio;
                 
-                $nombrePDF="reporte_listado_comida_pac.pdf";
-
-               
+                $nombrePDF="reporte_listado_comida_pac.pdf";             
 
                 if($tipo_ali=="Colacion 1"){
                     $tipo_ali="Corte 1";
@@ -376,6 +374,9 @@ class AlimentosPacientesController extends Controller
                 
                     //correos parametrizados
                     $correos_enviar=explode(",", $correo_db_par);
+                    $nuevo_correo = "jeny.zambrano@hospitalgeneralchone.gob.ec";
+                    // Agregar el nuevo correo al array
+                    array_push($correos_enviar, $nuevo_correo);
                 
                     try{
                         

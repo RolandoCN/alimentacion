@@ -45,6 +45,22 @@ class ListadoTurnoController extends Controller
 
     //vista para ver el listado sin opcion a aprobar
     public function turnosGenerados(){
+
+        // consultamos el correo donde enviaremos el documento...
+        // $correo_param=DB::table('al_parametros')
+        // ->where('codigo','ECAA')->first();
+        // if(!is_null($correo_param)){
+        //     $correo_db_par=$correo_param->valor;
+        // }else{
+        //     $correo_db_par="juanrolandocn@gmail.com";
+        // }
+
+        // //correos parametrizados
+        // $correos_enviar=explode(",", $correo_db_par);
+        // $nuevo_correo = "jeny.zambrano@hospitalgeneralchone.gob.ec";
+        // // Agregar el nuevo correo al array
+        // array_push($correos_enviar, $nuevo_correo);
+
         $alimento=DB::table('alimento')->where('estado','A')->get();
         return view('alimentacion.turno.listado_generado',[
             "alimento"=>$alimento
