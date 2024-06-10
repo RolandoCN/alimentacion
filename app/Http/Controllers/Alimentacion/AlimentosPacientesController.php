@@ -295,7 +295,7 @@ class AlimentosPacientesController extends Controller
                 if($hora=="10" || $hora==10){
                     $tipo="Colacion 1";
                 }else{
-                    $tipo="Colacion 2";
+                    $tipo="Almuerzo";
                 }
                 $tipo_ali=$tipo;
 
