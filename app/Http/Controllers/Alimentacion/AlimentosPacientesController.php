@@ -208,7 +208,7 @@ class AlimentosPacientesController extends Controller
             $hora=date('H');
             if($hora=="06" || $hora==6){
                 $tipo_ali="Desayuno";
-            }else if($hora=="09" || $hora==9){
+            }else if($hora=="09" || $hora==9 || $hora==10 || $hora=="10"){
                 $tipo_ali="Colacion 1";
             }else if($hora=="11" || $hora==11){
                 $tipo_ali="Almuerzo";
