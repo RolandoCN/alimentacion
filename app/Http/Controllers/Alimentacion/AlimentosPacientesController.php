@@ -789,7 +789,8 @@ class AlimentosPacientesController extends Controller
             }
 
             if($serv=="Dialisis"){
-                if($tipo=="Colacion 1"){
+                // if($tipo=="Colacion 1"){
+                if($tipo=="Colacion 1" || $tipo=="Corte 1"){
                     $tipo="Corte 1";
                 }else{
                     $tipo="Corte 2";

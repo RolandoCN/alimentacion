@@ -161,7 +161,7 @@
                                         @endphp
                                     @else
                                     
-                                        @if($comida_ser->comida == "Colacion" || $comida_ser->comida == "Colacion 1")
+                                        @if($comida_ser->comida == "Colacion" || $comida_ser->comida == "Colacion 1" || $comida_ser->comida == "Corte 1")
                                             @php
                                                 $colacion1='X';
                                                 $cont_colacion1=$cont_colacion1+1;
