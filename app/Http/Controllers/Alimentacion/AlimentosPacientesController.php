@@ -275,7 +275,7 @@ class AlimentosPacientesController extends Controller
         }
     }
 
-    //job para aprobar alimentos de pacientes dialisis 10 AM Y 14:30
+    //job para aprobar alimentos de pacientes dialisis 9:30 AM Y 11:00
     public function aprobarAliPaciente(){
        
         $transaction=DB::transaction(function() { 
@@ -292,7 +292,7 @@ class AlimentosPacientesController extends Controller
                 }
                 
                 $hora=date('H');
-                if($hora=="10" || $hora==10){
+                if($hora=="09" || $hora==9){
                     $tipo="Colacion 1";
                 }else{
                     $tipo="Almuerzo";
