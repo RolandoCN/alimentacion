@@ -8,6 +8,7 @@ use DB;
 use App\Models\Alimentacion\TurnoComida;
 use App\Models\Alimentacion\MenuCabecera;
 use App\Models\Alimentacion\Empleado;
+use App\Models\Alimentacion\AlimentoPaciente;
 use Illuminate\Http\Request;
 use PDF;
 use Storage;
@@ -203,5 +204,34 @@ class ApiController extends Controller
         return $transaction;
             
         
+    }
+
+    public function alimentosPaciente(Request $request){
+        try{
+           
+            $paciente=$request->id_paciente;
+            $listar=AlimentoPaciente::where('servicio','!=','Dialisis')
+            ->whereDate('fecha_solicita','>=',$request->inicio)
+            ->whereDate('fecha_solicita','<=',$request->final)
+            ->where('paciente',$paciente)
+            ->where('estado','Aprobado')
+            ->select('tipo','paciente','fecha')
+            ->orderby('idal_alimentos_pacientes')
+            ->distinct()
+            ->get();
+           
+            return [
+                'error'=>false,
+                'data'=>$listar
+            ];           
+
+        }catch (\Throwable $e) {
+            Log::error(__CLASS__." => ".__FUNCTION__." => Mensaje =>".$e->getMessage()." Linea =>".$e->getLine());
+            return response()->json([
+                'error'=>true,
+                'mensaje'=>'Ocurrió un error'
+            ]);
+             
+        }
     }
 }
