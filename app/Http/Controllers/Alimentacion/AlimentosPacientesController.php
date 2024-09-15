@@ -431,6 +431,9 @@ class AlimentosPacientesController extends Controller
         $transaction=DB::transaction(function() { 
             try{
                 
+                set_time_limit(0);
+                ini_set("memory_limit",-1);
+                ini_set('max_execution_time', 0);
                 $consultaPendiente=$this->listar();
                 if($consultaPendiente['error']==true){
                     return [
